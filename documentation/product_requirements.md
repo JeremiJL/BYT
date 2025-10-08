@@ -19,6 +19,14 @@ their own products and enable _shoppers_ to buy them. The payment process is out
 Platform's business model relays on the existence of _advertisers_. Emptio gives advertisers
 option to purchase more favorable positioning of chosen products on the website.
 
+### How does any user interact with the platform
+
+Any interaction with Emptio starts from having to log in to the platform.
+User fills in login and password, if login succeeds, user is redirected to dedicated home page.
+If user doesn't have an account yet, he may create one by completing an entry form. First user has to choose what
+type of account (shopper, merchant or advertiser) he would like to create. Then user provides his/her new login credentials
+and all profile details specific to kind of account chosen.
+
 ### How does a shopper interact with the platform
 
 After logging to the platform the shopper is faced with a home page.
@@ -44,7 +52,7 @@ The cart page is a list of products previously added to it. User may change the 
 in the cart of request the purchase of the whole cart.
 
 Upon clicking the purchase button following actions take place :
-- The cost of each product and the bank account of a merchant that owns this product is sent to Stripe - 3p vendor to whom Emptio outsources payments.
+- The cost of each product and the bank account number of a merchant that owns this product is sent to Stripe - 3p vendor to whom Emptio outsources payments.
 - Shopper is redirected to Stripe webpage in new browser tab to complete the payment. There Shopper pays the total sum
 while Stripe splits its and transfer the money to appropriate merchants.
 - When Stripe returns to Emptio information that payment has succeeded, then the cart clears empties itself 
@@ -58,4 +66,28 @@ shopper can change his/her information :
 - contact information - email and mobile number
 - shipping address
 
+### How does merchant interact with a platform
+
+After logging to the platform the merchant is faced with merchant panel.
+Merchant panel is nothing but a welcome screen with a top bar presenting merchant which available options for him.
+- inventory
+- profile
+- add product
+
+Inventory page is where all products that merchant put on display on Emptio are listed. Products are shown
+in the same manner as in listing page. Upon clicking one of his products, merchant is sent to product edit page,
+where he can change any details about his product or remove it from his/her inventory if it's out of his/her stock.
+
+Profile page is where merchant may edit his/her information :
+- full name
+- contact information - email and mobile number
+- address of his warehouse where his products are located
+- bank account number
+
+Add product page is where merchant may add new products to his/her inventory. The page is an entry form of all 
+product details.
+
+### How does advertiser interact with a platform
+
+After logging to the platform the merchant is faced with advertiser panel.
 
