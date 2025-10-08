@@ -69,10 +69,12 @@ shopper can change his/her information :
 ### How does merchant interact with a platform
 
 After logging to the platform the merchant is faced with merchant panel.
-Merchant panel is nothing but a welcome screen with a top bar presenting merchant which available options for him.
+Merchant panel is nothing but a welcome screen with a top bar presenting merchant with available options for him/her.
 - inventory
-- profile
 - add product
+- profile
+
+Every option redirects user to corresponding page, described below.
 
 Inventory page is where all products that merchant put on display on Emptio are listed. Products are shown
 in the same manner as in listing page. Upon clicking one of his products, merchant is sent to product edit page,
@@ -89,5 +91,27 @@ product details.
 
 ### How does advertiser interact with a platform
 
-After logging to the platform the merchant is faced with advertiser panel.
+After logging to the platform the advertiser is faced with advertiser panel.
+
+The advertiser panel is a simple welcome screen with a top bar presenting advertiser with available options for him/her.
+- new campaign
+- active campaigns
+- profile
+
+Every option redirects user to corresponding page, described below.
+
+New campaign page plays the role of an entry form for creating a new campaign.
+In order to create a new campaign advertiser has to provide following information :
+- name of the campaign
+- choose products available at Emptio that will be the object of campaign, for that advertiser is equipped
+with search mechanism similar to that of shopper.
+- chose the placement of campaign - shopper's main page xor shopper's listing page.
+- chose how money is advertiser willing to pay for each shopper's interaction with advertised product. Interaction with
+a product of a shopper is understood as going to the product's page.
+- choose the total budget of the campaign
+
+After completing the form advertiser has to pay for the campaign upfront, while the platform promises to
+display chosen products in such a way that the set budget will be spent while roas will be maximised.
+
+The payment is outsourced to Stripe and the process resembles that of shopper's.
 
