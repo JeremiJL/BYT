@@ -10,6 +10,7 @@ On the platform, we can distinguish three main types of users:
 - _shopper_
 - _merchant_
 - _advertiser_
+- _moderator_
 
 Being a 3P platform, Emptio doesn’t own any of the products listed on the site.  
 Its responsibility is limited to creating a space for _merchants_ to display their products and enabling _shoppers_ to buy them.  
@@ -24,6 +25,10 @@ Any interaction with Emptio begins with logging in to the platform.
 The _user_ enters a login and password. If authentication succeeds, the _user_ is redirected to a dedicated home page.  
 If the _user_ doesn’t have an account yet, they can create one by completing a registration form.  
 First, the _user_ chooses the type of account they would like to create (_shopper_, _merchant_, or _advertiser_), then provides login credentials and all profile details specific to the chosen account type.
+
+User archival policy :
+For economical motivations, all users who have not logged in within the last two years are placed in an archived state.
+This state indicates that the user's data may be subject to deletion.
 
 ### How a _shopper_ interacts with the platform
 
@@ -40,6 +45,7 @@ Upon clicking a product, the _shopper_ is sent to a product page with more detai
 - title
 - category
 - description
+- list of links to subproducts
 
 From the product page, the _shopper_ can add a product to their cart.  
 At any moment, the _shopper_ may proceed to the cart by clicking its icon visible in the top bar of the platform.
@@ -130,5 +136,21 @@ When a page is loaded, products and sponsored products (ads) are sorted such tha
 It is assumed that _merchants_ pay **0 EUR** for interactions with regular products — those not part of any ad campaign.  
 This assumption allows all products to participate in the sorting process alongside sponsored ones.
 
-### Nice-to-have features
-- XYZ
+
+### How does a _moderator_ interact with the platform
+
+On Emptio we can distinguish three types of moderators:
+- _regular moderator_
+- _market moderator_
+- _advertising moderator_
+
+Moderators fulfill a single, purpose on the platform — to block any content or entities that violate the platform's guidelines.
+
+The subject of a block can be any of the following:
+- user
+- product
+- campaign
+
+While every moderator has the right to block users,
+- the _market moderator_ additionally has the right to block products,
+- and the _advertising moderator_ has control over ad campaigns.
