@@ -139,10 +139,9 @@ This assumption allows all products to participate in the sorting process alongs
 
 ### How does a _moderator_ interact with the platform
 
-On Emptio we can distinguish three types of moderators:
+On Emptio we can distinguish two types of moderators:
 - _regular moderator_
-- _market moderator_
-- _advertising moderator_
+- _advertising support_
 
 Moderators fulfill a single, purpose on the platform — to block any content or entities that violate the platform's guidelines.
 
@@ -151,6 +150,6 @@ The subject of a block can be any of the following:
 - product
 - campaign
 
-While every moderator has the right to block users,
-- the _market moderator_ additionally has the right to block products,
-- and the _advertising moderator_ has control over ad campaigns.
+Additionally, _advertising support_ moderator has rights to edit campaign parameters of any
+advertiser on the platform. This gives them the possibility to act as intermediate between
+big brands and platform technicalities.
