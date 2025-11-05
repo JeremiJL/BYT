@@ -153,3 +153,7 @@ The subject of a block can be any of the following:
 Additionally, _advertising support_ moderator has rights to edit campaign parameters of any
 advertiser on the platform. This gives them the possibility to act as intermediate between
 big brands and platform technicalities.
+
+### Updates
+TTL of Shopper's Cart.
+Explicit quantity of products on the platform.
