@@ -20,7 +20,7 @@ Shopper is on a _main page_ or _product's listing_.
 2. The system presents the _product page_ with information about the product and an option of adding it to cart.
 3. Shopper clicks "add to cart" button.
 4. The system asserts the availability of chosen product.
-5. Transactionally, the system adds the product to the cart and updates the availability of a product on the platform.
+5. Transactionally, the system adds the product to the cart and updates the availability of a product on the market.
 6. The system presents the updated _cart page_ including the chosen product.
 ### Alternative flows of events
 _**The product is no longer available on the marketplace**_ <br>
@@ -59,15 +59,23 @@ payment service.
 - Payment value each merchant should receive.
 - Shopper's identification.
 5. The system displays a pop-up informing that it's awaiting payment confirmation from Stripe. System starts
-timer counting to 10 minutes.
+timer counting to 30 minutes.
 6. The system updates pop-up with a message saying that payment has been confirmed.
 7. The system forwards to every merchant involved in the order information, including :
 - Shopper's address - necessary for shipment of ordered product.
 - Product and quantity ordered by Shopper.
 7. Shopper clicks "ok".
 8. The system presents an updated—emptied _cart page_.
+### Alternative flow of events
+_**Time for finalizing the payment elapsed before confirmation from Stripe**_ <br>
+6A1. The system updates pop-up with a message saying that payment failed - has not been made in a given time frame. <br>
+6A2. Transactionally, the system adds the products back to the market from the cart and updates the availability of a product on the platform, which results
+in cart getting emptied. <br>
+6A3. Shopper clicks "ok". <br>
+6A4. Return to point 8. <br>
 ### Post-condition
 **Basic flow of events**: Order is completed - every merchant whose product was included in the cart
 receives appropriate payment and information which product should be shipped and to what address. Shopper's cart is 
-cleared out.
-
+cleared out. <br>
+**Time for finalizing the payment elapsed**: All products from the Shopper's cart are put back on the market, 
+no order is made.
