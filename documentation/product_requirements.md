@@ -174,3 +174,6 @@ and parameters of an entity are listed. Additionally, the page offers to do any 
 - login to the platform as chosen user (available only if entity is of user type)
 
 Each option is visualized as an individual button bellow entity's description.
+
+### New features :
+Both order and cart are TTL based.
