@@ -139,23 +139,38 @@ This assumption allows all products to participate in the sorting process alongs
 
 ### How does a _moderator_ interact with the platform
 
-On Emptio we can distinguish two types of moderators:
-- _regular moderator_
-- _advertising support_
-
-Moderators fulfill a single, purpose on the platform — to block any content or entities that violate the platform's guidelines.
+Moderators fulfill two important purposes on the platform :
+- blocking any content or entities that violate the platform's guidelines or lifting previously imposed blocks if threat is gone.
+- taking over the user's account and acting on his/her behalf.
 
 The subject of a block can be any of the following:
 - user
 - product
 - campaign
 
-Additionally, _advertising support_ moderator has rights to edit campaign parameters of any
-advertiser on the platform. This gives them the possibility to act as intermediate between
+To take over of user's account _moderator_ has to log in as that user from dedicated panel. This functionality allows _moderators_
+to act, for example, as 'advertising supports' giving them rights to edit campaign parameters of any
+advertiser on the platform. Such 'advertising support' can act as an intermediate between
 big brands and platform technicalities.
 
-### To do:
-- TTL of Shopper's Cart.
-- Explicit quantity of products on the platform.
-- Moderator description and Class Diagram has to be updated to match Use Case logic of loging in
-- Paying for campaigns has to be reflected on use case.
+After logging in, the _moderator_ is greeted with a _moderator panel_.  
+The _moderator_ panel is a welcome screen with a top bar showing the following options:
+- browse entities
+- profile
+
+The browse entities page is a search bar, under which all search results are listed in the form of rows for the last query.
+The search engines match platform entities (users,products and campaigns) in a full-text search manner.
+
+Query result is represented by a row having three columns :
+- unique id of an entity
+- string that matched the query
+- type of the entity (user/product/campaign)
+
+After clicking the search result, the _moderator_ is redirected to a _description page_ of the entity, where all information
+and parameters of an entity are listed. Additionally, the page offers to do any of the following :
+- block entity
+- lift block
+- remove from platform
+- login to the platform as chosen user (available only if entity is of user type)
+
+Each option is visualized as an individual button bellow entity's description.

@@ -4,7 +4,7 @@
 
 ### Comments
 There is no point in analyzing this use case in isolation; therefore, our focus begins from the moment
-when Shopper is presented with the _product page_.
+when shopper is presented with the _product page_.
 ### Actors
 Shopper.
 ### Purpose and context
@@ -82,20 +82,73 @@ no order is made.
 
 ## Login to a platform as chosen user - use case scenario
 
+### Comments
+There is no point in analyzing this use case in isolation; therefore, our focus begins from the moment
+when the moderator is presented with the _browse entities page_.
+
 ### Actors
 Moderator.
 ### Purpose and context
-The use case allows moderators to take over control of user's account when necessary.
+The use case allows moderators to take over control of user to act on their behalf.
 ### Assumptions
 There are at least two users on the platform.
 ### Pre-conditions
+Moderators in on _browse entities page_.
 ### Basic flow of events
-1. x
+1. Moderator queries for an entity in a search bar.
+2. The system lists the entities matching search results.
+3. Moderator clicks on a chosen search result.
+4. The system presents entities description including a "log in as this user" button.
+5. The Moderator clicks on "log in as this user" button.
+6. The system presents a _welcoming page_ of chosen user.
 ### Alternative flow of events
-_**x**_ <br>
+_**The query has not matched any entity**_ <br>
+2A1. Instead of lists of matched entities, the system notifies user that no entity matched the query. <br>
+2A2. Moderator clicks "ok". <br>
+2A3. The system reloads the _browse entities page_.
+
+_**The query has not matched any entities of 'user' type**_ <br>
+3A1. Return to point 1.
+### Post-condition
+**Basic flow of events**: Moderator logs in to the platform a chosen user.<br>
+**The query has not matched any entity**: No changes occur.<br>
+**The query has not matched any entities of 'user' type**: No changes occur.
+
+## Stop a campaign - use case scenario
+
+### Comments
+There is no point in analyzing this use case in isolation; therefore, our focus begins from the moment
+when the advertiser is presented with the _inventory page_.
+
+### Actors
+Advertiser.
+### Purpose and context
+The use case allows advertisers to stop their campaigns. Which allows them not to waste their budget
+at times when advertisement for products of their interest is unfavourable.
+### Assumptions
+Advertiser has at least one active campaign.
+### Pre-conditions
+Advertiser in on _inventory page_.
+### Basic flow of events
+1. Advertiser chooses one of the campaigns listed in his/her inventory.
+2. The system presents the _campaign page_ where among campaign details (like 'state'), parameters and performance summary, a button
+"stop campaign" button is included at the bottom of the page.
+3. Advertiser clicks "stop campaign" button.
+4. The system stops the campaign.
+5. The system refreshes the _campaign page_ updating the 'state' information to "stopped".
+### Alternative flow of events
+_**The campaign is blocked**_ <br>
+4A1. The system displays a pop-up saying that moderation currently blocks the campaign and no changes can be made to it. <br>
+4A2. The Advertiser clicks "ok". <br>
+4A3. The system returns to presenting the _campaign page_
+
+_**The campaign is already stopped**_ <br>
+4A1. The system displays a pop-up saying that the campaign is already stopped. <br>
+4A2. The Advertiser clicks "ok". <br>
+4A3. The system returns to presenting the _campaign page_.
 
 ### Post-condition
-**Basic flow of events**: x<br>
-
-
-
+**Basic flow of events**: The system stops the campaign setting 'orderingCost' of all 'sponsored offers' which it concerns back to the neutral,
+default value - 0. <br>
+**The campaign is blocked**: No changes occur.<br>
+**The campaign is already stopped**: No changes occur.
