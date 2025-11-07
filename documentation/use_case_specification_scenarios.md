@@ -79,3 +79,23 @@ receives appropriate payment and information which product should be shipped and
 cleared out. <br>
 **Time for finalizing the payment elapsed**: All products from the Shopper's cart are put back on the market, 
 no order is made.
+
+## Login to a platform as chosen user - use case scenario
+
+### Actors
+Moderator.
+### Purpose and context
+The use case allows moderators to take over control of user's account when necessary.
+### Assumptions
+There are at least two users on the platform.
+### Pre-conditions
+### Basic flow of events
+1. x
+### Alternative flow of events
+_**x**_ <br>
+
+### Post-condition
+**Basic flow of events**: x<br>
+
+
+

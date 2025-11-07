@@ -154,6 +154,8 @@ Additionally, _advertising support_ moderator has rights to edit campaign parame
 advertiser on the platform. This gives them the possibility to act as intermediate between
 big brands and platform technicalities.
 
-### Updates
-TTL of Shopper's Cart.
-Explicit quantity of products on the platform.
+### To do:
+- TTL of Shopper's Cart.
+- Explicit quantity of products on the platform.
+- Moderator description and Class Diagram has to be updated to match Use Case logic of loging in
+- Paying for campaigns has to be reflected on use case.
