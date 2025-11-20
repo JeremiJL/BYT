@@ -2,3 +2,5 @@
 documentation/.DS_Store
 .DS_Store
 assignements
+build
+.gradle
