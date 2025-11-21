@@ -6,7 +6,7 @@ import emptio.domain.user.User;
 
 public class LoginValidator implements Validator<User> {
 
-    int maxCharacters = 50;
+    public final int maxCharacters = 50;
 
     @Override
     public void validate(User entity) throws ValidationException {
