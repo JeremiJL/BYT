@@ -22,10 +22,10 @@ public class UserService {
 
     public User newUser(String name, String surname,
                         String email, String number,
-                        String login, String password) throws ValidationException
+                        String login, String password, Address address) throws ValidationException
     {
         LocalDate today = today();
-        User user = new User(name, surname, email, number, login, password, today);
+        User user = new User(name, surname, email, number, login, password, today, address);
 
         try {
             validators.forEach(validator -> validator.validate(user));

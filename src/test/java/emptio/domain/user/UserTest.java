@@ -158,9 +158,10 @@ class UserTest {
         private String phoneNumber;
         private String login;
         private String password;
+        private Address address;
 
         User newUser() {
-            return userService.newUser(name, surname, email, phoneNumber, login, password);
+            return userService.newUser(name, surname, email, phoneNumber, login, password, address);
         }
 
         UserServiceFacade withName(String name) {
@@ -185,6 +186,10 @@ class UserTest {
         }
         UserServiceFacade withPassword(String password) {
             this.password = password;
+            return this;
+        }
+        UserServiceFacade withAddress(Address address) {
+            this.address = address;
             return this;
         }
     }

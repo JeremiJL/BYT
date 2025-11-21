@@ -14,11 +14,13 @@ public class User extends Blockable implements Identifiable {
     public final String login;
     public final String password;
 
+    public final Address address;
+
     LocalDate lastLogin;
 
     protected User(String name, String surname,
                    String email, String number,
-                   String login, String password, LocalDate lastLogin) {
+                   String login, String password, LocalDate lastLogin, Address address) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -26,6 +28,7 @@ public class User extends Blockable implements Identifiable {
         this.login = login;
         this.password = password;
         this.lastLogin = lastLogin;
+        this.address = address;
     }
 
     public void setId(int id) {
