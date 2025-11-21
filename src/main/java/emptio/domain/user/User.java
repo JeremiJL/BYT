@@ -3,7 +3,7 @@ package emptio.domain.user;
 import emptio.serialization.Identifiable;
 import java.time.LocalDate;
 
-public class User implements Identifiable {
+public class User extends Blockable implements Identifiable {
 
     private int id;
     public final String name;
@@ -33,6 +33,13 @@ public class User implements Identifiable {
     }
     public int getId() {
         return this.id;
+    }
+
+    public State getState() {
+        if (this.lastLogin.isBefore(LocalDate.now().minusYears(2))) {
+            this.state = State.ARCHIVED;
+        }
+        return this.state;
     }
 }
 

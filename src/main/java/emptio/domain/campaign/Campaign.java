@@ -1,8 +1,9 @@
 package emptio.domain.campaign;
 
+import emptio.domain.user.Blockable;
 import emptio.serialization.Identifiable;
 
-public class Campaign implements Identifiable {
+public class Campaign extends Blockable implements Identifiable {
 
     private int id;
     final String name;
