@@ -6,8 +6,15 @@ import emptio.domain.user.User;
 
 public class SurnameValidator implements Validator<User> {
 
+    int maxCharacters = 50;
+
     @Override
     public void validate(User entity) throws ValidationException {
-
+        if (entity.surname == null)
+            throw new ValidationException("Surname can't be null.");
+        if (entity.surname.isBlank())
+            throw new ValidationException("Surname is required - can't be empty.");
+        if (entity.surname.length() > maxCharacters)
+            throw new ValidationException("Surname can't be longer than " + maxCharacters + ".");
     }
 }

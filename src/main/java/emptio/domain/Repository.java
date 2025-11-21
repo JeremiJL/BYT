@@ -1,7 +1,9 @@
 package emptio.domain;
 
-public interface Repository<E> {
-    E add(E e);
-    E update(E e);
-    E find(E e);
+
+import emptio.serialization.Identifiable;
+
+public interface Repository<I extends Identifiable> {
+    I add(I i);
+    I find(Integer id);
 }

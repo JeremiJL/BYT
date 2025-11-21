@@ -1,28 +1,23 @@
 package emptio.serialization;
 
+import emptio.domain.Repository;
 import emptio.domain.user.User;
-import emptio.domain.user.UserRepository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class InMemoryUserRepository implements UserRepository {
+public class InMemoryUserRepository implements Repository<User> {
 
-    private List<User> users = new ArrayList<>();
+    private final Map<Integer, User> users = new HashMap<>();
 
     @Override
     public User add(User user) {
-        users.add(user);
+        users.put(user.getId(), user);
         return user;
     }
 
     @Override
-    public User update(User user) {
-        return null;
-    }
-
-    @Override
-    public User find(User user) {
-        return null;
+    public User find(Integer userId) {
+        return users.get(userId);
     }
 }
