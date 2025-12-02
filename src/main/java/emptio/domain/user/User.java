@@ -1,11 +1,14 @@
 package emptio.domain.user;
 
+import emptio.domain.common.Blockable;
+import emptio.domain.common.State;
 import emptio.serialization.Identifiable;
 import java.time.LocalDate;
 
-public class User extends Blockable implements Identifiable {
+public abstract class User extends Blockable implements Identifiable {
 
     private int id;
+
     public final String name;
     public final String surname;
     public final String email;

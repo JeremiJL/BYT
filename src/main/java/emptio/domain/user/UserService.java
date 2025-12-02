@@ -12,12 +12,10 @@ public class UserService {
 
     private final Set<Validator<User>> validators;
     private final Repository<User> userRepository;
-    private final IdService idService;
 
     public UserService(Set<Validator<User>> validators, Repository<User> userRepository, IdService idService) {
         this.validators = validators;
         this.userRepository = userRepository;
-        this.idService = idService;
     }
 
     public User newUser(String name, String surname,
@@ -33,8 +31,9 @@ public class UserService {
             throw new ValidationException("Failed to create a user with given parameters, cause : " + e.getMessage());
         }
 
-        user.setId(idService.getNewId());
-        return userRepository.add(user);
+        return userRepository.find(
+                userRepository.add(user)
+        );
     }
 
     private LocalDate today() {

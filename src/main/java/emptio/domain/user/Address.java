@@ -1,5 +1,7 @@
 package emptio.domain.user;
 
+import emptio.common.Nullable;
+
 public class Address {
 
     public final String postalCode;

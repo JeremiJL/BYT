@@ -27,7 +27,9 @@ public class CampaignService {
             throw new ValidationException("Failed to create a campaign with given parameters, cause : " + e.getMessage());
         }
 
-        return campaignRepository.add(campaign);
+        return campaignRepository.find(
+                campaignRepository.add(campaign)
+        );
     }
 
 }
