@@ -4,7 +4,7 @@ import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.product.Product;
 
-public class TitleValidation implements Validator<Product> {
+public class TitleValidator implements Validator<Product> {
 
     public final int maxCharacters = 20;
 

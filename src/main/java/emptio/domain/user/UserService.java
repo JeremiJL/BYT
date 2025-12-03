@@ -13,7 +13,7 @@ public class UserService {
     private final Set<Validator<User>> validators;
     private final Repository<User> userRepository;
 
-    public UserService(Set<Validator<User>> validators, Repository<User> userRepository, IdService idService) {
+    public UserService(Set<Validator<User>> validators, Repository<User> userRepository) {
         this.validators = validators;
         this.userRepository = userRepository;
     }

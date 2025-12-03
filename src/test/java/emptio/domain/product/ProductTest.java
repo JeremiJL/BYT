@@ -1,0 +1,221 @@
+package emptio.domain.product;
+
+import emptio.domain.Repository;
+import emptio.domain.ValidationException;
+import emptio.domain.Validator;
+import emptio.domain.common.Category;
+import emptio.domain.common.Cost;
+import emptio.domain.common.Currency;
+import emptio.domain.product.validators.*;
+import emptio.serialization.IdService;
+import emptio.serialization.InMemoryRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class ProductTest {
+
+    Repository<Product> productRepository;
+    Set<Validator<Product>> validators;
+
+    ProductService productService;
+    ProductServiceBuilder productServiceBuilder;
+
+    @BeforeEach
+    void setUp() {
+        productRepository = new InMemoryRepository<>();
+        validators = new HashSet<>();
+        productServiceBuilder =  new ProductServiceBuilder();
+        productService = new ProductService(validators, productRepository);
+    }
+
+    @Test
+    void shouldValidatePrice() {
+        validators.add(new PriceValidator());
+        // Assert potential negative cases - validation fails - exception is thrown
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withPrice(new Cost(null, Currency.PLN)).newProduct();
+        });
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withPrice(new Cost(BigDecimal.ONE, null)).newProduct();
+        });
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withPrice(new Cost(BigDecimal.valueOf(-2d), Currency.PLN)).newProduct();
+        });
+        // Assert potential positive cases - validation succeeds - exception is not thrown
+        productServiceBuilder.withPrice(new Cost(BigDecimal.valueOf(20.5d), Currency.PLN)).newProduct();
+    }
+
+    @Test
+    void shouldValidateImage() {
+        validators.add(new ImageValidator());
+        // Assert potential negative cases - validation fails - exception is thrown
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withImage(null).newProduct();
+        });
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withImage(new byte[]{}).newProduct();
+        });
+        // Assert potential positive cases - validation succeeds - exception is not thrown
+        productServiceBuilder.withImage(new byte[]{1,2,3,4}).newProduct();
+    }
+
+    @Test
+    void shouldValidateCategory() {
+        validators.add(new CategoryValidator());
+        // Assert potential negative cases - validation fails - exception is thrown
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withCategory(null).newProduct();
+        });
+        // Assert potential positive cases - validation succeeds - exception is not thrown
+        assertEquals(Category.CLOTHING, productServiceBuilder.withCategory(Category.CLOTHING).newProduct().category);
+    }
+
+    @Test
+    void shouldValidateTitle() {
+        TitleValidator titleValidator = new TitleValidator();
+        validators.add(titleValidator);
+        // Assert potential negative cases - validation fails - exception is thrown
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withTitle(null).newProduct();
+        });
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withTitle("").newProduct();
+        });
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withTitle(" ").newProduct();
+        });
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withTitle(stringOfGivenLength(titleValidator.maxCharacters + 1)).newProduct();
+        });
+        // Assert potential positive cases - validation succeeds - exception is not thrown
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withTitle("Waterproof vest for outdoors activities").newProduct();
+        });
+    }
+
+    @Test
+    void shouldValidateDescription() {
+        DescriptionValidator descriptionValidator = new DescriptionValidator();
+        validators.add(descriptionValidator);
+        // Assert potential negative cases - validation fails - exception is thrown
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withDescription(null).newProduct();
+        });
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withDescription("").newProduct();
+        });
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withDescription(" ").newProduct();
+        });
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withDescription(stringOfGivenLength(descriptionValidator.maxCharacters + 1)).newProduct();
+        });
+        // Assert potential positive cases - validation succeeds - exception is not thrown
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withDescription("Waterproof vest for outdoors activities, " +
+                    "made from artificial cancerous fabric. Unisex. No returns. Recommended by 9 out of 10 dentists.").newProduct();
+        });
+    }
+
+    @Test
+    void shouldValidateCountOnMarketplace() {
+        validators.add(new CountOnMarketplaceValidator());
+        // Assert potential negative cases - validation fails - exception is thrown
+        assertThrows(ValidationException.class, () -> {
+            productServiceBuilder.withCountOnMarketplace(-1).newProduct();
+        });
+
+        // Decrementing
+        Product myProduct = productServiceBuilder.withCountOnMarketplace(5).newProduct();
+        assertEquals(5, myProduct.countOnMarketplace);
+
+        int id = myProduct.getId();
+
+        productService.decrementCountOnMarketplace(id);
+        myProduct = productRepository.find(id);
+        assertEquals(4, myProduct.countOnMarketplace);
+
+        productService.decrementCountOnMarketplace(id);
+        myProduct = productRepository.find(id);
+        assertEquals(3, myProduct.countOnMarketplace);
+    }
+
+    @Test
+    void shouldValidateInteractions() {
+        validators.add(new InteractionsValidator());
+
+        // Assert interaction's value upon initialization
+        Product myProduct = productServiceBuilder.newProduct();
+        assertEquals(0, myProduct.interactions);
+
+        // Incrementing
+        int id = myProduct.getId();
+
+        productService.incrementInteractionCount(id);
+        myProduct = productRepository.find(id);
+        assertEquals(1, myProduct.interactions);
+
+        productService.incrementInteractionCount(id);
+        myProduct = productRepository.find(id);
+        assertEquals(2, myProduct.interactions);
+     }
+
+
+    private class ProductServiceBuilder {
+
+        private Cost price;
+        private byte[] image;
+        private Category category;
+        private String title;
+        private String description;
+        private int countOnMarketplace;
+
+        Product newProduct() {
+            return productService.newProduct(price,image,category,title,description,countOnMarketplace);
+        }
+
+        ProductServiceBuilder withPrice(Cost price) {
+            this.price = price;
+            return this;
+        }
+
+         ProductServiceBuilder withImage(byte[] image) {
+            this.image = image;
+            return this;
+        }
+
+         ProductServiceBuilder withCategory(Category category){
+            this.category = category;
+            return this;
+        }
+
+         ProductServiceBuilder withTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        ProductServiceBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        ProductServiceBuilder withCountOnMarketplace(int countOnMarketplace) {
+            this.countOnMarketplace = countOnMarketplace;
+            return this;
+        }
+    }
+
+    private String stringOfGivenLength(int length) {
+        return "-".repeat(length);
+    }
+
+}
+
+

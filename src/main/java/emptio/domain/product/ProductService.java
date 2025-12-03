@@ -13,8 +13,9 @@ public class ProductService {
     Set<Validator<Product>> validators;
     Repository<Product> productRepository;
 
-    public ProductService(Set<Validator<Product>> validators) {
+    public ProductService(Set<Validator<Product>> validators, Repository<Product> productRepository) {
         this.validators = validators;
+        this.productRepository = productRepository;
     }
 
     public Product newProduct(
@@ -43,6 +44,7 @@ public class ProductService {
                 oldProduct.description, oldProduct.orderingWeight,
                 oldProduct.countOnMarketplace, oldProduct.interactions + 1
         );
+        updatedProduct.setId(oldProduct.getId());
         productRepository.update(updatedProduct);
     }
 
@@ -56,6 +58,7 @@ public class ProductService {
                     oldProduct.description, oldProduct.orderingWeight,
                     oldProduct.countOnMarketplace - 1, oldProduct.interactions
             );
+            updatedProduct.setId(oldProduct.getId());
             productRepository.update(updatedProduct);
         }
         else {

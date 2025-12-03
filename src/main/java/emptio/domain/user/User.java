@@ -5,7 +5,7 @@ import emptio.domain.common.State;
 import emptio.serialization.Identifiable;
 import java.time.LocalDate;
 
-public abstract class User extends Blockable implements Identifiable {
+public class User extends Blockable implements Identifiable {
 
     private int id;
 

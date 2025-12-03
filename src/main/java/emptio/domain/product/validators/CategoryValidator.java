@@ -4,7 +4,7 @@ import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.product.Product;
 
-public class CategoryValidation implements Validator<Product> {
+public class CategoryValidator implements Validator<Product> {
 
     @Override
     public void validate(Product entity) throws ValidationException {

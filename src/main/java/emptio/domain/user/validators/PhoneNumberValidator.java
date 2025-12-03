@@ -8,7 +8,7 @@ public class PhoneNumberValidator implements Validator<User> {
 
     public final int maxCharacters = 9;
     public final int minCharacters = 9;
-    private final String[] possibleCharacters = {"0","1","2","3","4","5","6","7","8","9"};
+    protected final String[] possibleCharacters = {"0","1","2","3","4","5","6","7","8","9"};
 
     @Override
     public void validate(User entity) throws ValidationException {

@@ -4,9 +4,9 @@ import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.product.Product;
 
-public class DescriptionValidation implements Validator<Product> {
+public class DescriptionValidator implements Validator<Product> {
 
-    private final int maxCharacters = 50;
+    public final int maxCharacters = 50;
 
     @Override
     public void validate(Product entity) throws ValidationException {

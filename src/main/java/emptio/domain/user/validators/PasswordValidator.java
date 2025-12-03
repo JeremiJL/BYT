@@ -9,8 +9,8 @@ import java.util.Arrays;
 public class PasswordValidator implements Validator<User> {
 
     public final int maxCharacters = 50;
-    public final int minCharacters = 8;
-    final String[] easyPasswords = {"password", "123", "qwe", "admin"};
+    protected final int minCharacters = 8;
+    protected final String[] easyPasswords = {"password", "123", "qwe", "admin"};
 
     @Override
     public void validate(User entity) throws ValidationException {

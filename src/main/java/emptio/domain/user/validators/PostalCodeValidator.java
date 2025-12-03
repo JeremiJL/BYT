@@ -6,8 +6,8 @@ import emptio.domain.user.Address;
 
 public class PostalCodeValidator implements Validator<Address> {
 
-    public final int maxCharacters = 9;
-    public final int minCharacters = 6;
+    protected final int maxCharacters = 9;
+    protected final int minCharacters = 6;
     
     @Override
     public void validate(Address entity) throws ValidationException {

@@ -10,6 +10,6 @@ public interface Repository<T extends Identifiable> {
     Integer add(T i);
     T find(Integer id);
     Integer update(T i);
-    void delete(Integer id);
+    void remove(Integer id);
 }
 

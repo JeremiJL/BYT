@@ -4,7 +4,6 @@ import emptio.domain.Repository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.user.validators.*;
-import emptio.serialization.IdService;
 import emptio.serialization.InMemoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,18 +16,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class UserTest {
 
     Repository<User> userRepository;
-    IdService idService;
     Set<Validator<User>> validators;
-    UserServiceFacade userServiceFacade;
+
     UserService userService;
+    UserServiceBuilder userServiceBuilder;
 
     @BeforeEach
     void setUp() {
         userRepository = new InMemoryRepository<>();
-        idService = new IdService();
         validators = new HashSet<>();
-        userServiceFacade =  new UserServiceFacade();
-        userService = new UserService(validators, userRepository, idService);
+
+        userServiceBuilder =  new UserServiceBuilder();
+        userService = new UserService(validators, userRepository);
     }
 
     @Test
@@ -36,16 +35,16 @@ class UserTest {
         validators.add(new EmailValidator());
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withEmail("abdulla!pjatk").newUser();
+            userServiceBuilder.withEmail("abdulla!pjatk").newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withEmail(null).newUser();
+            userServiceBuilder.withEmail(null).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withEmail("").newUser();
+            userServiceBuilder.withEmail("").newUser();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        userServiceFacade.withEmail("abdulla@pjatk").newUser();
+        userServiceBuilder.withEmail("abdulla@pjatk").newUser();
     }
 
     @Test
@@ -54,17 +53,17 @@ class UserTest {
         validators.add(loginValidator);
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withLogin("").newUser();
+            userServiceBuilder.withLogin("").newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withLogin(null).newUser();
+            userServiceBuilder.withLogin(null).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withLogin(stringOfGivenLength(loginValidator.maxCharacters + 1)).newUser();
+            userServiceBuilder.withLogin(stringOfGivenLength(loginValidator.maxCharacters + 1)).newUser();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        userServiceFacade.withLogin(stringOfGivenLength(loginValidator.maxCharacters - 1)).newUser();
-        userServiceFacade.withLogin("prof-abdulla").newUser();
+        userServiceBuilder.withLogin(stringOfGivenLength(loginValidator.maxCharacters - 1)).newUser();
+        userServiceBuilder.withLogin("prof-abdulla").newUser();
     }
 
     @Test
@@ -73,17 +72,17 @@ class UserTest {
         validators.add(nameValidator);
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withName("").newUser();
+            userServiceBuilder.withName("").newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withName(null).newUser();
+            userServiceBuilder.withName(null).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withName(stringOfGivenLength(nameValidator.maxCharacters + 1)).newUser();
+            userServiceBuilder.withName(stringOfGivenLength(nameValidator.maxCharacters + 1)).newUser();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        userServiceFacade.withName(stringOfGivenLength(nameValidator.maxCharacters - 1)).newUser();
-        userServiceFacade.withName("Mohamed").newUser();
+        userServiceBuilder.withName(stringOfGivenLength(nameValidator.maxCharacters - 1)).newUser();
+        userServiceBuilder.withName("Mohamed").newUser();
     }
 
     @Test
@@ -92,20 +91,20 @@ class UserTest {
         validators.add(passwordValidator);
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withPassword("").newUser();
+            userServiceBuilder.withPassword("").newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withPassword(null).newUser();
+            userServiceBuilder.withPassword(null).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withPassword(stringOfGivenLength(passwordValidator.maxCharacters + 1)).newUser();
+            userServiceBuilder.withPassword(stringOfGivenLength(passwordValidator.maxCharacters + 1)).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withPassword("password").newUser();
+            userServiceBuilder.withPassword("password").newUser();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        userServiceFacade.withPassword(stringOfGivenLength(passwordValidator.maxCharacters - 1)).newUser();
-        userServiceFacade.withPassword("GigaChadStrongPassword").newUser();
+        userServiceBuilder.withPassword(stringOfGivenLength(passwordValidator.maxCharacters - 1)).newUser();
+        userServiceBuilder.withPassword("GigaChadStrongPassword").newUser();
     }
 
     @Test
@@ -114,23 +113,23 @@ class UserTest {
         validators.add(phoneNumberValidator);
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withPhoneNumber("").newUser();
+            userServiceBuilder.withPhoneNumber("").newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withPhoneNumber(null).newUser();
+            userServiceBuilder.withPhoneNumber(null).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withPhoneNumber(stringOfGivenLength(phoneNumberValidator.maxCharacters + 1)).newUser();
+            userServiceBuilder.withPhoneNumber(stringOfGivenLength(phoneNumberValidator.maxCharacters + 1)).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withPhoneNumber(stringOfGivenLength(phoneNumberValidator.minCharacters - 1)).newUser();
+            userServiceBuilder.withPhoneNumber(stringOfGivenLength(phoneNumberValidator.minCharacters - 1)).newUser();
         });
 //        TODO : This case should have a personal validator.
 //        assertThrows(ValidationException.class, () -> {
-//            userServiceFacade.withPhoneNumber("abcdefghi").newUser();
+//            userServiceBuilder.withPhoneNumber("abcdefghi").newUser();
 //        });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        userServiceFacade.withPhoneNumber("678098152").newUser();
+        userServiceBuilder.withPhoneNumber("678098152").newUser();
     }
 
     @Test
@@ -139,19 +138,19 @@ class UserTest {
         validators.add(surnameValidator);
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withSurname("").newUser();
+            userServiceBuilder.withSurname("").newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withSurname(null).newUser();
+            userServiceBuilder.withSurname(null).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceFacade.withSurname(stringOfGivenLength(surnameValidator.maxCharacters + 1)).newUser();
+            userServiceBuilder.withSurname(stringOfGivenLength(surnameValidator.maxCharacters + 1)).newUser();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        userServiceFacade.withSurname("Abdulla").newUser();
+        userServiceBuilder.withSurname("Abdulla").newUser();
     }
 
-    private class UserServiceFacade {
+    private class UserServiceBuilder {
 
         private String name;
         private String surname;
@@ -165,31 +164,31 @@ class UserTest {
             return userService.newUser(name, surname, email, phoneNumber, login, password, address);
         }
 
-        UserServiceFacade withName(String name) {
+        UserServiceBuilder withName(String name) {
             this.name = name;
             return this;
         }
-        UserServiceFacade withSurname(String surname) {
+        UserServiceBuilder withSurname(String surname) {
             this.surname = surname;
             return this;
         }
-        UserServiceFacade withEmail(String email) {
+        UserServiceBuilder withEmail(String email) {
             this.email = email;
             return this;
         }
-        UserServiceFacade withPhoneNumber(String phoneNumber) {
+        UserServiceBuilder withPhoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
             return this;
         }
-        UserServiceFacade withLogin(String login) {
+        UserServiceBuilder withLogin(String login) {
             this.login = login;
             return this;
         }
-        UserServiceFacade withPassword(String password) {
+        UserServiceBuilder withPassword(String password) {
             this.password = password;
             return this;
         }
-        UserServiceFacade withAddress(Address address) {
+        UserServiceBuilder withAddress(Address address) {
             this.address = address;
             return this;
         }
