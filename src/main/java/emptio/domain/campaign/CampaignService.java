@@ -5,6 +5,7 @@ import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.common.Cost;
 import emptio.domain.common.Currency;
+import emptio.domain.user.User;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -20,14 +21,16 @@ public class CampaignService {
     }
 
     public Campaign newCampaign(
+            User owner,
             String name, Placement placement, BigDecimal pricePerInteraction, BigDecimal totalBudget)
             throws ValidationException
     {
         Campaign campaign = new Campaign(
                 Campaign.idService.getNewId(),
-                name, placement,
-                new Cost(pricePerInteraction, Currency.EUR),
-                new Cost(totalBudget, Currency.EUR), new Cost(BigDecimal.ZERO, Currency.EUR), 0);
+                owner,
+                        name, placement,
+                        new Cost(pricePerInteraction, Currency.EUR),
+                        new Cost(totalBudget, Currency.EUR), new Cost(BigDecimal.ZERO, Currency.EUR), 0);
 
         return campaignRepository.find(
                 campaignRepository.add(
