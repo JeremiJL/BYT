@@ -10,11 +10,11 @@ public class DescriptionValidator implements Validator<Product> {
 
     @Override
     public void validate(Product entity) throws ValidationException {
-        if (entity.description == null)
+        if (entity.getDescription() == null)
             throw new ValidationException("Description can't be null.");
-        if (entity.description.isBlank())
+        if (entity.getDescription().isBlank())
             throw new ValidationException("Description can't be empty.");
-        if (entity.description.length() > maxCharacters)
+        if (entity.getDescription().length() > maxCharacters)
             throw new ValidationException("Description can't be longer than " + maxCharacters + " characters.");
     }
 }

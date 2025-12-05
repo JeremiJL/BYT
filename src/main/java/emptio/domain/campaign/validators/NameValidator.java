@@ -10,11 +10,11 @@ public class NameValidator implements Validator<Campaign> {
 
     @Override
     public void validate(Campaign entity) throws ValidationException {
-        if (entity.name == null)
+        if (entity.getName() == null)
             throw new ValidationException("Name can't be null.");
-        if (entity.name.isBlank())
+        if (entity.getName().isBlank())
             throw new ValidationException("Name can't be blank.");
-        if (entity.name.length() > maxCharacters)
+        if (entity.getName().length() > maxCharacters)
             throw new ValidationException("Name can't be longer than " + maxCharacters + ".");
     }
 }

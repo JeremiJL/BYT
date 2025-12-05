@@ -10,12 +10,12 @@ import java.util.Set;
 
 public class UserService {
 
-    private final Set<Validator<User>> validators;
-    private final Repository<User> userRepository;
+    static private Set<Validator<User>> validators;
+    static private Repository<User> userRepository;
 
     public UserService(Set<Validator<User>> validators, Repository<User> userRepository) {
-        this.validators = validators;
-        this.userRepository = userRepository;
+        UserService.validators = validators;
+        UserService.userRepository = userRepository;
     }
 
     public User newUser(String name, String surname,
@@ -23,7 +23,7 @@ public class UserService {
                         String login, String password, Address address) throws ValidationException
     {
         LocalDate today = today();
-        User user = new User(name, surname, email, number, login, password, today, address);
+        User user = new User(User.idService.getNewId(), name, surname, email, number, login, password, address, today);
 
         try {
             validators.forEach(validator -> validator.validate(user));

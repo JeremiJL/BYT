@@ -1,16 +1,10 @@
 package emptio.domain.common;
 
+import lombok.NonNull;
+
 import java.math.BigDecimal;
 
-public class Cost {
-
-    public final BigDecimal value;
-    public final Currency currency;
-
-    public Cost(BigDecimal value, Currency currency) {
-        this.value = value;
-        this.currency = currency;
-    }
+public record Cost(@NonNull BigDecimal value, @NonNull Currency currency) {
 
     public static Cost add(Cost a, Cost b) {
         if (a.currency != b.currency)

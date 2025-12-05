@@ -10,11 +10,11 @@ public class SurnameValidator implements Validator<User> {
 
     @Override
     public void validate(User entity) throws ValidationException {
-        if (entity.surname == null)
+        if (entity.getSurname() == null)
             throw new ValidationException("Surname can't be null.");
-        if (entity.surname.isBlank())
+        if (entity.getSurname().isBlank())
             throw new ValidationException("Surname is required - can't be empty.");
-        if (entity.surname.length() > maxCharacters)
+        if (entity.getSurname().length() > maxCharacters)
             throw new ValidationException("Surname can't be longer than " + maxCharacters + ".");
     }
 }

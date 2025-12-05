@@ -8,9 +8,9 @@ public class ImageValidator implements Validator<Product> {
 
     @Override
     public void validate(Product entity) throws ValidationException {
-        if (entity.image == null)
+        if (entity.getImage() == null)
             throw new ValidationException("Image can't be null.");
-        if (entity.image.length == 0)
+        if (entity.getImage().length == 0)
             throw new ValidationException("Image can't be represent in 0 bytes.");
     }
 }

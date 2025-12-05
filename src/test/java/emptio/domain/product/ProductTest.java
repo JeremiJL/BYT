@@ -38,10 +38,10 @@ class ProductTest {
     void shouldValidatePrice() {
         validators.add(new PriceValidator());
         // Assert potential negative cases - validation fails - exception is thrown
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             productBuilder.withPrice(new Cost(null, Currency.PLN)).newProduct();
         });
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             productBuilder.withPrice(new Cost(BigDecimal.ONE, null)).newProduct();
         });
         assertThrows(ValidationException.class, () -> {
@@ -55,7 +55,7 @@ class ProductTest {
     void shouldValidateImage() {
         validators.add(new ImageValidator());
         // Assert potential negative cases - validation fails - exception is thrown
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             productBuilder.withImage(null).newProduct();
         });
         assertThrows(ValidationException.class, () -> {
@@ -69,11 +69,11 @@ class ProductTest {
     void shouldValidateCategory() {
         validators.add(new CategoryValidator());
         // Assert potential negative cases - validation fails - exception is thrown
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             productBuilder.withCategory(null).newProduct();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        assertEquals(Category.CLOTHING, productBuilder.withCategory(Category.CLOTHING).newProduct().category);
+        assertEquals(Category.CLOTHING, productBuilder.withCategory(Category.CLOTHING).newProduct().getCategory());
     }
 
     @Test
@@ -81,7 +81,7 @@ class ProductTest {
         TitleValidator titleValidator = new TitleValidator();
         validators.add(titleValidator);
         // Assert potential negative cases - validation fails - exception is thrown
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             productBuilder.withTitle(null).newProduct();
         });
         assertThrows(ValidationException.class, () -> {
@@ -104,7 +104,7 @@ class ProductTest {
         DescriptionValidator descriptionValidator = new DescriptionValidator();
         validators.add(descriptionValidator);
         // Assert potential negative cases - validation fails - exception is thrown
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             productBuilder.withDescription(null).newProduct();
         });
         assertThrows(ValidationException.class, () -> {
@@ -133,17 +133,17 @@ class ProductTest {
 
         // Decrementing
         Product myProduct = productBuilder.withCountOnMarketplace(5).newProduct();
-        assertEquals(5, myProduct.countOnMarketplace);
+        assertEquals(5, myProduct.getCountOnMarketplace());
 
         int id = myProduct.getId();
 
         productService.decrementCountOnMarketplace(id);
         myProduct = productRepository.find(id);
-        assertEquals(4, myProduct.countOnMarketplace);
+        assertEquals(4, myProduct.getCountOnMarketplace());
 
         productService.decrementCountOnMarketplace(id);
         myProduct = productRepository.find(id);
-        assertEquals(3, myProduct.countOnMarketplace);
+        assertEquals(3, myProduct.getCountOnMarketplace());
     }
 
     @Test
@@ -152,29 +152,29 @@ class ProductTest {
 
         // Assert interaction's value upon initialization
         Product myProduct = productBuilder.newProduct();
-        assertEquals(0, myProduct.interactions);
+        assertEquals(0, myProduct.getInteractions());
 
         // Incrementing
         int id = myProduct.getId();
 
         productService.incrementInteractionCount(id);
         myProduct = productRepository.find(id);
-        assertEquals(1, myProduct.interactions);
+        assertEquals(1, myProduct.getInteractions());
 
         productService.incrementInteractionCount(id);
         myProduct = productRepository.find(id);
-        assertEquals(2, myProduct.interactions);
+        assertEquals(2, myProduct.getInteractions());
      }
 
 
     private class ProductBuilder {
 
-        private Cost price;
-        private byte[] image;
-        private Category category;
-        private String title;
-        private String description;
-        private int countOnMarketplace;
+        private Cost price = new Cost(BigDecimal.TEN, Currency.EUR);
+        private byte[] image = new byte[]{1,2,3,4};
+        private Category category = Category.CLOTHING;
+        private String title = "Title";
+        private String description = "Description";
+        private int countOnMarketplace = 10;
 
         Product newProduct() {
             return productService.newProduct(price,image,category,title,description,countOnMarketplace);

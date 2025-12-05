@@ -10,11 +10,11 @@ public class NameValidator implements Validator<User> {
 
     @Override
     public void validate(User entity) throws ValidationException {
-        if (entity.name == null)
+        if (entity.getName() == null)
             throw new ValidationException("Name can't be null.");
-        if (entity.name.isBlank())
+        if (entity.getName().isBlank())
             throw new ValidationException("Password can not be empty.");
-        if (entity.name.length() > maxCharacters)
+        if (entity.getName().length() > maxCharacters)
             throw new ValidationException("Name can't be longer than " + maxCharacters + ".");
     }
 }

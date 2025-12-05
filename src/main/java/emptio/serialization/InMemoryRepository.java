@@ -12,7 +12,6 @@ public class InMemoryRepository<T extends Identifiable> implements Repository<T>
 
     @Override
     public Integer add(T identifiable) {
-        identifiable.setId(idService.getNewId());
         int id = identifiable.getId();
 
         if (this.find(id) == null)

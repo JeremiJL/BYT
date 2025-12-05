@@ -8,7 +8,7 @@ public class OrderingWeightValidator implements Validator<Product> {
 
     @Override
     public void validate(Product entity) throws ValidationException {
-        if (entity.orderingWeight < 0)
+        if (entity.getOrderingWeight() < 0)
             throw new ValidationException("Ordering weight can't be smaller than 0.");
     }
 }

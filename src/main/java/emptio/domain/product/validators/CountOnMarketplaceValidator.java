@@ -8,7 +8,7 @@ public class CountOnMarketplaceValidator implements Validator<Product> {
 
     @Override
     public void validate(Product entity) throws ValidationException {
-        if (entity.countOnMarketplace < 0)
+        if (entity.getCountOnMarketplace() < 0)
             throw new ValidationException("Count on marketplace can't be smaller than 0");
     }
 }

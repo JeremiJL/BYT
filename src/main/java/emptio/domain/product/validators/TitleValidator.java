@@ -10,11 +10,11 @@ public class TitleValidator implements Validator<Product> {
 
     @Override
     public void validate(Product entity) throws ValidationException {
-        if (entity.title == null)
+        if (entity.getTitle() == null)
             throw new ValidationException("Title can't be null");
-        if (entity.title.isBlank())
+        if (entity.getTitle().isBlank())
             throw new ValidationException("Title can't be empty.");
-        if (entity.title.length() > maxCharacters)
+        if (entity.getTitle().length() > maxCharacters)
             throw new ValidationException("Title can't be longer than " + maxCharacters + " characters.");
     }
 }

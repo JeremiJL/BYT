@@ -13,13 +13,13 @@ public class PricePerInteractionValidator implements Validator<Campaign> {
 
     @Override
     public void validate(Campaign entity) throws ValidationException {
-        if (entity.pricePerInteraction == null)
+        if (entity.getPricePerInteraction() == null)
             throw new ValidationException("Price per interaction can't be null.");
-        if (entity.pricePerInteraction.value == null)
+        if (entity.getPricePerInteraction().value() == null)
             throw new ValidationException("Price per interaction value can't be nul");
-        if (entity.pricePerInteraction.currency != Currency.EUR)
+        if (entity.getPricePerInteraction().currency() != Currency.EUR)
             throw new ValidationException("Price per interaction can be only expressed in EUR.");
-        if (entity.pricePerInteraction.value.compareTo(minPricePerInteraction) < 0)
+        if (entity.getPricePerInteraction().value().compareTo(minPricePerInteraction) < 0)
             throw new ValidationException("Price per interaction can value can't be smaller than " + minPricePerInteraction + ".");
     }
 }

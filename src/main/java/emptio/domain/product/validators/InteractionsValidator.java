@@ -8,7 +8,7 @@ public class InteractionsValidator implements Validator<Product> {
 
     @Override
     public void validate(Product entity) throws ValidationException {
-        if (entity.interactions < 0)
+        if (entity.getInteractions() < 0)
             throw new ValidationException("Interactions number can't be smaller than 0");
     }
 }

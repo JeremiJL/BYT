@@ -13,13 +13,13 @@ public class TotalBudgetValidator implements Validator<Campaign> {
 
     @Override
     public void validate(Campaign entity) throws ValidationException {
-        if (entity.totalBudget == null)
+        if (entity.getTotalBudget() == null)
             throw new ValidationException("Total budget can't be null");
-        if (entity.totalBudget.value == null)
+        if (entity.getTotalBudget().value() == null)
             throw new ValidationException("Total budget value can't be null");
-        if (entity.totalBudget.currency != Currency.EUR)
+        if (entity.getTotalBudget().currency() != Currency.EUR)
             throw new ValidationException("Total budget can be only expressed in EUR.");
-        if (entity.totalBudget.value.compareTo(minCampaignBudget) < 0)
+        if (entity.getTotalBudget().value().compareTo(minCampaignBudget) < 0)
             throw new ValidationException("Campaign's budget can't be smaller than " + minCampaignBudget + ".");
     }
 }

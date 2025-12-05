@@ -10,11 +10,11 @@ public class PriceValidator implements Validator<Product> {
 
     @Override
     public void validate(Product entity) throws ValidationException {
-        if (entity.price.value == null)
+        if (entity.getPrice().value() == null)
             throw new ValidationException("Cost value can't be null.");
-        if (entity.price.currency == null)
+        if (entity.getPrice().currency() == null)
             throw new ValidationException("Cost currency can't be null.");
-        if (entity.price.value.compareTo(BigDecimal.ZERO) <= 0)
+        if (entity.getPrice().value().compareTo(BigDecimal.ZERO) <= 0)
             throw new ValidationException("Cost value can't be smaller or equal than zero.");
     }
 }

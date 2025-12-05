@@ -10,12 +10,12 @@ import java.util.Set;
 
 public class ProductService {
 
-    Set<Validator<Product>> validators;
-    Repository<Product> productRepository;
+    static Set<Validator<Product>> validators;
+    static Repository<Product> productRepository;
 
     public ProductService(Set<Validator<Product>> validators, Repository<Product> productRepository) {
-        this.validators = validators;
-        this.productRepository = productRepository;
+        ProductService.validators = validators;
+        ProductService.productRepository = productRepository;
     }
 
     public Product newProduct(
@@ -23,7 +23,8 @@ public class ProductService {
             String title, String description, int countOnMarketplace)
             throws ValidationException
     {
-        Product product = new Product(price, image, category, title, description, 0.0, countOnMarketplace, 0);
+        Product product = new Product(Product.idService.getNewId(),
+                price, image, category, title, description, 0.0, countOnMarketplace, 0);
 
         try {
             validators.forEach(validator -> validator.validate(product));
@@ -38,27 +39,15 @@ public class ProductService {
 
     public void incrementInteractionCount(int id) {
         Product oldProduct = productRepository.find(id);
-        Product updatedProduct = new Product(
-                oldProduct.price, oldProduct.image,
-                oldProduct.category, oldProduct.title,
-                oldProduct.description, oldProduct.orderingWeight,
-                oldProduct.countOnMarketplace, oldProduct.interactions + 1
-        );
-        updatedProduct.setId(oldProduct.getId());
+        Product updatedProduct = oldProduct.withInteractions(oldProduct.getInteractions() + 1);
         productRepository.update(updatedProduct);
     }
 
     public void decrementCountOnMarketplace(int id) {
         Product oldProduct = productRepository.find(id);
 
-        if (oldProduct.countOnMarketplace > 0) {
-            Product updatedProduct = new Product(
-                    oldProduct.price, oldProduct.image,
-                    oldProduct.category, oldProduct.title,
-                    oldProduct.description, oldProduct.orderingWeight,
-                    oldProduct.countOnMarketplace - 1, oldProduct.interactions
-            );
-            updatedProduct.setId(oldProduct.getId());
+        if (oldProduct.getCountOnMarketplace() > 0) {
+            Product updatedProduct = oldProduct.withCountOnMarketplace(oldProduct.getCountOnMarketplace() - 1);
             productRepository.update(updatedProduct);
         }
         else {

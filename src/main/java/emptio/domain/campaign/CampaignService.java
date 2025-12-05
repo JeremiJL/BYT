@@ -11,19 +11,21 @@ import java.util.Set;
 
 public class CampaignService {
 
-    Set<Validator<Campaign>> validators;
-    Repository<Campaign> campaignRepository;
+    static Set<Validator<Campaign>> validators;
+    static Repository<Campaign> campaignRepository;
 
     public CampaignService(Set<Validator<Campaign>> validators, Repository<Campaign> campaignRepository) {
-        this.validators = validators;
-        this.campaignRepository = campaignRepository;
+        CampaignService.validators = validators;
+        CampaignService.campaignRepository = campaignRepository;
     }
 
     public Campaign newCampaign(
             String name, Placement placement, BigDecimal pricePerInteraction, BigDecimal totalBudget)
             throws ValidationException
     {
-        Campaign campaign = new Campaign(name, placement,
+        Campaign campaign = new Campaign(
+                Campaign.idService.getNewId(),
+                name, placement,
                 new Cost(pricePerInteraction, Currency.EUR),
                 new Cost(totalBudget, Currency.EUR), new Cost(BigDecimal.ZERO, Currency.EUR), 0);
 
@@ -36,11 +38,9 @@ public class CampaignService {
 
     public void recordInteraction(int id) {
         Campaign oldCampaign = campaignRepository.find(id);
-        Campaign updatedCampaign = new Campaign(
-                oldCampaign.name, oldCampaign.placement, oldCampaign.pricePerInteraction,
-                oldCampaign.totalBudget, Cost.add(oldCampaign.budgetSpent, oldCampaign.pricePerInteraction), oldCampaign.interactionsCount + 1
-        );
-        updatedCampaign.setId(oldCampaign.getId());
+        Campaign updatedCampaign = oldCampaign.
+                withInteractionsCount(oldCampaign.getInteractionsCount() + 1)
+                .withBudgetSpent(Cost.add(oldCampaign.getBudgetSpent(), oldCampaign.getPricePerInteraction()));
         campaignRepository.update(
                 validate(updatedCampaign)
         );

@@ -8,7 +8,7 @@ public class CategoryValidator implements Validator<Product> {
 
     @Override
     public void validate(Product entity) throws ValidationException {
-        if (entity.category == null)
+        if (entity.getCategory() == null)
             throw new ValidationException("Category can't be null");
     }
 }

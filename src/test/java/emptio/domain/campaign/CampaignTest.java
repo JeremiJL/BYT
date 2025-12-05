@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -71,7 +70,7 @@ class CampaignTest {
         TotalBudgetValidator totalBudgetValidator = new TotalBudgetValidator();
         validators.add(totalBudgetValidator);
         // Assert potential negative cases - validation fails - exception is thrown
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             campaignBuilder.withTotalBudget(null).newCampaign();
         });
         assertThrows(ValidationException.class, () -> {
@@ -86,7 +85,7 @@ class CampaignTest {
         PricePerInteractionValidator pricePerInteractionValidator = new PricePerInteractionValidator();
         validators.add(pricePerInteractionValidator);
         // Assert potential negative cases - validation fails - exception is thrown
-        assertThrows(ValidationException.class, () -> {
+        assertThrows(NullPointerException.class, () -> {
             campaignBuilder.withPricePerInteraction(null).newCampaign();
         });
         assertThrows(ValidationException.class, () -> {
@@ -102,23 +101,23 @@ class CampaignTest {
         Collections.addAll(validators, new BudgetSpentValidator(), new InteractionsCountValidator());
 
         // Interactions count and spent budget upon creation
-        assertEquals(0, myCampaign.interactionsCount);
-        assertEquals(BigDecimal.ZERO, myCampaign.budgetSpent.value);
+        assertEquals(0, myCampaign.getInteractionsCount());
+        assertEquals(BigDecimal.ZERO, myCampaign.getBudgetSpent().value());
         // Interactions count and spent budget after recording two interactions
         campaignService.recordInteraction(myCampaign.getId());
         campaignService.recordInteraction(myCampaign.getId());
         myCampaign = campaignRepository.find(myCampaign.getId());
-        assertEquals(2, myCampaign.interactionsCount);
-        assertEquals(BigDecimal.valueOf(20), myCampaign.budgetSpent.value);
+        assertEquals(2, myCampaign.getInteractionsCount());
+        assertEquals(BigDecimal.valueOf(20), myCampaign.getBudgetSpent().value());
     }
 
 
     private class CampaignBuilder {
 
-        private String name;
-        private Placement placement;
-        private BigDecimal pricePerInteraction;
-        private BigDecimal totalBudget;
+        private String name = "Campaign";
+        private Placement placement = Placement.LISTING;
+        private BigDecimal pricePerInteraction = BigDecimal.TWO;
+        private BigDecimal totalBudget = BigDecimal.valueOf(100);
 
         Campaign newCampaign() {
             return campaignService.newCampaign(name, placement, pricePerInteraction, totalBudget);

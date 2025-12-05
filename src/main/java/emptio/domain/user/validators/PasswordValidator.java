@@ -14,15 +14,15 @@ public class PasswordValidator implements Validator<User> {
 
     @Override
     public void validate(User entity) throws ValidationException {
-        if (entity.password == null)
+        if (entity.getPassword() == null)
             throw new ValidationException("Password can't be null.");
-        if (entity.password.isBlank())
+        if (entity.getPassword().isBlank())
             throw new ValidationException("Password can not be empty.");
-        if (entity.password.length() > maxCharacters)
+        if (entity.getPassword().length() > maxCharacters)
             throw new ValidationException("Password can't be longer than " + maxCharacters + ".");
-        if (entity.password.length() < minCharacters)
+        if (entity.getPassword().length() < minCharacters)
             throw new ValidationException("Password can't be longer than " + minCharacters + ".");
-        if (Arrays.stream(easyPasswords).anyMatch(password -> password.equals(entity.password)))
+        if (Arrays.stream(easyPasswords).anyMatch(password -> password.equals(entity.getPassword())))
             throw new ValidationException("Password can't be that easy to guess.");
     }
 }
