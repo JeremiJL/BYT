@@ -19,14 +19,14 @@ class UserTest {
     Set<Validator<User>> validators;
 
     UserService userService;
-    UserServiceBuilder userServiceBuilder;
+    UserBuilder userBuilder;
 
     @BeforeEach
     void setUp() {
         userRepository = new InMemoryRepository<>();
         validators = new HashSet<>();
 
-        userServiceBuilder =  new UserServiceBuilder();
+        userBuilder =  new UserBuilder();
         userService = new UserService(validators, userRepository);
     }
 
@@ -35,16 +35,16 @@ class UserTest {
         validators.add(new EmailValidator());
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withEmail("abdulla!pjatk").newUser();
+            userBuilder.withEmail("abdulla!pjatk").newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withEmail(null).newUser();
+            userBuilder.withEmail(null).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withEmail("").newUser();
+            userBuilder.withEmail("").newUser();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        userServiceBuilder.withEmail("abdulla@pjatk").newUser();
+        userBuilder.withEmail("abdulla@pjatk").newUser();
     }
 
     @Test
@@ -53,17 +53,17 @@ class UserTest {
         validators.add(loginValidator);
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withLogin("").newUser();
+            userBuilder.withLogin("").newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withLogin(null).newUser();
+            userBuilder.withLogin(null).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withLogin(stringOfGivenLength(loginValidator.maxCharacters + 1)).newUser();
+            userBuilder.withLogin(stringOfGivenLength(loginValidator.maxCharacters + 1)).newUser();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        userServiceBuilder.withLogin(stringOfGivenLength(loginValidator.maxCharacters - 1)).newUser();
-        userServiceBuilder.withLogin("prof-abdulla").newUser();
+        userBuilder.withLogin(stringOfGivenLength(loginValidator.maxCharacters - 1)).newUser();
+        userBuilder.withLogin("prof-abdulla").newUser();
     }
 
     @Test
@@ -72,17 +72,17 @@ class UserTest {
         validators.add(nameValidator);
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withName("").newUser();
+            userBuilder.withName("").newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withName(null).newUser();
+            userBuilder.withName(null).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withName(stringOfGivenLength(nameValidator.maxCharacters + 1)).newUser();
+            userBuilder.withName(stringOfGivenLength(nameValidator.maxCharacters + 1)).newUser();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        userServiceBuilder.withName(stringOfGivenLength(nameValidator.maxCharacters - 1)).newUser();
-        userServiceBuilder.withName("Mohamed").newUser();
+        userBuilder.withName(stringOfGivenLength(nameValidator.maxCharacters - 1)).newUser();
+        userBuilder.withName("Mohamed").newUser();
     }
 
     @Test
@@ -91,20 +91,20 @@ class UserTest {
         validators.add(passwordValidator);
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withPassword("").newUser();
+            userBuilder.withPassword("").newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withPassword(null).newUser();
+            userBuilder.withPassword(null).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withPassword(stringOfGivenLength(passwordValidator.maxCharacters + 1)).newUser();
+            userBuilder.withPassword(stringOfGivenLength(passwordValidator.maxCharacters + 1)).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withPassword("password").newUser();
+            userBuilder.withPassword("password").newUser();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        userServiceBuilder.withPassword(stringOfGivenLength(passwordValidator.maxCharacters - 1)).newUser();
-        userServiceBuilder.withPassword("GigaChadStrongPassword").newUser();
+        userBuilder.withPassword(stringOfGivenLength(passwordValidator.maxCharacters - 1)).newUser();
+        userBuilder.withPassword("GigaChadStrongPassword").newUser();
     }
 
     @Test
@@ -113,23 +113,23 @@ class UserTest {
         validators.add(phoneNumberValidator);
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withPhoneNumber("").newUser();
+            userBuilder.withPhoneNumber("").newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withPhoneNumber(null).newUser();
+            userBuilder.withPhoneNumber(null).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withPhoneNumber(stringOfGivenLength(phoneNumberValidator.maxCharacters + 1)).newUser();
+            userBuilder.withPhoneNumber(stringOfGivenLength(phoneNumberValidator.maxCharacters + 1)).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withPhoneNumber(stringOfGivenLength(phoneNumberValidator.minCharacters - 1)).newUser();
+            userBuilder.withPhoneNumber(stringOfGivenLength(phoneNumberValidator.minCharacters - 1)).newUser();
         });
 //        TODO : This case should have a personal validator.
 //        assertThrows(ValidationException.class, () -> {
 //            userServiceBuilder.withPhoneNumber("abcdefghi").newUser();
 //        });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        userServiceBuilder.withPhoneNumber("678098152").newUser();
+        userBuilder.withPhoneNumber("678098152").newUser();
     }
 
     @Test
@@ -138,19 +138,19 @@ class UserTest {
         validators.add(surnameValidator);
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withSurname("").newUser();
+            userBuilder.withSurname("").newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withSurname(null).newUser();
+            userBuilder.withSurname(null).newUser();
         });
         assertThrows(ValidationException.class, () -> {
-            userServiceBuilder.withSurname(stringOfGivenLength(surnameValidator.maxCharacters + 1)).newUser();
+            userBuilder.withSurname(stringOfGivenLength(surnameValidator.maxCharacters + 1)).newUser();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        userServiceBuilder.withSurname("Abdulla").newUser();
+        userBuilder.withSurname("Abdulla").newUser();
     }
 
-    private class UserServiceBuilder {
+    private class UserBuilder {
 
         private String name;
         private String surname;
@@ -164,31 +164,31 @@ class UserTest {
             return userService.newUser(name, surname, email, phoneNumber, login, password, address);
         }
 
-        UserServiceBuilder withName(String name) {
+        UserBuilder withName(String name) {
             this.name = name;
             return this;
         }
-        UserServiceBuilder withSurname(String surname) {
+        UserBuilder withSurname(String surname) {
             this.surname = surname;
             return this;
         }
-        UserServiceBuilder withEmail(String email) {
+        UserBuilder withEmail(String email) {
             this.email = email;
             return this;
         }
-        UserServiceBuilder withPhoneNumber(String phoneNumber) {
+        UserBuilder withPhoneNumber(String phoneNumber) {
             this.phoneNumber = phoneNumber;
             return this;
         }
-        UserServiceBuilder withLogin(String login) {
+        UserBuilder withLogin(String login) {
             this.login = login;
             return this;
         }
-        UserServiceBuilder withPassword(String password) {
+        UserBuilder withPassword(String password) {
             this.password = password;
             return this;
         }
-        UserServiceBuilder withAddress(Address address) {
+        UserBuilder withAddress(Address address) {
             this.address = address;
             return this;
         }

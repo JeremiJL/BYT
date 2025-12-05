@@ -11,4 +11,10 @@ public class Cost {
         this.value = value;
         this.currency = currency;
     }
+
+    public static Cost add(Cost a, Cost b) {
+        if (a.currency != b.currency)
+            throw new CostException("Can't add costs of different currencies.");
+        else return new Cost(a.value.add(b.value), a.currency);
+    }
 }
