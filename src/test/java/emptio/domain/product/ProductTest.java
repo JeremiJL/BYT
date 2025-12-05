@@ -7,6 +7,7 @@ import emptio.domain.common.Category;
 import emptio.domain.common.Cost;
 import emptio.domain.common.Currency;
 import emptio.domain.product.validators.*;
+import emptio.domain.user.User;
 import emptio.serialization.InMemoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -169,6 +170,7 @@ class ProductTest {
 
     private class ProductBuilder {
 
+        private User seller = null;
         private Cost price = new Cost(BigDecimal.TEN, Currency.EUR);
         private byte[] image = new byte[]{1,2,3,4};
         private Category category = Category.CLOTHING;
@@ -177,7 +179,7 @@ class ProductTest {
         private int countOnMarketplace = 10;
 
         Product newProduct() {
-            return productService.newProduct(price,image,category,title,description,countOnMarketplace);
+            return productService.newProduct(seller, price,image,category,title,description,countOnMarketplace);
         }
 
         ProductBuilder withPrice(Cost price) {

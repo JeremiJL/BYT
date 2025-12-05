@@ -4,6 +4,7 @@ import emptio.domain.Repository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.campaign.validators.*;
+import emptio.domain.user.User;
 import emptio.serialization.InMemoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -114,13 +115,14 @@ class CampaignTest {
 
     private class CampaignBuilder {
 
+        private User owner = null;
         private String name = "Campaign";
         private Placement placement = Placement.LISTING;
         private BigDecimal pricePerInteraction = BigDecimal.TWO;
         private BigDecimal totalBudget = BigDecimal.valueOf(100);
 
         Campaign newCampaign() {
-            return campaignService.newCampaign(name, placement, pricePerInteraction, totalBudget);
+            return campaignService.newCampaign(owner, name, placement, pricePerInteraction, totalBudget);
         }
 
         CampaignBuilder withName(String name) {

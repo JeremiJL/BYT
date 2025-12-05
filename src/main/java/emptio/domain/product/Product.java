@@ -3,6 +3,7 @@ package emptio.domain.product;
 import emptio.domain.common.Blockable;
 import emptio.domain.common.Category;
 import emptio.domain.common.Cost;
+import emptio.domain.user.User;
 import emptio.serialization.Identifiable;
 import lombok.*;
 
@@ -10,6 +11,7 @@ import lombok.*;
 @Value
 public class Product extends Blockable implements Identifiable {
 
+    @NonNull User seller;
     int id;
     @NonNull Cost price;
     @NonNull byte[] image;
