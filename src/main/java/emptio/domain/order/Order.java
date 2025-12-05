@@ -20,9 +20,6 @@ import java.util.List;
     @NonNull List<Payment> payments;
     List<Payment> returns;
 
-    public final Cart cart;
-    public final Campaign campaign;
-
     int id;
     int minutesToLive;
     @NonNull LocalDateTime bornDateTime;
