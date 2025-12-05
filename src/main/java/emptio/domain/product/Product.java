@@ -11,7 +11,7 @@ import lombok.*;
 @Value
 public class Product extends Blockable implements Identifiable {
 
-    @NonNull User seller;
+    User seller;
     int id;
     @NonNull Cost price;
     @NonNull byte[] image;

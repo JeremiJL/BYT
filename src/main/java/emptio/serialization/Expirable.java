@@ -4,10 +4,7 @@ import java.time.LocalDateTime;
 
 public interface Expirable {
 
-    void setMinutesToLive(int minutes);
     int getMinutesToLive();
-
-    void setBornDateTime(LocalDateTime bornDateTime);
     LocalDateTime getBornDateTime();
 
     default boolean isDead() {

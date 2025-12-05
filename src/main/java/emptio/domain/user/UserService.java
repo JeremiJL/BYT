@@ -18,7 +18,7 @@ public class UserService {
         UserService.userRepository = userRepository;
     }
 
-    public User newUser(String name, String surname,
+    static public User newUser(String name, String surname,
                         String email, String number,
                         String login, String password, Address address) throws ValidationException
     {
@@ -36,7 +36,11 @@ public class UserService {
         );
     }
 
-    private LocalDate today() {
+    static public User getEmptioUser() {
+        return userRepository.find(1);
+    }
+
+    private static LocalDate today() {
         return LocalDate.now();
     }
 }

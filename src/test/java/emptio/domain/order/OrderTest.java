@@ -11,6 +11,9 @@ public class OrderTest {
     }
 
     @Test
-    void shouldValidatePrice() {
+    void shouldValidatePayments() {
+
     }
+
+
 }
