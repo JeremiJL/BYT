@@ -10,14 +10,12 @@ import java.util.Set;
 
 public class UserService {
 
-    private final Set<Validator<User>> validators;
-    private final Repository<User> userRepository;
-    private final IdService idService;
+    static private Set<Validator<User>> validators;
+    static private Repository<User> userRepository;
 
-    public UserService(Set<Validator<User>> validators, Repository<User> userRepository, IdService idService) {
-        this.validators = validators;
-        this.userRepository = userRepository;
-        this.idService = idService;
+    public UserService(Set<Validator<User>> validators, Repository<User> userRepository) {
+        UserService.validators = validators;
+        UserService.userRepository = userRepository;
     }
 
     public User newUser(String name, String surname,
@@ -25,7 +23,7 @@ public class UserService {
                         String login, String password, Address address) throws ValidationException
     {
         LocalDate today = today();
-        User user = new User(name, surname, email, number, login, password, today, address);
+        User user = new User(User.idService.getNewId(), name, surname, email, number, login, password, address, today);
 
         try {
             validators.forEach(validator -> validator.validate(user));
@@ -33,8 +31,9 @@ public class UserService {
             throw new ValidationException("Failed to create a user with given parameters, cause : " + e.getMessage());
         }
 
-        user.setId(idService.getNewId());
-        return userRepository.add(user);
+        return userRepository.find(
+                userRepository.add(user)
+        );
     }
 
     private LocalDate today() {

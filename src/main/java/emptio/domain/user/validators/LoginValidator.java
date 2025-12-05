@@ -10,11 +10,11 @@ public class LoginValidator implements Validator<User> {
 
     @Override
     public void validate(User entity) throws ValidationException {
-        if (entity.login == null)
+        if (entity.getLogin() == null)
             throw new ValidationException("Login can't be null.");
-        if (entity.login.isBlank())
+        if (entity.getLogin().isBlank())
             throw new ValidationException("Password can not be empty.");
-        if (entity.login.length() > maxCharacters)
+        if (entity.getLogin().length() > maxCharacters)
             throw new ValidationException("Name can't be longer than " + maxCharacters + ".");
     }
 }

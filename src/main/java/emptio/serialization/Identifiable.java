@@ -1,6 +1,6 @@
 package emptio.serialization;
 
 public interface Identifiable {
-    void setId(int id);
+    IdService idService = new IdService();
     int getId();
 }

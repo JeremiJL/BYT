@@ -8,6 +8,7 @@ public class PlacementValidator implements Validator<Campaign> {
 
     @Override
     public void validate(Campaign entity) throws ValidationException {
-
+        if (entity.getPlacement() == null)
+            throw new ValidationException("Placement can't be null.");
     }
 }

@@ -17,9 +17,9 @@ public class AddressValidator implements Validator<User> {
 
     @Override
     public void validate(User entity) throws ValidationException {
-        if (entity.address == null)
+        if (entity.getAddress() == null)
             throw new ValidationException("Name can't be null.");
-        validators.forEach(validator -> validator.validate(entity.address));
+        validators.forEach(validator -> validator.validate(entity.getAddress()));
     }
 }
 
