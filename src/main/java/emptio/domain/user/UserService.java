@@ -13,14 +13,17 @@ public class UserService {
     static private Set<Validator<User>> validators;
     static private Repository<User> userRepository;
 
-    public UserService(Set<Validator<User>> validators, Repository<User> userRepository) {
+    public static void setValidators(Set<Validator<User>> validators) {
         UserService.validators = validators;
+    }
+
+    public static void setUserRepository(Repository<User> userRepository) {
         UserService.userRepository = userRepository;
     }
 
     static public User newUser(String name, String surname,
-                        String email, String number,
-                        String login, String password, Address address) throws ValidationException
+                               String email, String number,
+                               String login, String password, Address address) throws ValidationException
     {
         LocalDate today = today();
         User user = new User(User.idService.getNewId(), name, surname, email, number, login, password, address, today);

@@ -25,9 +25,9 @@ class UserTest {
     void setUp() {
         userRepository = new InMemoryRepository<>();
         validators = new HashSet<>();
-
         userBuilder =  new UserBuilder();
-        userService = new UserService(validators, userRepository);
+        UserService.setUserRepository(userRepository);
+        UserService.setValidators(validators);
     }
 
     @Test

@@ -13,7 +13,6 @@ import java.util.List;
 
 @Value
 public class Cart implements Identifiable, Expirable {
-
     User owner;
     List<Product> products;
     int id;

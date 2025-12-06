@@ -30,7 +30,8 @@ class CampaignTest {
         campaignRepository = new InMemoryRepository<>();
         validators = new HashSet<>();
         campaignBuilder = new CampaignBuilder();
-        campaignService = new CampaignService(validators, campaignRepository);
+        CampaignService.setCampaignRepository(campaignRepository);
+        CampaignService.setValidators(validators);
     }
 
     @Test

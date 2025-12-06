@@ -3,7 +3,6 @@ package emptio.domain.cart;
 import emptio.domain.Repository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
-import emptio.domain.order.Order;
 import emptio.domain.product.Product;
 import emptio.domain.user.User;
 
@@ -35,5 +34,4 @@ public class CartService {
         }
         return cartToValidate;
     }
-
 }
