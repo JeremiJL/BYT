@@ -2,6 +2,7 @@ package emptio.adapters.rest.login;
 
 import com.sun.net.httpserver.HttpExchange;
 import emptio.adapters.rest.BasicHandler;
+import emptio.adapters.rest.utils.HttpFormToJson;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +15,10 @@ public class LoginHandler extends BasicHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        showPage(exchange);
+
+        byte[] requestData = exchange.getRequestBody().readAllBytes();
+        String readableRequestData = HttpFormToJson.convert(requestData);
+
+        System.out.println(readableRequestData);
     }
 }
