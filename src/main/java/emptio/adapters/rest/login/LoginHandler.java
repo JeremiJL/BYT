@@ -1,18 +1,19 @@
-package emptio.adapters.rest;
+package emptio.adapters.rest.login;
 
 import com.sun.net.httpserver.HttpExchange;
+import emptio.adapters.rest.BasicHandler;
 
 import java.io.File;
 import java.io.IOException;
 
-public class HomeHandler extends BasicHandler {
+public class LoginHandler extends BasicHandler {
 
-    public HomeHandler(File page) {
+    public LoginHandler(File page) {
         super(page);
     }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        this.showPage(exchange);
+        showPage(exchange);
     }
 }
