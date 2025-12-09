@@ -30,7 +30,7 @@ public class UserHandler implements HttpHandler {
             os.write(response.toString().getBytes());
             os.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error in " + this.getClass().getName() +" : " + e);
         }
     }
 }

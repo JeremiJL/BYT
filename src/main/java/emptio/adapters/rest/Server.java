@@ -18,6 +18,9 @@ public class Server {
     private static void linkHandlers(HttpServer server) {
         server.createContext("/user", new UserHandler());
         server.createContext("/product", new ProductHandler());
+        server.createContext("/", new LoginHandler());
+        server.createContext("/home", new HomeHandler());
+        server.createContext("/new_account", new NewAccountHandler());
     }
 
 }

@@ -3,12 +3,12 @@ package emptio.adapters.rest;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Scanner;
 
-public class ProductHandler implements HttpHandler {
+public class HomeHandler implements HttpHandler {
+
+    private final File homePage = new File("ui/home.html");
 
     @Override
     public void handle(HttpExchange exchange) {
@@ -19,7 +19,6 @@ public class ProductHandler implements HttpHandler {
 
             // Build response
             StringBuilder response = new StringBuilder();
-            response.append("Endpoint - Product | My response : ");
             while (scanner.hasNextLine())
                 response.append(scanner.nextLine());
             is.close();
@@ -30,7 +29,7 @@ public class ProductHandler implements HttpHandler {
             os.write(response.toString().getBytes());
             os.close();
         } catch (IOException e) {
-            System.out.println("Error in " + this.getClass().getName() +" : " + e);
+            System.out.println("Error in HomeHandler : " + e);
         }
     }
 }
