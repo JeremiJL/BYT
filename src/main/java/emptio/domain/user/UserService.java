@@ -4,6 +4,8 @@ import emptio.domain.*;
 import emptio.serialization.IdService;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class UserService {
@@ -16,8 +18,17 @@ public class UserService {
         UserService.validators = validators;
     }
 
+    @SafeVarargs
+    public static void setValidators(Validator<User> ... validators) {
+        UserService.validators = new HashSet<>(List.of(validators));
+    }
+
     public static void setUserRepository(Repository<User> userRepository) {
         UserService.userRepository = userRepository;
+    }
+
+    public static void setCredentialsRepository(CredentialsRepository credentialsRepository) {
+        UserService.credentialsRepository = credentialsRepository;
     }
 
     public static User newUser(String name, String surname,

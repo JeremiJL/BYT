@@ -9,7 +9,7 @@ import lombok.experimental.NonFinal;
 import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
-@Value public class User extends Blockable implements Identifiable {
+@Value @NonFinal public class User extends Blockable implements Identifiable {
 
     @NonNull int id;
     @NonNull String name;

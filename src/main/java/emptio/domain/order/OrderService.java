@@ -27,6 +27,8 @@ public class OrderService {
     private static Set<Validator<Order>> validators;
     private static PaymentGateway paymentGateway;
 
+    private final static int ORDER_TIME_TO_LIVE_IN_MINUTES = 30;
+
     static public Order newOrder(Cart cart, Campaign campaign) {
 
         Set<Payment> payments = new HashSet<>();
@@ -40,7 +42,7 @@ public class OrderService {
                     UserService.getEmptioUser(),
                     campaign.getOwner()));
 
-        Order order = new Order(payments, LocalDateTime.now());
+        Order order = new Order(payments, Order.idService.getNewId(), ORDER_TIME_TO_LIVE_IN_MINUTES, LocalDateTime.now());
 
         return orderRepository.find(
                 orderRepository.add(

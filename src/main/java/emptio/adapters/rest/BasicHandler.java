@@ -4,8 +4,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import lombok.NonNull;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
@@ -27,15 +25,17 @@ public abstract class BasicHandler implements HttpHandler {
         os.close();
     }
 
-    public void changePage(Map<String, String> changes) throws IOException {
+    public void renderTemplate(Map<String, String> templateData) throws IOException {
 
         String pageAsText = new String(page);
 
-        for (Entry<String, String> change : changes.entrySet()) {
-            String templatedKey = "{{ " + change.getKey() + " }}";
-            pageAsText = pageAsText.replaceFirst(templatedKey, change.getValue());
+        for (Entry<String, String> record : templateData.entrySet()) {
+            String templatedKey = "{{ " + record.getKey() + " }}";
+            String templatedValue = record.getValue();
+            pageAsText = pageAsText.replace(templatedKey, templatedValue);
         }
 
+        this.page = pageAsText.getBytes();
     }
 
 }
