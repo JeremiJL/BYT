@@ -4,21 +4,22 @@ import emptio.domain.common.Blockable;
 import emptio.domain.common.State;
 import emptio.serialization.Identifiable;
 import lombok.*;
+import lombok.experimental.NonFinal;
 
 import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
-@Data public class User extends Blockable implements Identifiable {
+@Value public class User extends Blockable implements Identifiable {
 
-    final int id;
-    final String name;
-    final String surname;
-    final String email;
-    final String phoneNumber;
-    final String login;
-    final String password;
-    final Address address;
-    final @NonNull LocalDate lastLogin;
+    @NonNull int id;
+    @NonNull String name;
+    @NonNull String surname;
+    @NonNull String email;
+    @NonNull String phoneNumber;
+    @NonNull String login;
+    @NonNull String password;
+    @NonNull Address address;
+    @NonFinal @NonNull LocalDate lastLogin;
 
     public State getState() {
         if (this.lastLogin.isBefore(LocalDate.now().minusYears(2))) {

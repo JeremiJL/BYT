@@ -11,7 +11,7 @@ import java.io.OutputStream;
 
 public class NewAccountFormHandler extends BasicHandler {
 
-    public NewAccountFormHandler(File page) {
+    public NewAccountFormHandler(byte[] page) {
         super(page);
     }
 

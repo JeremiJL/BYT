@@ -1,8 +1,6 @@
 package emptio.domain.user;
 
-import emptio.domain.Repository;
-import emptio.domain.ValidationException;
-import emptio.domain.Validator;
+import emptio.domain.*;
 import emptio.serialization.IdService;
 
 import java.time.LocalDate;
@@ -12,6 +10,7 @@ public class UserService {
 
     static private Set<Validator<User>> validators;
     static private Repository<User> userRepository;
+    static private CredentialsRepository credentialsRepository;
 
     public static void setValidators(Set<Validator<User>> validators) {
         UserService.validators = validators;
@@ -21,7 +20,7 @@ public class UserService {
         UserService.userRepository = userRepository;
     }
 
-    static public User newUser(String name, String surname,
+    public static User newUser(String name, String surname,
                                String email, String number,
                                String login, String password, Address address) throws ValidationException
     {
@@ -34,17 +33,26 @@ public class UserService {
             throw new ValidationException("Failed to create a user with given parameters, cause : " + e.getMessage());
         }
 
+        credentialsRepository.setCredentials(user.getLogin(), new UserCredentials(user.getId(),user.getPassword()));
+
         return userRepository.find(
                 userRepository.add(user)
         );
     }
 
-    static public User getEmptioUser() {
+    public static User getEmptioUser() {
         return userRepository.find(1);
+    }
+
+    public static int getUserId(String login, String password) {
+        UserCredentials credentials = credentialsRepository.getCredentials(login);
+        if (credentials.getPassword().equals(password))
+            return credentials.getId();
+        else
+            throw new CredentialsException("Given password does not match given login");
     }
 
     private static LocalDate today() {
         return LocalDate.now();
     }
 }
-

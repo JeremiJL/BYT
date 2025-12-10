@@ -12,7 +12,7 @@ import java.util.Set;
 @Data public class Order implements Identifiable, Expirable {
     @NonNull Set<Payment> payments;
     Set<Payment> returns;
-    int id;
-    int minutesToLive;
-    @NonNull LocalDateTime bornDateTime;
+    @NonNull final int id;
+    @NonNull final int minutesToLive;
+    @NonNull final LocalDateTime bornDateTime;
 }

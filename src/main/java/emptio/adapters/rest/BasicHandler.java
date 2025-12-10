@@ -2,28 +2,40 @@ package emptio.adapters.rest;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import lombok.NonNull;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public abstract class BasicHandler implements HttpHandler {
 
-    private final File page;
+    @NonNull private byte[] page;
 
-    public BasicHandler(File page) {
+    public BasicHandler(byte[] page) {
         this.page = page;
     }
 
     public void showPage(HttpExchange exchange) throws IOException {
 
-        FileInputStream fileInputStream = new FileInputStream(page);
-        byte[] pageBytes = fileInputStream.readAllBytes();
-
-        exchange.sendResponseHeaders(200, pageBytes.length);
+        exchange.sendResponseHeaders(200, page.length);
         OutputStream os = exchange.getResponseBody();
-        os.write(pageBytes);
+        os.write(page);
         os.close();
     }
+
+    public void changePage(Map<String, String> changes) throws IOException {
+
+        String pageAsText = new String(page);
+
+        for (Entry<String, String> change : changes.entrySet()) {
+            String templatedKey = "{{ " + change.getKey() + " }}";
+            pageAsText = pageAsText.replaceFirst(templatedKey, change.getValue());
+        }
+
+    }
+
 }

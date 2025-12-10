@@ -8,14 +8,14 @@ import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Value public class Campaign extends Blockable implements Identifiable {
-    int id;
-    User owner;
-    String name;
-    Placement placement;
-    Cost pricePerInteraction;
-    Cost totalBudget;
-    @With Cost budgetSpent;
-    @With int interactionsCount;
+    @NonNull int id;
+    @NonNull User owner;
+    @NonNull String name;
+    @NonNull Placement placement;
+    @NonNull Cost pricePerInteraction;
+    @NonNull Cost totalBudget;
+    @NonNull @With Cost budgetSpent;
+    @NonNull @With int interactionsCount;
 }
 
 

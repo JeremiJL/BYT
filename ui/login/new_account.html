@@ -5,51 +5,51 @@
     <title>Emptio</title>
 </head>
 <body>
-    <h1>Welcome to Emptio! </h1>
+    <h1>Welcome to Emptio!</h1>
     <h1>Create new account</h1>
     <form action="/create_account" method="post">
 
         <p>Type of account you would like to create :</p>
 
-        <input type="radio" id="shopper_account" name="type_of_account" value="shopper">
+        <input type="radio" id="shopper_account" name="type_of_account" value="shopper" required>
         <label for="shopper_account">shopper</label><br>
-        <input type="radio" id="merchant_account" name="type_of_account" value="merchant">
+        <input type="radio" id="merchant_account" name="type_of_account" value="merchant" required>
         <label for="merchant_account">merchant</label><br>
-        <input type="radio" id="advertiser_account" name="type_of_account" value="advertiser">
+        <input type="radio" id="advertiser_account" name="type_of_account" value="advertiser" required>
         <label for="advertiser_account">advertiser</label><br>
 
 
         <p>New login credentials:</p>
 
         <label for="login">login:</label>
-        <input type="text" id="login" name="login"><br><br>
+        <input type="text" id="login" name="login" required><br><br>
 
         <label for="password">password:</label>
-        <input type="password" id="password" name="password"><br><br>
+        <input type="password" id="password" name="password" required><br><br>
 
         <p>Your full name :</p>
 
         <label for="name">first name:</label>
-        <input type="text" id="name" name="name"><br><br>
+        <input type="text" id="name" name="name" required><br><br>
 
         <label for="surname">surname:</label>
-        <input type="text" id="surname" name="surname"><br><br>
+        <input type="text" id="surname" name="surname" required><br><br>
 
         <p>Contact information :</p>
 
         <label for="email">email:</label>
-        <input type="text" id="email" name="email"><br><br>
+        <input type="text" id="email" name="email" required><br><br>
 
         <label for="phone_number">phone number:</label>
-        <input type="text" id="phone_number" name="phone_number"><br><br>
+        <input type="text" id="phone_number" name="phone_number" required><br><br>
 
         <p>Address :</p>
 
         <label for="postal_code">postal code:</label>
-        <input type="text" id="postal_code" name="postal_code"><br><br>
+        <input type="text" id="postal_code" name="postal_code" required><br><br>
 
         <label for="street_name">street name:</label>
-        <input type="text" id="street_name" name="street_name"><br><br>
+        <input type="text" id="street_name" name="street_name" required><br><br>
 
         <label for="country">country:</label>
         <input type="text" id="country" name="country"><br><br>

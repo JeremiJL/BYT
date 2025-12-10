@@ -11,7 +11,7 @@ import java.io.OutputStream;
 
 public class LoginFormHandler extends BasicHandler {
 
-    public LoginFormHandler(File page) {
+    public LoginFormHandler(byte[] page) {
         super(page);
     }
 

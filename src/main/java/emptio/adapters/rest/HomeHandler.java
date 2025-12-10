@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class HomeHandler extends BasicHandler {
 
-    public HomeHandler(File page) {
+    public HomeHandler(byte[] page) {
         super(page);
     }
 
