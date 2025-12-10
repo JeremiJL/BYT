@@ -11,15 +11,15 @@ import lombok.*;
 @Value public class Product extends Blockable implements Identifiable {
 
     @NonNull User seller;
-    @NonNull int id;
+    int id;
     @NonNull Cost price;
     @NonNull byte[] image;
     @NonNull Category category;
     @NonNull String title;
     @NonNull String description;
-    @NonNull double orderingWeight;
-    @NonNull @With int countOnMarketplace;
-    @NonNull @With int interactions;
+    double orderingWeight;
+    @With int countOnMarketplace;
+    @With int interactions;
 }
 
 

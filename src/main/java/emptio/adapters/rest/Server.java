@@ -4,7 +4,7 @@ import com.sun.net.httpserver.HttpServer;
 import emptio.adapters.rest.login.CreateAccountHandler;
 import emptio.adapters.rest.login.LoginFormHandler;
 import emptio.adapters.rest.login.LoginHandler;
-import emptio.adapters.rest.login.NewAccountFormHandler;
+import emptio.adapters.rest.login.CreateAccountFormHandler;
 import emptio.adapters.rest.utils.FileToBytes;
 
 import java.io.File;
@@ -28,7 +28,7 @@ public class Server {
 
         server.createContext("/home", new HomeHandler(FileToBytes.getBytes(new File("ui/home.html")))); // Home page for logged users
 
-        server.createContext("/new_account", new NewAccountFormHandler(FileToBytes.getBytes(new File("ui/login/new_account.html")))); // New account form page for new users
+        server.createContext("/create_account_form", new CreateAccountFormHandler(FileToBytes.getBytes(new File("ui/login/create_account_form.html")))); // New account form page for new users
         server.createContext("/create_account", new CreateAccountHandler(FileToBytes.getBytes(new File("ui/login/create_account.html")))); // New account data is sent, redirect to success/failure page performed
     }
 

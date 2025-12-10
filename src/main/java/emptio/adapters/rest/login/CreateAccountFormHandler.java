@@ -1,17 +1,13 @@
 package emptio.adapters.rest.login;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import emptio.adapters.rest.BasicHandler;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
-public class NewAccountFormHandler extends BasicHandler {
+public class CreateAccountFormHandler extends BasicHandler {
 
-    public NewAccountFormHandler(byte[] page) {
+    public CreateAccountFormHandler(byte[] page) {
         super(page);
     }
 

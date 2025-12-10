@@ -22,7 +22,9 @@ public class HttpFormConverter {
             String[] pairs = plain.split("&");
             Map<String, String> map = new HashMap<>();
             for (String pair : pairs) {
-                map.put(pair.split("=")[0],pair.split("=")[1]);
+                String key = pair.split("=")[0];
+                String value = (pair.split("=").length == 1) ? null : pair.split("=")[1];
+                map.put(key,value);
             }
             return map;
         } catch (RuntimeException e) {

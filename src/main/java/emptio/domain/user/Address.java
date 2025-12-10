@@ -10,5 +10,5 @@ import lombok.Value;
     @NonNull String country;
     @NonNull String city;
     @NonNull int buildingNumber;
-    int apartmentNumber;
+    Integer apartmentNumber;
 }

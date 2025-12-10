@@ -8,7 +8,7 @@ import lombok.Value;
 import lombok.With;
 
 @Value public class Payment implements Identifiable {
-    @NonNull int id;
+    int id;
     @NonNull Cost cost;
     @NonNull @With User receiver;
     @NonNull @With User payer;
