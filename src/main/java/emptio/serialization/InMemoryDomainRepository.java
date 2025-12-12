@@ -1,12 +1,12 @@
 package emptio.serialization;
 
-import emptio.domain.Repository;
+import emptio.domain.DomainRepository;
 import emptio.domain.RepositoryException;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class InMemoryRepository<T extends Identifiable> implements Repository<T> {
+public class InMemoryDomainRepository<T extends Identifiable> implements DomainRepository<T> {
 
     Map<Integer, T> extent = new HashMap<>();
 

@@ -3,13 +3,13 @@ package emptio.domain.campaign;
 import emptio.builder.AddressBuilder;
 import emptio.builder.CampaignBuilder;
 import emptio.builder.UserBuilder;
-import emptio.domain.Repository;
+import emptio.domain.DomainRepository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.campaign.validators.*;
 import emptio.domain.user.UserService;
 import emptio.serialization.InMemoryCredentialsRepository;
-import emptio.serialization.InMemoryRepository;
+import emptio.serialization.InMemoryDomainRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CampaignTest {
 
     CampaignService campaignService;
-    Repository<Campaign> campaignRepository;
+    DomainRepository<Campaign> campaignRepository;
     Set<Validator<Campaign>> validators;
     CampaignBuilder campaignBuilder;
     UserBuilder userBuilder;
@@ -33,11 +33,11 @@ class CampaignTest {
 
     @BeforeEach
     void setUp() {
-        campaignRepository = new InMemoryRepository<>();
+        campaignRepository = new InMemoryDomainRepository<>();
         validators = new HashSet<>();
         campaignService = new CampaignService(validators,campaignRepository);
         addressBuilder = new AddressBuilder();
-        userService = new UserService(new InMemoryRepository<>(), new InMemoryCredentialsRepository(), new HashSet<>());
+        userService = new UserService(new InMemoryDomainRepository<>(), new InMemoryCredentialsRepository(), new HashSet<>());
         userBuilder = new UserBuilder(userService, addressBuilder);
         campaignBuilder = new CampaignBuilder(campaignService, userBuilder);
     }

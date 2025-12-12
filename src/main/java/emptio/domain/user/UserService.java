@@ -1,7 +1,6 @@
 package emptio.domain.user;
 
 import emptio.domain.*;
-import emptio.serialization.IdService;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -11,17 +10,17 @@ import java.util.Set;
 public class UserService {
 
     private final Set<Validator<User>> validators;
-    private final Repository<User> userRepository;
+    private final DomainRepository<User> userRepository;
     private final CredentialsRepository credentialsRepository;
 
     @SafeVarargs
-    public UserService(Repository<User> userRepository, CredentialsRepository credentialsRepository, Validator<User>... validators) {
+    public UserService(DomainRepository<User> userRepository, CredentialsRepository credentialsRepository, Validator<User>... validators) {
         this.validators = new HashSet<>(List.of(validators));
         this.userRepository = userRepository;
         this.credentialsRepository = credentialsRepository;
     }
 
-    public UserService(Repository<User> userRepository, CredentialsRepository credentialsRepository, Set<Validator<User>> validators) {
+    public UserService(DomainRepository<User> userRepository, CredentialsRepository credentialsRepository, Set<Validator<User>> validators) {
         this.validators = validators;
         this.userRepository = userRepository;
         this.credentialsRepository = credentialsRepository;

@@ -4,6 +4,6 @@ import lombok.NonNull;
 import lombok.Value;
 
 @Value public class UserCredentials {
-    @NonNull int id;
+    int id;
     @NonNull String password;
 }

@@ -1,12 +1,11 @@
 package emptio.domain.campaign;
 
-import emptio.domain.Repository;
+import emptio.domain.DomainRepository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.common.Cost;
 import emptio.domain.common.Currency;
 import emptio.domain.user.User;
-import lombok.NonNull;
 
 import java.math.BigDecimal;
 import java.util.Set;
@@ -14,9 +13,9 @@ import java.util.Set;
 public class CampaignService {
 
     private final Set<Validator<Campaign>> validators;
-    private final Repository<Campaign> campaignRepository;
+    private final DomainRepository<Campaign> campaignRepository;
 
-    public CampaignService(Set<Validator<Campaign>> validators, Repository<Campaign> campaignRepository) {
+    public CampaignService(Set<Validator<Campaign>> validators, DomainRepository<Campaign> campaignRepository) {
         this.validators = validators;
         this.campaignRepository = campaignRepository;
     }

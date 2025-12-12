@@ -3,17 +3,16 @@ package emptio.domain.product;
 import emptio.builder.AddressBuilder;
 import emptio.builder.ProductBuilder;
 import emptio.builder.UserBuilder;
-import emptio.domain.Repository;
+import emptio.domain.DomainRepository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.common.Category;
 import emptio.domain.common.Cost;
 import emptio.domain.common.Currency;
 import emptio.domain.product.validators.*;
-import emptio.domain.user.User;
 import emptio.domain.user.UserService;
 import emptio.serialization.InMemoryCredentialsRepository;
-import emptio.serialization.InMemoryRepository;
+import emptio.serialization.InMemoryDomainRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ProductTest {
 
-    Repository<Product> productRepository;
+    DomainRepository<Product> productRepository;
     Set<Validator<Product>> validators;
 
     ProductService productService;
@@ -37,10 +36,10 @@ class ProductTest {
 
     @BeforeEach
     void setUp() {
-        productRepository = new InMemoryRepository<>();
+        productRepository = new InMemoryDomainRepository<>();
         validators = new HashSet<>();
         productService = new ProductService(validators, productRepository);
-        userService = new UserService(new InMemoryRepository<>(), new InMemoryCredentialsRepository(), new HashSet<>());
+        userService = new UserService(new InMemoryDomainRepository<>(), new InMemoryCredentialsRepository(), new HashSet<>());
         addressBuilder = new AddressBuilder();
         userBuilder = new UserBuilder(userService, addressBuilder);
         productBuilder =  new ProductBuilder(productService, userBuilder);

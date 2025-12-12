@@ -1,7 +1,7 @@
 package emptio.domain.order;
 
 import emptio.adapters.PaymentGateway;
-import emptio.domain.Repository;
+import emptio.domain.DomainRepository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.campaign.Campaign;
@@ -23,14 +23,14 @@ import static java.util.stream.Collectors.toList;
 
 public class OrderService {
 
-    private final Repository<Order> orderRepository;
+    private final DomainRepository<Order> orderRepository;
     private final Set<Validator<Order>> validators;
     private final PaymentGateway paymentGateway;
     private final UserService userService;
 
     private final static int ORDER_TIME_TO_LIVE_IN_MINUTES = 30;
 
-    public OrderService(Repository<Order> orderRepository, Set<Validator<Order>> validators, PaymentGateway paymentGateway, UserService userService) {
+    public OrderService(DomainRepository<Order> orderRepository, Set<Validator<Order>> validators, PaymentGateway paymentGateway, UserService userService) {
         this.orderRepository = orderRepository;
         this.validators = validators;
         this.paymentGateway = paymentGateway;

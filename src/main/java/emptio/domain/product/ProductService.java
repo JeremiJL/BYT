@@ -1,6 +1,6 @@
 package emptio.domain.product;
 
-import emptio.domain.Repository;
+import emptio.domain.DomainRepository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.common.Category;
@@ -12,9 +12,9 @@ import java.util.Set;
 public class ProductService {
 
     private final Set<Validator<Product>> validators;
-    private final Repository<Product> productRepository;
+    private final DomainRepository<Product> productRepository;
 
-    public ProductService(Set<Validator<Product>> validators, Repository<Product> productRepository) {
+    public ProductService(Set<Validator<Product>> validators, DomainRepository<Product> productRepository) {
         this.validators = validators;
         this.productRepository = productRepository;
     }

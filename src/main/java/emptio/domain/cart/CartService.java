@@ -1,6 +1,6 @@
 package emptio.domain.cart;
 
-import emptio.domain.Repository;
+import emptio.domain.DomainRepository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.product.Product;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CartService {
 
-    private static Repository<Cart> cartRepository;
+    private static DomainRepository<Cart> cartRepository;
     private static List<Validator<Cart>> validators;
 
     public static Cart newCart(
