@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emptio</title>
+</head>
+<body>
+    <h1>Welcome to Emptio!</h1>
+    <h2> Login {{ LOGIN_RESULT }} </h2>
+    <button id="home_button" onclick="document.location='/home'">Home</button><br><br>
+    <button id="try_again_button" onclick="document.location='/'">Try again</button>
+</body>
+<script>
+    document.cookie = "user_id={{ USER_ID }}";
+    document.getElementById("home_button").style.visibility = "{{ HOME_REDIRECT_VISIBILITY }}";
+    document.getElementById("try_again_button").style.visibility = "{{ TRY_AGAIN_REDIRECT_VISIBILITY }}";
+</script>
+</html>

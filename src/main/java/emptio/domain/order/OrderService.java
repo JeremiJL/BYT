@@ -1,7 +1,7 @@
 package emptio.domain.order;
 
 import emptio.adapters.PaymentGateway;
-import emptio.domain.Repository;
+import emptio.domain.DomainRepository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.campaign.Campaign;
@@ -23,11 +23,21 @@ import static java.util.stream.Collectors.toList;
 
 public class OrderService {
 
-    private static Repository<Order> orderRepository;
-    private static Set<Validator<Order>> validators;
-    private static PaymentGateway paymentGateway;
+    private final DomainRepository<Order> orderRepository;
+    private final Set<Validator<Order>> validators;
+    private final PaymentGateway paymentGateway;
+    private final UserService userService;
 
-    static public Order newOrder(Cart cart, Campaign campaign) {
+    private final static int ORDER_TIME_TO_LIVE_IN_MINUTES = 30;
+
+    public OrderService(DomainRepository<Order> orderRepository, Set<Validator<Order>> validators, PaymentGateway paymentGateway, UserService userService) {
+        this.orderRepository = orderRepository;
+        this.validators = validators;
+        this.paymentGateway = paymentGateway;
+        this.userService = userService;
+    }
+
+    public Order newOrder(Cart cart, Campaign campaign) {
 
         Set<Payment> payments = new HashSet<>();
 
@@ -37,10 +47,10 @@ public class OrderService {
             payments.add(new Payment(
                     Payment.idService.getNewId(),
                     campaign.getTotalBudget(),
-                    UserService.getEmptioUser(),
+                    userService.getEmptioUser(),
                     campaign.getOwner()));
 
-        Order order = new Order(payments, LocalDateTime.now());
+        Order order = new Order(payments, Order.idService.getNewId(), ORDER_TIME_TO_LIVE_IN_MINUTES, LocalDateTime.now());
 
         return orderRepository.find(
                 orderRepository.add(
@@ -49,7 +59,7 @@ public class OrderService {
         );
     }
 
-    static private Order validate(Order orderToValidate) {
+    private Order validate(Order orderToValidate) {
         try {
             validators.forEach(validator -> validator.validate(orderToValidate));
         } catch (ValidationException e) {
@@ -58,7 +68,7 @@ public class OrderService {
         return orderToValidate;
     }
 
-    static public void requestReturns(Order order) {
+    public void requestReturns(Order order) {
         for (Payment payment : order.payments) {
             if (paymentGateway.getPaymentStatus(payment.getId()) == PaymentStatus.COMPLETE){
                 Payment returnPayment = PaymentService.convertToReturnPayment(payment);
@@ -70,7 +80,7 @@ public class OrderService {
         }
     }
 
-    static public OrderStatus getStatus(Order order) {
+    public OrderStatus getStatus(Order order) {
         if (order.isDead()) {
             if (order.payments.stream().allMatch( payment -> paymentGateway.getPaymentStatus(payment.getId()) == PaymentStatus.INCOMPLETE))
                 return OrderStatus.FAILED;
@@ -95,7 +105,7 @@ public class OrderService {
     }
 
 
-   static private Set<Payment> splitCartIntoPayments(Cart cart) {
+   private Set<Payment> splitCartIntoPayments(Cart cart) {
         Map<User, List<Product>> userProducts = cart.getProducts().stream().collect(groupingBy(Product::getSeller, toList()));
         return userProducts.entrySet().stream().map(entry ->
                new Payment(Payment.idService.getNewId(),

@@ -21,7 +21,7 @@ public class PasswordValidator implements Validator<User> {
         if (entity.getPassword().length() > maxCharacters)
             throw new ValidationException("Password can't be longer than " + maxCharacters + ".");
         if (entity.getPassword().length() < minCharacters)
-            throw new ValidationException("Password can't be longer than " + minCharacters + ".");
+            throw new ValidationException("Password can't be shorter than " + minCharacters + ".");
         if (Arrays.stream(easyPasswords).anyMatch(password -> password.equals(entity.getPassword())))
             throw new ValidationException("Password can't be that easy to guess.");
     }

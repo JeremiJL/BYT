@@ -8,10 +8,9 @@ import emptio.serialization.Identifiable;
 import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
-@Value
-public class Product extends Blockable implements Identifiable {
+@Value public class Product extends Blockable implements Identifiable {
 
-    User seller;
+    @NonNull User seller;
     int id;
     @NonNull Cost price;
     @NonNull byte[] image;
