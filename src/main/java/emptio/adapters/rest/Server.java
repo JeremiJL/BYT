@@ -5,31 +5,44 @@ import emptio.adapters.rest.login.CreateAccountHandler;
 import emptio.adapters.rest.login.LoginFormHandler;
 import emptio.adapters.rest.login.LoginHandler;
 import emptio.adapters.rest.login.CreateAccountFormHandler;
-import emptio.adapters.rest.utils.FileToBytes;
+import static emptio.adapters.rest.utils.FilePathToBytes.getBytes;
+import emptio.domain.user.UserService;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
 
+
+
 public class Server {
 
-    static public void run() throws IOException {
+    private final UserService userService;
+
+    public Server(UserService userService) {
+        this.userService = userService;
+    }
+
+    public void run() throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-        linkHandlers(server);
+        this.linkHandlers(server);
         server.setExecutor(null);
         server.start();
     }
 
-    private static void linkHandlers(HttpServer server) {
+    private void linkHandlers(HttpServer server) {
 
-        server.createContext("/", new LoginFormHandler(FileToBytes.getBytes(new File("ui/login/.html")))); // Landing login form page
-        server.createContext("/login", new LoginHandler(FileToBytes.getBytes(new File("ui/login/login.html")))); // Login data is sent, redirect to home page performed
+        server.createContext("/",
+                new LoginFormHandler(getBytes("ui/login/.html"))); // Landing login form page
+        server.createContext("/login",
+                new LoginHandler(getBytes("ui/login/login.html"), this.userService)); // Login data is sent, redirect to home page performed
 
-        server.createContext("/home", new HomeHandler(FileToBytes.getBytes(new File("ui/home.html")))); // Home page for logged users
+        server.createContext("/home",
+                new HomeHandler(getBytes("ui/home.html"))); // Home page for logged users
 
-        server.createContext("/create_account_form", new CreateAccountFormHandler(FileToBytes.getBytes(new File("ui/login/create_account_form.html")))); // New account form page for new users
-        server.createContext("/create_account", new CreateAccountHandler(FileToBytes.getBytes(new File("ui/login/create_account.html")))); // New account data is sent, redirect to success/failure page performed
+        server.createContext("/create_account_form",
+                new CreateAccountFormHandler(getBytes("ui/login/create_account_form.html"))); // New account form page for new users
+        server.createContext("/create_account",
+                new CreateAccountHandler(getBytes("ui/login/create_account.html"), this.userService)); // New account data is sent, redirect to success/failure page performed
     }
 
 }

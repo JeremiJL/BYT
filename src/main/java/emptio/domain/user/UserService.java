@@ -10,28 +10,24 @@ import java.util.Set;
 
 public class UserService {
 
-    static private Set<Validator<User>> validators;
-    static private Repository<User> userRepository;
-    static private CredentialsRepository credentialsRepository;
-
-    public static void setValidators(Set<Validator<User>> validators) {
-        UserService.validators = validators;
-    }
+    private final Set<Validator<User>> validators;
+    private final Repository<User> userRepository;
+    private final CredentialsRepository credentialsRepository;
 
     @SafeVarargs
-    public static void setValidators(Validator<User> ... validators) {
-        UserService.validators = new HashSet<>(List.of(validators));
+    public UserService(Repository<User> userRepository, CredentialsRepository credentialsRepository, Validator<User>... validators) {
+        this.validators = new HashSet<>(List.of(validators));
+        this.userRepository = userRepository;
+        this.credentialsRepository = credentialsRepository;
     }
 
-    public static void setUserRepository(Repository<User> userRepository) {
-        UserService.userRepository = userRepository;
+    public UserService(Repository<User> userRepository, CredentialsRepository credentialsRepository, Set<Validator<User>> validators) {
+        this.validators = validators;
+        this.userRepository = userRepository;
+        this.credentialsRepository = credentialsRepository;
     }
 
-    public static void setCredentialsRepository(CredentialsRepository credentialsRepository) {
-        UserService.credentialsRepository = credentialsRepository;
-    }
-
-    public static User newUser(String name, String surname,
+    public User newUser(String name, String surname,
                                String email, String number,
                                String login, String password, Address address) throws ValidationException
     {
@@ -51,11 +47,11 @@ public class UserService {
         );
     }
 
-    public static User getEmptioUser() {
+    public User getEmptioUser() {
         return userRepository.find(1);
     }
 
-    public static int getUserId(String login, String password) {
+    public int getUserId(String login, String password) {
         UserCredentials credentials = credentialsRepository.getCredentials(login);
         if (credentials.getPassword().equals(password))
             return credentials.getId();

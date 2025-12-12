@@ -1,5 +1,8 @@
 package emptio.domain.product;
 
+import emptio.builder.AddressBuilder;
+import emptio.builder.ProductBuilder;
+import emptio.builder.UserBuilder;
 import emptio.domain.Repository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
@@ -8,6 +11,8 @@ import emptio.domain.common.Cost;
 import emptio.domain.common.Currency;
 import emptio.domain.product.validators.*;
 import emptio.domain.user.User;
+import emptio.domain.user.UserService;
+import emptio.serialization.InMemoryCredentialsRepository;
 import emptio.serialization.InMemoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,14 +30,20 @@ class ProductTest {
     Set<Validator<Product>> validators;
 
     ProductService productService;
+    UserBuilder userBuilder;
     ProductBuilder productBuilder;
+    UserService userService;
+    AddressBuilder addressBuilder;
 
     @BeforeEach
     void setUp() {
         productRepository = new InMemoryRepository<>();
         validators = new HashSet<>();
-        productBuilder =  new ProductBuilder();
         productService = new ProductService(validators, productRepository);
+        userService = new UserService(new InMemoryRepository<>(), new InMemoryCredentialsRepository(), new HashSet<>());
+        addressBuilder = new AddressBuilder();
+        userBuilder = new UserBuilder(userService, addressBuilder);
+        productBuilder =  new ProductBuilder(productService, userBuilder);
     }
 
     @Test
@@ -40,16 +51,20 @@ class ProductTest {
         validators.add(new PriceValidator());
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(NullPointerException.class, () -> {
-            productBuilder.withPrice(new Cost(null, Currency.PLN)).newProduct();
+            productBuilder.setPrice(new Cost(null, Currency.PLN));
+            productBuilder.build();
         });
         assertThrows(NullPointerException.class, () -> {
-            productBuilder.withPrice(new Cost(BigDecimal.ONE, null)).newProduct();
+            productBuilder.setPrice(new Cost(BigDecimal.ONE, null));
+            productBuilder.build();
         });
         assertThrows(ValidationException.class, () -> {
-            productBuilder.withPrice(new Cost(BigDecimal.valueOf(-2d), Currency.PLN)).newProduct();
+            productBuilder.setPrice(new Cost(BigDecimal.valueOf(-2d), Currency.PLN));
+            productBuilder.build();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        productBuilder.withPrice(new Cost(BigDecimal.valueOf(20.5d), Currency.PLN)).newProduct();
+        productBuilder.setPrice(new Cost(BigDecimal.valueOf(20.5d), Currency.PLN));
+        productBuilder.build();
     }
 
     @Test
@@ -57,13 +72,16 @@ class ProductTest {
         validators.add(new ImageValidator());
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(NullPointerException.class, () -> {
-            productBuilder.withImage(null).newProduct();
+            productBuilder.setImage(null);
+            productBuilder.build();
         });
         assertThrows(ValidationException.class, () -> {
-            productBuilder.withImage(new byte[]{}).newProduct();
+            productBuilder.setImage(new byte[]{});
+            productBuilder.build();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        productBuilder.withImage(new byte[]{1,2,3,4}).newProduct();
+        productBuilder.setImage(new byte[]{1,2,3,4});
+        productBuilder.build();
     }
 
     @Test
@@ -71,10 +89,12 @@ class ProductTest {
         validators.add(new CategoryValidator());
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(NullPointerException.class, () -> {
-            productBuilder.withCategory(null).newProduct();
+            productBuilder.setCategory(null);
+            productBuilder.build();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
-        assertEquals(Category.CLOTHING, productBuilder.withCategory(Category.CLOTHING).newProduct().getCategory());
+        productBuilder.setCategory(Category.CLOTHING);
+        productBuilder.build();
     }
 
     @Test
@@ -83,20 +103,25 @@ class ProductTest {
         validators.add(titleValidator);
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(NullPointerException.class, () -> {
-            productBuilder.withTitle(null).newProduct();
+            productBuilder.setTitle(null);
+            productBuilder.build();
         });
         assertThrows(ValidationException.class, () -> {
-            productBuilder.withTitle("").newProduct();
+            productBuilder.setTitle("");
+            productBuilder.build();
         });
         assertThrows(ValidationException.class, () -> {
-            productBuilder.withTitle(" ").newProduct();
+            productBuilder.setTitle(" ");
+            productBuilder.build();
         });
         assertThrows(ValidationException.class, () -> {
-            productBuilder.withTitle(stringOfGivenLength(titleValidator.maxCharacters + 1)).newProduct();
+            productBuilder.setTitle(stringOfGivenLength(titleValidator.maxCharacters + 1));
+            productBuilder.build();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
         assertThrows(ValidationException.class, () -> {
-            productBuilder.withTitle("Waterproof vest for outdoors activities").newProduct();
+            productBuilder.setTitle("Waterproof vest for outdoors activities");
+            productBuilder.build();
         });
     }
 
@@ -106,21 +131,26 @@ class ProductTest {
         validators.add(descriptionValidator);
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(NullPointerException.class, () -> {
-            productBuilder.withDescription(null).newProduct();
+            productBuilder.setDescription(null);
+            productBuilder.build();
         });
         assertThrows(ValidationException.class, () -> {
-            productBuilder.withDescription("").newProduct();
+            productBuilder.setDescription("");
+            productBuilder.build();
         });
         assertThrows(ValidationException.class, () -> {
-            productBuilder.withDescription(" ").newProduct();
+            productBuilder.setDescription(" ");
+            productBuilder.build();
         });
         assertThrows(ValidationException.class, () -> {
-            productBuilder.withDescription(stringOfGivenLength(descriptionValidator.maxCharacters + 1)).newProduct();
+            productBuilder.setDescription(stringOfGivenLength(descriptionValidator.maxCharacters + 1));
+            productBuilder.build();
         });
         // Assert potential positive cases - validation succeeds - exception is not thrown
         assertThrows(ValidationException.class, () -> {
-            productBuilder.withDescription("Waterproof vest for outdoors activities, " +
-                    "made from artificial cancerous fabric. Unisex. No returns. Recommended by 9 out of 10 dentists.").newProduct();
+            productBuilder.setDescription("Waterproof vest for outdoors activities, " +
+                    "made from artificial cancerous fabric. Unisex. No returns. Recommended by 9 out of 10 dentists.");
+            productBuilder.build();
         });
     }
 
@@ -129,11 +159,13 @@ class ProductTest {
         validators.add(new CountOnMarketplaceValidator());
         // Assert potential negative cases - validation fails - exception is thrown
         assertThrows(ValidationException.class, () -> {
-            productBuilder.withCountOnMarketplace(-1).newProduct();
+            productBuilder.setCountOnMarketplace(-1);
+            productBuilder.build();
         });
 
         // Decrementing
-        Product myProduct = productBuilder.withCountOnMarketplace(5).newProduct();
+        productBuilder.setCountOnMarketplace(5);
+        Product myProduct = productBuilder.build();
         assertEquals(5, myProduct.getCountOnMarketplace());
 
         int id = myProduct.getId();
@@ -152,7 +184,7 @@ class ProductTest {
         validators.add(new InteractionsValidator());
 
         // Assert interaction's value upon initialization
-        Product myProduct = productBuilder.newProduct();
+        Product myProduct = productBuilder.build();
         assertEquals(0, myProduct.getInteractions());
 
         // Incrementing
@@ -166,52 +198,6 @@ class ProductTest {
         myProduct = productRepository.find(id);
         assertEquals(2, myProduct.getInteractions());
      }
-
-
-    private class ProductBuilder {
-
-        private User seller = null;
-        private Cost price = new Cost(BigDecimal.TEN, Currency.EUR);
-        private byte[] image = new byte[]{1,2,3,4};
-        private Category category = Category.CLOTHING;
-        private String title = "Title";
-        private String description = "Description";
-        private int countOnMarketplace = 10;
-
-        Product newProduct() {
-            return productService.newProduct(seller, price,image,category,title,description,countOnMarketplace);
-        }
-
-        ProductBuilder withPrice(Cost price) {
-            this.price = price;
-            return this;
-        }
-
-         ProductBuilder withImage(byte[] image) {
-            this.image = image;
-            return this;
-        }
-
-         ProductBuilder withCategory(Category category){
-            this.category = category;
-            return this;
-        }
-
-         ProductBuilder withTitle(String title) {
-            this.title = title;
-            return this;
-        }
-
-        ProductBuilder withDescription(String description) {
-            this.description = description;
-            return this;
-        }
-
-        ProductBuilder withCountOnMarketplace(int countOnMarketplace) {
-            this.countOnMarketplace = countOnMarketplace;
-            return this;
-        }
-    }
 
     private String stringOfGivenLength(int length) {
         return "-".repeat(length);

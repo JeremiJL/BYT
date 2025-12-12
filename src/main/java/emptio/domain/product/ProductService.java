@@ -11,12 +11,12 @@ import java.util.Set;
 
 public class ProductService {
 
-    static Set<Validator<Product>> validators;
-    static Repository<Product> productRepository;
+    private final Set<Validator<Product>> validators;
+    private final Repository<Product> productRepository;
 
     public ProductService(Set<Validator<Product>> validators, Repository<Product> productRepository) {
-        ProductService.validators = validators;
-        ProductService.productRepository = productRepository;
+        this.validators = validators;
+        this.productRepository = productRepository;
     }
 
     public Product newProduct(

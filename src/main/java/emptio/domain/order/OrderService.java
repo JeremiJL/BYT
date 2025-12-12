@@ -23,13 +23,21 @@ import static java.util.stream.Collectors.toList;
 
 public class OrderService {
 
-    private static Repository<Order> orderRepository;
-    private static Set<Validator<Order>> validators;
-    private static PaymentGateway paymentGateway;
+    private final Repository<Order> orderRepository;
+    private final Set<Validator<Order>> validators;
+    private final PaymentGateway paymentGateway;
+    private final UserService userService;
 
     private final static int ORDER_TIME_TO_LIVE_IN_MINUTES = 30;
 
-    static public Order newOrder(Cart cart, Campaign campaign) {
+    public OrderService(Repository<Order> orderRepository, Set<Validator<Order>> validators, PaymentGateway paymentGateway, UserService userService) {
+        this.orderRepository = orderRepository;
+        this.validators = validators;
+        this.paymentGateway = paymentGateway;
+        this.userService = userService;
+    }
+
+    public Order newOrder(Cart cart, Campaign campaign) {
 
         Set<Payment> payments = new HashSet<>();
 
@@ -39,7 +47,7 @@ public class OrderService {
             payments.add(new Payment(
                     Payment.idService.getNewId(),
                     campaign.getTotalBudget(),
-                    UserService.getEmptioUser(),
+                    userService.getEmptioUser(),
                     campaign.getOwner()));
 
         Order order = new Order(payments, Order.idService.getNewId(), ORDER_TIME_TO_LIVE_IN_MINUTES, LocalDateTime.now());
@@ -51,7 +59,7 @@ public class OrderService {
         );
     }
 
-    static private Order validate(Order orderToValidate) {
+    private Order validate(Order orderToValidate) {
         try {
             validators.forEach(validator -> validator.validate(orderToValidate));
         } catch (ValidationException e) {
@@ -60,7 +68,7 @@ public class OrderService {
         return orderToValidate;
     }
 
-    static public void requestReturns(Order order) {
+    public void requestReturns(Order order) {
         for (Payment payment : order.payments) {
             if (paymentGateway.getPaymentStatus(payment.getId()) == PaymentStatus.COMPLETE){
                 Payment returnPayment = PaymentService.convertToReturnPayment(payment);
@@ -72,7 +80,7 @@ public class OrderService {
         }
     }
 
-    static public OrderStatus getStatus(Order order) {
+    public OrderStatus getStatus(Order order) {
         if (order.isDead()) {
             if (order.payments.stream().allMatch( payment -> paymentGateway.getPaymentStatus(payment.getId()) == PaymentStatus.INCOMPLETE))
                 return OrderStatus.FAILED;
@@ -97,7 +105,7 @@ public class OrderService {
     }
 
 
-   static private Set<Payment> splitCartIntoPayments(Cart cart) {
+   private Set<Payment> splitCartIntoPayments(Cart cart) {
         Map<User, List<Product>> userProducts = cart.getProducts().stream().collect(groupingBy(Product::getSeller, toList()));
         return userProducts.entrySet().stream().map(entry ->
                new Payment(Payment.idService.getNewId(),

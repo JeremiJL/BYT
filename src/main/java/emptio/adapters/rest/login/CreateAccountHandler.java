@@ -13,8 +13,11 @@ import java.util.Map;
 
 public class CreateAccountHandler extends BasicHandler {
 
-    public CreateAccountHandler(byte[] page) {
+    private final UserService userService;
+
+    public CreateAccountHandler(byte[] page, UserService userService) {
         super(page);
+        this.userService = userService;
     }
 
     @Override
@@ -57,7 +60,7 @@ public class CreateAccountHandler extends BasicHandler {
             Integer apartmentNumberParsed = (apartmentNumber == null) ? null : Integer.parseInt(apartmentNumber);
             int buildingNumberParsed = Integer.parseInt(buildingNumber);
 
-            UserService.newUser(name,surname,email,number,login,password,
+            userService.newUser(name,surname,email,number,login,password,
                     new Address(postalCode,streetName,country,city,buildingNumberParsed, apartmentNumberParsed));
 
             template.put("ACCOUNT_CREATION_RESULT","succeeded");

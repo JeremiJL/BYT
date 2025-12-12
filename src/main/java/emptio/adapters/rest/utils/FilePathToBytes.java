@@ -4,9 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public class FileToBytes {
+public class FilePathToBytes {
 
-    static public byte[] getBytes(File file) {
+    static public byte[] getBytes(String path) {
+        File file = new File(path);
         try (FileInputStream inputStream = new FileInputStream(file)) {
             return inputStream.readAllBytes();
         } catch (IOException e) {

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 @Value @NonFinal public class User extends Blockable implements Identifiable {
 
-    @NonNull int id;
+    int id;
     @NonNull String name;
     @NonNull String surname;
     @NonNull String email;

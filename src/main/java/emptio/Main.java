@@ -16,28 +16,26 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // Greet
         System.out.println("Welcome to Emptio!");
 
-        wireDependencies();
-
-        try {
-            Server.run();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    private static void wireDependencies() {
+        // Wire dependencies
 
         // Repositories
         Repository<User> userRepository = new InMemoryRepository<>();
         CredentialsRepository credentialsRepository = new InMemoryCredentialsRepository();
 
         // Entity services
-        UserService.setUserRepository(userRepository);
-        UserService.setCredentialsRepository(credentialsRepository);
-        UserService.setValidators(new LoginValidator(), new PasswordValidator());
+        UserService userService = new UserService(userRepository, credentialsRepository,new LoginValidator(), new PasswordValidator());
+
+        // Server - Root dependency
+        Server server = new Server(userService);
+
+        try {
+            server.run();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }

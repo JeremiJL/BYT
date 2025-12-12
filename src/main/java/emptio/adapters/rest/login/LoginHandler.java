@@ -11,8 +11,11 @@ import java.util.Map;
 
 public class LoginHandler extends BasicHandler {
 
-    public LoginHandler(byte[] page) {
+    private final UserService userService;
+
+    public LoginHandler(byte[] page, UserService userService) {
         super(page);
+        this.userService = userService;
     }
 
     @Override
@@ -33,7 +36,7 @@ public class LoginHandler extends BasicHandler {
         Map<String, String> template = new HashMap<>();
 
         try {
-            int id = UserService.getUserId(login, password);
+            int id = userService.getUserId(login, password);
 
             template.put("LOGIN_RESULT", "successful");
             template.put("HOME_REDIRECT_VISIBILITY", "visible");

@@ -2,13 +2,14 @@ package emptio.domain.user;
 
 import lombok.NonNull;
 import lombok.Value;
+import lombok.experimental.NonFinal;
 
-@Value public class Address {
+@NonFinal @Value public class Address {
 
     @NonNull String postalCode;
     String streetName;
     @NonNull String country;
     @NonNull String city;
-    @NonNull int buildingNumber;
+    int buildingNumber;
     Integer apartmentNumber;
 }

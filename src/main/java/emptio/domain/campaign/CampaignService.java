@@ -13,18 +13,15 @@ import java.util.Set;
 
 public class CampaignService {
 
-    static Set<Validator<Campaign>> validators;
-    static Repository<Campaign> campaignRepository;
+    private final Set<Validator<Campaign>> validators;
+    private final Repository<Campaign> campaignRepository;
 
-    public static void setValidators(Set<Validator<Campaign>> validators) {
-        CampaignService.validators = validators;
+    public CampaignService(Set<Validator<Campaign>> validators, Repository<Campaign> campaignRepository) {
+        this.validators = validators;
+        this.campaignRepository = campaignRepository;
     }
 
-    public static void setCampaignRepository(Repository<Campaign> campaignRepository) {
-        CampaignService.campaignRepository = campaignRepository;
-    }
-
-    static public Campaign newCampaign(
+    public Campaign newCampaign(
             User owner,
             String name, Placement placement, BigDecimal pricePerInteraction, BigDecimal totalBudget)
             throws ValidationException
@@ -43,7 +40,7 @@ public class CampaignService {
         );
     }
 
-    static public void recordInteraction(int id) {
+    public void recordInteraction(int id) {
         Campaign oldCampaign = campaignRepository.find(id);
         Campaign updatedCampaign = oldCampaign.
                 withInteractionsCount(oldCampaign.getInteractionsCount() + 1)
@@ -53,7 +50,7 @@ public class CampaignService {
         );
     }
 
-    static private Campaign validate(Campaign campaignToValidate) {
+    private Campaign validate(Campaign campaignToValidate) {
         try {
             validators.forEach(validator -> validator.validate(campaignToValidate));
         } catch (ValidationException e) {
