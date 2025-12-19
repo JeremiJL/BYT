@@ -21,7 +21,7 @@ import java.time.LocalDate;
     @NonNull String login;
     @NonNull String password;
     @NonNull Address address;
-    @NonFinal @NonNull LocalDate lastLogin;
+    @NonNull LocalDate lastLogin;
 
     public State getState() {
         if (this.lastLogin.isBefore(LocalDate.now().minusYears(2))) {

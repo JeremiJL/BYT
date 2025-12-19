@@ -2,6 +2,7 @@ package emptio.domain.cart;
 
 
 import emptio.domain.product.Product;
+import emptio.domain.user.Shopper;
 import emptio.domain.user.User;
 import emptio.serialization.Expirable;
 import emptio.serialization.Identifiable;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Value
 public class Cart implements Identifiable, Expirable {
-    User owner;
+    Shopper owner;
     List<Product> products;
     int id;
     int minutesToLive;

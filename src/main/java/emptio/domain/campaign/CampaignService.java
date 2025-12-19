@@ -5,6 +5,7 @@ import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.common.Cost;
 import emptio.domain.common.Currency;
+import emptio.domain.user.Advertiser;
 import emptio.domain.user.User;
 
 import java.math.BigDecimal;
@@ -21,7 +22,7 @@ public class CampaignService {
     }
 
     public Campaign newCampaign(
-            User owner,
+            Advertiser owner,
             String name, Placement placement, BigDecimal pricePerInteraction, BigDecimal totalBudget)
             throws ValidationException
     {

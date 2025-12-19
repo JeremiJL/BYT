@@ -4,6 +4,7 @@ import emptio.domain.DomainRepository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.product.Product;
+import emptio.domain.user.Shopper;
 import emptio.domain.user.User;
 
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ public class CartService {
     private static List<Validator<Cart>> validators;
 
     public static Cart newCart(
-            User owner, List<Product> products) {
+            Shopper owner, List<Product> products) {
 
         Cart cart = new Cart(
                 owner, products, Cart.idService.getNewId(), 30, LocalDateTime.now()

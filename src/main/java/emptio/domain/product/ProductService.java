@@ -5,7 +5,7 @@ import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.common.Category;
 import emptio.domain.common.Cost;
-import emptio.domain.user.User;
+import emptio.domain.user.Merchant;
 
 import java.util.Set;
 
@@ -20,7 +20,7 @@ public class ProductService {
     }
 
     public Product newProduct(
-            User seller,
+            Merchant seller,
             Cost price, byte[] image, Category category,
             String title, String description, int countOnMarketplace)
             throws ValidationException

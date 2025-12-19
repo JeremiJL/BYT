@@ -1,5 +1,6 @@
 package emptio.builder;
 
+import emptio.domain.user.AccountType;
 import emptio.domain.user.Address;
 import emptio.domain.user.User;
 import emptio.domain.user.UserService;
@@ -29,7 +30,15 @@ public class UserBuilder {
         this.address = addressBuilder.build();
     }
 
+    public User build(AccountType type) {
+        return switch (type) {
+            case SHOPPER -> userService.newUser(name, surname, email, phoneNumber, login, password, address);
+            case MERCHANT -> userService.newUser(name, surname, email, phoneNumber, login, password, address);
+            case ADVERTISER -> userService.newUser(name, surname, email, phoneNumber, login, password, address);
+        };
+    }
     public User build() {
-        return userService.newUser(name, surname, email, phoneNumber, login, password, address);
+        return build(AccountType.SHOPPER);
     }
 }
+

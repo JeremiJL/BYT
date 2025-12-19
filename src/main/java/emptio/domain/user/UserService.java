@@ -1,6 +1,9 @@
 package emptio.domain.user;
 
 import emptio.domain.*;
+import emptio.domain.campaign.Campaign;
+import emptio.domain.cart.Cart;
+import emptio.domain.product.Product;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -26,9 +29,10 @@ public class UserService {
         this.credentialsRepository = credentialsRepository;
     }
 
-    public User newUser(String name, String surname,
-                               String email, String number,
-                               String login, String password, Address address) throws ValidationException
+    public User newUser(AccountType accountType,
+                        String name, String surname,
+                        String email, String number,
+                        String login, String password, Address address) throws ValidationException
     {
         LocalDate today = today();
         User user = new User(User.idService.getNewId(), name, surname, email, number, login, password, address, today);
@@ -63,6 +67,32 @@ public class UserService {
             return credentials.getId();
         else
             throw new CredentialsException("Given password does not match given login");
+    }
+
+    public void addCampaign(Advertiser advertiser, Campaign newCampaign) {
+        Set<Campaign> advertiserCampaigns;
+        advertiserCampaigns = new HashSet<>(advertiser.getCampaigns());
+        advertiserCampaigns.add(newCampaign);
+
+        userRepository.update(advertiser.withCampaigns(
+                advertiserCampaigns
+        ));
+    }
+
+    public void addProduct(Merchant merchant, Product newProduct) {
+        Set<Product> merchantProducts;
+        merchantProducts = new HashSet<>(merchant.getProducts());
+        merchantProducts.add(newProduct);
+
+        userRepository.update(merchant.withProducts(
+                merchantProducts
+        ));
+    }
+
+    public void newCart(Shopper shopper, Cart cart) {
+        userRepository.update(
+                shopper.withCart(cart)
+        );
     }
 
     private static LocalDate today() {
