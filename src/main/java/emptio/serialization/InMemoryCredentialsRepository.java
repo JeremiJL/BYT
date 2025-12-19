@@ -2,7 +2,6 @@ package emptio.serialization;
 
 import emptio.domain.CredentialsException;
 import emptio.domain.CredentialsRepository;
-import emptio.domain.RepositoryException;
 import emptio.domain.user.UserCredentials;
 
 import java.util.HashMap;
@@ -25,5 +24,10 @@ public class InMemoryCredentialsRepository implements CredentialsRepository {
             extent.put(login, credentials);
         else
             throw new CredentialsException("Given login is already taken : " + login);
+    }
+
+    @Override
+    public void deleteCredentials(String login) {
+        extent.remove(login);
     }
 }

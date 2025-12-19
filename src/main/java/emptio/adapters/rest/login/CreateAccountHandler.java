@@ -39,19 +39,19 @@ public class CreateAccountHandler extends BasicHandler {
         String apartmentNumber = requestData.get("apartmentNumber");
 
 
-        createNewAccount(
+        byte[] page = createNewAccount(
             name,surname,email,phoneNumber,login,password,postalCode,streetName,country,city,buildingNumber,apartmentNumber
         );
 
-        showPage(exchange);
+        showPage(exchange, page);
     }
 
-    private void createNewAccount(String name, String surname,
+    private byte[] createNewAccount(String name, String surname,
                                   String email, String number,
                                   String login, String password,
                                   String postalCode, String streetName,
                                   String country, String city,
-                                  String buildingNumber, String apartmentNumber) throws IOException {
+                                  String buildingNumber, String apartmentNumber) {
 
         Map<String, String> template = new HashMap<>();
 
@@ -59,21 +59,26 @@ public class CreateAccountHandler extends BasicHandler {
 
             Integer apartmentNumberParsed = (apartmentNumber == null) ? null : Integer.parseInt(apartmentNumber);
             int buildingNumberParsed = Integer.parseInt(buildingNumber);
+            String emailFormatted = formatEscapeCharacters(email);
 
-            userService.newUser(name,surname,email,number,login,password,
+            userService.newUser(name,surname,emailFormatted,number,login,password,
                     new Address(postalCode,streetName,country,city,buildingNumberParsed, apartmentNumberParsed));
 
             template.put("ACCOUNT_CREATION_RESULT","succeeded");
             template.put("LOGIN_REDIRECT_VISIBILITY","visible");
             template.put("TRY_AGAIN_REDIRECT_VISIBILITY","hidden");
 
-        } catch (ValidationException | NumberFormatException e){
+        } catch (Exception e){
 
             template.put("ACCOUNT_CREATION_RESULT","failed - " + e.getMessage());
             template.put("LOGIN_REDIRECT_VISIBILITY","hidden");
             template.put("TRY_AGAIN_REDIRECT_VISIBILITY","visible");
         }
 
-        renderTemplate(template);
+        return renderTemplate(template);
+    }
+
+    private String formatEscapeCharacters(String value) {
+        return value.replaceFirst("%40", "@");
     }
 }

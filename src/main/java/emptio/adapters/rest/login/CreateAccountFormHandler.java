@@ -13,6 +13,6 @@ public class CreateAccountFormHandler extends BasicHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        showPage(exchange);
+        showPage(exchange, getPage());
     }
 }

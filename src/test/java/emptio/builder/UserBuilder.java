@@ -23,7 +23,7 @@ public class UserBuilder {
         this.name = "Mohamed";
         this.surname = "Abdulla";
         this.email = "abdulla123@pjatk.edu.pl";
-        this.phoneNumber = "555-555-555";
+        this.phoneNumber = "555555555";
         this.login = "abdulla123";
         this.password = "best_password_123";
         this.address = addressBuilder.build();

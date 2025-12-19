@@ -112,4 +112,8 @@ optimize operations, it allows you to differentiate you how data is managed base
 
 requires lot of reources - due to it conforming to the distribution approach
 
+# Lecture 2
+
+The challanges of introducing a new system.
+
 

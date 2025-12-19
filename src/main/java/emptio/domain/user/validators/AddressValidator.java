@@ -5,14 +5,17 @@ import emptio.domain.Validator;
 import emptio.domain.user.Address;
 import emptio.domain.user.User;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class AddressValidator implements Validator<User> {
 
     private final Set<Validator<Address>> validators;
 
-    public AddressValidator(Set<Validator<Address>> validators) {
-        this.validators = validators;
+    @SafeVarargs
+    public AddressValidator(Validator<Address>... validators) {
+        this.validators = new HashSet<>(List.of(validators));
     }
 
     @Override

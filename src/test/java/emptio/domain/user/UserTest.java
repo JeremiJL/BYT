@@ -152,10 +152,10 @@ class UserTest {
             userBuilder.setPhoneNumber(stringOfGivenLength(phoneNumberValidator.minCharacters - 1));
             userBuilder.build();
         });
-//        TODO : This case should have a personal validator.
-//        assertThrows(ValidationException.class, () -> {
-//            userServiceBuilder.setPhoneNumber();("abcdefghi").newUser();
-//        });
+        assertThrows(ValidationException.class, () -> {
+            userBuilder.setPhoneNumber("abcdefghi");
+            userBuilder.build();
+        });
         // Assert potential positive cases - validation succeeds - exception is not thrown
         userBuilder.setPhoneNumber("678098152");
         userBuilder.build();

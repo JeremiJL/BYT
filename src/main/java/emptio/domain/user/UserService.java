@@ -39,10 +39,17 @@ public class UserService {
             throw new ValidationException("Failed to create a user with given parameters, cause : " + e.getMessage());
         }
 
-        credentialsRepository.setCredentials(user.getLogin(), new UserCredentials(user.getId(),user.getPassword()));
+        try {
+            credentialsRepository.setCredentials(user.getLogin(), new UserCredentials(user.getId(),user.getPassword()));
+            userRepository.add(user);
+        } catch (Exception e) {
+            credentialsRepository.deleteCredentials(user.getLogin());
+            userRepository.remove(user.getId());
+            throw e;
+        }
 
         return userRepository.find(
-                userRepository.add(user)
+            user.getId()
         );
     }
 

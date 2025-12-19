@@ -26,12 +26,12 @@ public class LoginHandler extends BasicHandler {
         String login = requestData.get("login");
         String password = requestData.get("password");
 
-        login(login, password);
+        byte[] page = login(login, password);
 
-        showPage(exchange);
+        showPage(exchange, page);
     }
 
-    private void login(String login, String password) throws IOException {
+    private byte[] login(String login, String password) {
 
         Map<String, String> template = new HashMap<>();
 
@@ -51,7 +51,7 @@ public class LoginHandler extends BasicHandler {
             template.put("USER_ID", "");
         }
 
-        renderTemplate(template);
+       return renderTemplate(template);
     }
 
 }

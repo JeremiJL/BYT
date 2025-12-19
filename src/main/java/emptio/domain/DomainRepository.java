@@ -5,7 +5,10 @@ import emptio.serialization.Identifiable;
 public interface DomainRepository<T extends Identifiable> {
     Integer add(T i);
     T find(Integer id);
-    Integer update(T i);
+    default Integer update(T i){
+        remove(i.getId());
+        return add(i);
+    }
     void remove(Integer id);
 }
 

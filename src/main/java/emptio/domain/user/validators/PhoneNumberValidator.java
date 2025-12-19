@@ -8,7 +8,6 @@ public class PhoneNumberValidator implements Validator<User> {
 
     public final int maxCharacters = 9;
     public final int minCharacters = 9;
-    protected final String[] possibleCharacters = {"0","1","2","3","4","5","6","7","8","9"};
 
     @Override
     public void validate(User entity) throws ValidationException {
@@ -20,5 +19,7 @@ public class PhoneNumberValidator implements Validator<User> {
             throw new ValidationException("Phone number can't be longer than " + maxCharacters + ".");
         if (entity.getPhoneNumber().length() < minCharacters)
             throw new ValidationException("Phone number can't be shorter than " + minCharacters + ".");
+        if (!entity.getPhoneNumber().matches("^\\d+$"))
+            throw new ValidationException("Phone number can be only composed fro digits.");
     }
 }

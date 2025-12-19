@@ -11,21 +11,26 @@ import java.util.Map.Entry;
 
 public abstract class BasicHandler implements HttpHandler {
 
-    @NonNull private byte[] page;
+    @NonNull private final byte[] page;
+
+    public byte[] getPage() {
+        return page;
+    }
 
     public BasicHandler(byte[] page) {
         this.page = page;
     }
 
-    public void showPage(HttpExchange exchange) throws IOException {
+    public void showPage(HttpExchange exchange, byte[] pageToBeShown) throws IOException {
 
-        exchange.sendResponseHeaders(200, page.length);
+        exchange.sendResponseHeaders(200, pageToBeShown.length);
         OutputStream os = exchange.getResponseBody();
-        os.write(page);
+        os.write(pageToBeShown);
         os.close();
+        exchange.close();
     }
 
-    public void renderTemplate(Map<String, String> templateData) throws IOException {
+    public byte[] renderTemplate(Map<String, String> templateData) {
 
         String pageAsText = new String(page);
 
@@ -35,7 +40,7 @@ public abstract class BasicHandler implements HttpHandler {
             pageAsText = pageAsText.replace(templatedKey, templatedValue);
         }
 
-        this.page = pageAsText.getBytes();
+        return pageAsText.getBytes();
     }
 
 }
