@@ -11,6 +11,7 @@ public class UserBuilder {
 
     private final UserService userService;
 
+    private AccountType accountType;
     private String name;
     private String surname;
     private String email;
@@ -21,6 +22,7 @@ public class UserBuilder {
 
     public UserBuilder(UserService userService, AddressBuilder addressBuilder) {
         this.userService = userService;
+        this.accountType = AccountType.SHOPPER;
         this.name = "Mohamed";
         this.surname = "Abdulla";
         this.email = "abdulla123@pjatk.edu.pl";
@@ -30,15 +32,8 @@ public class UserBuilder {
         this.address = addressBuilder.build();
     }
 
-    public User build(AccountType type) {
-        return switch (type) {
-            case SHOPPER -> userService.newUser(name, surname, email, phoneNumber, login, password, address);
-            case MERCHANT -> userService.newUser(name, surname, email, phoneNumber, login, password, address);
-            case ADVERTISER -> userService.newUser(name, surname, email, phoneNumber, login, password, address);
-        };
-    }
     public User build() {
-        return build(AccountType.SHOPPER);
+        User user = userService.newUser(accountType, name, surname, email, phoneNumber, login, password, address);
+        return user;
     }
 }
-

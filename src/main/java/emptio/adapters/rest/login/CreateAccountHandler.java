@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import emptio.adapters.rest.BasicHandler;
 import emptio.adapters.rest.utils.HttpFormConverter;
 import emptio.domain.ValidationException;
+import emptio.domain.user.AccountType;
 import emptio.domain.user.Address;
 import emptio.domain.user.UserService;
 
@@ -25,6 +26,7 @@ public class CreateAccountHandler extends BasicHandler {
 
         Map<String,String> requestData = HttpFormConverter.convertToMap(exchange.getRequestBody().readAllBytes());
 
+        String accountType = requestData.get("accountType");
         String name = requestData.get("name");
         String surname = requestData.get("surname");
         String email = requestData.get("email");
@@ -40,13 +42,13 @@ public class CreateAccountHandler extends BasicHandler {
 
 
         byte[] page = createNewAccount(
-            name,surname,email,phoneNumber,login,password,postalCode,streetName,country,city,buildingNumber,apartmentNumber
+            accountType,name,surname,email,phoneNumber,login,password,postalCode,streetName,country,city,buildingNumber,apartmentNumber
         );
 
         showPage(exchange, page);
     }
 
-    private byte[] createNewAccount(String name, String surname,
+    private byte[] createNewAccount(String accountType, String name, String surname,
                                   String email, String number,
                                   String login, String password,
                                   String postalCode, String streetName,
@@ -60,8 +62,9 @@ public class CreateAccountHandler extends BasicHandler {
             Integer apartmentNumberParsed = (apartmentNumber == null) ? null : Integer.parseInt(apartmentNumber);
             int buildingNumberParsed = Integer.parseInt(buildingNumber);
             String emailFormatted = formatEscapeCharacters(email);
+            AccountType accountTypeFormatted = AccountType.valueOf(accountType);
 
-            userService.newUser(name,surname,emailFormatted,number,login,password,
+            userService.newUser(accountTypeFormatted,name,surname,emailFormatted,number,login,password,
                     new Address(postalCode,streetName,country,city,buildingNumberParsed, apartmentNumberParsed));
 
             template.put("ACCOUNT_CREATION_RESULT","succeeded");

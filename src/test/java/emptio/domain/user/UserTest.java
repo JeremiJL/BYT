@@ -3,10 +3,7 @@ package emptio.domain.user;
 
 import emptio.builder.AddressBuilder;
 import emptio.builder.UserBuilder;
-import emptio.domain.CredentialsRepository;
-import emptio.domain.DomainRepository;
-import emptio.domain.ValidationException;
-import emptio.domain.Validator;
+import emptio.domain.*;
 import emptio.domain.user.validators.*;
 import emptio.serialization.InMemoryCredentialsRepository;
 import emptio.serialization.InMemoryDomainRepository;
@@ -20,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserTest {
 
-    DomainRepository<User> userRepository;
+    UserRepository<User> userRepository;
     CredentialsRepository credentialsRepository;
     Set<Validator<User>> validators;
 
@@ -30,9 +27,13 @@ class UserTest {
 
     @BeforeEach
     void setUp() {
-        userRepository = new InMemoryDomainRepository<>();
         credentialsRepository = new InMemoryCredentialsRepository();
         validators = new HashSet<>();
+        userRepository = new UserRepository<>(
+                new InMemoryDomainRepository<Shopper>(),
+                new InMemoryDomainRepository<Merchant>(),
+                new InMemoryDomainRepository<Advertiser>()
+        );
         userService = new UserService(userRepository,credentialsRepository,validators);
         addressBuilder = new AddressBuilder();
         userBuilder = new UserBuilder(userService, addressBuilder);

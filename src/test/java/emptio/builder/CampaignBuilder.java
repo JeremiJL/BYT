@@ -22,7 +22,8 @@ public class CampaignBuilder {
 
     public CampaignBuilder(CampaignService campaignService, UserBuilder userBuilder) {
         this.campaignService = campaignService;
-        this.owner = userBuilder.build(AccountType.ADVERTISER);
+        userBuilder.setAccountType(AccountType.ADVERTISER);
+        this.owner = (Advertiser) userBuilder.build();
         this.name = "Campaign";
         this.placement = Placement.LISTING;
         this.pricePerInteraction = BigDecimal.TWO;

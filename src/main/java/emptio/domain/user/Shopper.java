@@ -1,5 +1,7 @@
 package emptio.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import emptio.domain.cart.Cart;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -13,17 +15,14 @@ import java.time.LocalDate;
     // Nullable
     Cart cart;
 
-    public Shopper(int id, String name, String surname,
-                   String email, String number,
-                   String login, String password,
-                   LocalDate lastLogin, Address address, @NonNull Cart cart) {
-        super(id, name, surname, email, number, login, password, address, lastLogin);
-        this.cart = null;
-    }
-
-    public Shopper(int id, @NonNull String name, @NonNull String surname, @NonNull String email,
-                   @NonNull String phoneNumber, @NonNull String login, @NonNull String password,
-                   @NonNull Address address, @NonNull LocalDate lastLogin, Cart cart) {
+    @JsonCreator
+    public Shopper(@JsonProperty("id") int id, @JsonProperty("name") @NonNull String name, @JsonProperty("surname") @NonNull String surname,
+                   @JsonProperty("email") @NonNull String email, @JsonProperty("phoneNumber") @NonNull String phoneNumber,
+                   @JsonProperty("login") @NonNull String login,
+                   @JsonProperty("password") @NonNull String password,
+                   @JsonProperty("address") @NonNull Address address,
+                   @JsonProperty("lastLogin") @NonNull LocalDate lastLogin,
+                   @JsonProperty("cart") Cart cart) {
         super(id, name, surname, email, phoneNumber, login, password, address, lastLogin);
         this.cart = cart;
     }

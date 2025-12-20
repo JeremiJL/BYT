@@ -6,6 +6,7 @@ import emptio.domain.cart.Cart;
 import emptio.domain.product.Product;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,17 +14,17 @@ import java.util.Set;
 public class UserService {
 
     private final Set<Validator<User>> validators;
-    private final DomainRepository<User> userRepository;
+    private final UserRepository<User> userRepository;
     private final CredentialsRepository credentialsRepository;
 
     @SafeVarargs
-    public UserService(DomainRepository<User> userRepository, CredentialsRepository credentialsRepository, Validator<User>... validators) {
+    public UserService(UserRepository<User> userRepository, CredentialsRepository credentialsRepository, Validator<User>... validators) {
         this.validators = new HashSet<>(List.of(validators));
         this.userRepository = userRepository;
         this.credentialsRepository = credentialsRepository;
     }
 
-    public UserService(DomainRepository<User> userRepository, CredentialsRepository credentialsRepository, Set<Validator<User>> validators) {
+    public UserService(UserRepository<User> userRepository, CredentialsRepository credentialsRepository, Set<Validator<User>> validators) {
         this.validators = validators;
         this.userRepository = userRepository;
         this.credentialsRepository = credentialsRepository;
@@ -35,7 +36,12 @@ public class UserService {
                         String login, String password, Address address) throws ValidationException
     {
         LocalDate today = today();
-        User user = new User(User.idService.getNewId(), name, surname, email, number, login, password, address, today);
+
+        User user = switch (accountType) {
+            case SHOPPER -> new Shopper(User.idService.getNewId(), name, surname, email, number, login, password, address, today, null);
+            case MERCHANT -> new Merchant(User.idService.getNewId(), name, surname, email, number, login, password, address, today, Collections.emptySet());
+            case ADVERTISER -> new Advertiser(User.idService.getNewId(), name, surname, email, number, login, password, address, today, Collections.emptySet());
+        };
 
         try {
             validators.forEach(validator -> validator.validate(user));

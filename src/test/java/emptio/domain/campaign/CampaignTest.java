@@ -4,10 +4,11 @@ import emptio.builder.AddressBuilder;
 import emptio.builder.CampaignBuilder;
 import emptio.builder.UserBuilder;
 import emptio.domain.DomainRepository;
+import emptio.domain.UserRepository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.campaign.validators.*;
-import emptio.domain.user.UserService;
+import emptio.domain.user.*;
 import emptio.serialization.InMemoryCredentialsRepository;
 import emptio.serialization.InMemoryDomainRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,12 @@ class CampaignTest {
         validators = new HashSet<>();
         campaignService = new CampaignService(validators,campaignRepository);
         addressBuilder = new AddressBuilder();
-        userService = new UserService(new InMemoryDomainRepository<>(), new InMemoryCredentialsRepository(), new HashSet<>());
+        UserRepository<User> userRepository = new UserRepository<>(
+                new InMemoryDomainRepository<Shopper>(),
+                new InMemoryDomainRepository<Merchant>(),
+                new InMemoryDomainRepository<Advertiser>()
+        );
+        userService = new UserService(userRepository, new InMemoryCredentialsRepository(), new HashSet<>());
         userBuilder = new UserBuilder(userService, addressBuilder);
         campaignBuilder = new CampaignBuilder(campaignService, userBuilder);
     }
@@ -128,13 +134,13 @@ class CampaignTest {
 
         // Interactions count and spent budget upon creation
         assertEquals(0, myCampaign.getInteractionsCount());
-        assertEquals(BigDecimal.ZERO, myCampaign.getBudgetSpent().value());
+        assertEquals(BigDecimal.ZERO, myCampaign.getBudgetSpent().getValue());
         // Interactions count and spent budget after recording two interactions
         campaignService.recordInteraction(myCampaign.getId());
         campaignService.recordInteraction(myCampaign.getId());
         myCampaign = campaignRepository.find(myCampaign.getId());
         assertEquals(2, myCampaign.getInteractionsCount());
-        assertEquals(BigDecimal.valueOf(20), myCampaign.getBudgetSpent().value());
+        assertEquals(BigDecimal.valueOf(20), myCampaign.getBudgetSpent().getValue());
     }
 
     private String stringOfGivenLength(int length) {

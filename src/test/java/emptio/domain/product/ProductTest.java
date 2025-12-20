@@ -4,13 +4,14 @@ import emptio.builder.AddressBuilder;
 import emptio.builder.ProductBuilder;
 import emptio.builder.UserBuilder;
 import emptio.domain.DomainRepository;
+import emptio.domain.UserRepository;
 import emptio.domain.ValidationException;
 import emptio.domain.Validator;
 import emptio.domain.common.Category;
 import emptio.domain.common.Cost;
 import emptio.domain.common.Currency;
 import emptio.domain.product.validators.*;
-import emptio.domain.user.UserService;
+import emptio.domain.user.*;
 import emptio.serialization.InMemoryCredentialsRepository;
 import emptio.serialization.InMemoryDomainRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +40,12 @@ class ProductTest {
         productRepository = new InMemoryDomainRepository<>();
         validators = new HashSet<>();
         productService = new ProductService(validators, productRepository);
-        userService = new UserService(new InMemoryDomainRepository<>(), new InMemoryCredentialsRepository(), new HashSet<>());
+        UserRepository<User> userRepository = new UserRepository<>(
+                new InMemoryDomainRepository<Shopper>(),
+                new InMemoryDomainRepository<Merchant>(),
+                new InMemoryDomainRepository<Advertiser>()
+        );
+        userService = new UserService(userRepository, new InMemoryCredentialsRepository(), new HashSet<>());
         addressBuilder = new AddressBuilder();
         userBuilder = new UserBuilder(userService, addressBuilder);
         productBuilder =  new ProductBuilder(productService, userBuilder);

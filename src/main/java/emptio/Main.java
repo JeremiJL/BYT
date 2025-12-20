@@ -3,19 +3,13 @@ package emptio;
 import emptio.adapters.rest.Server;
 import emptio.domain.CredentialsRepository;
 import emptio.domain.DomainRepository;
-import emptio.domain.user.User;
-import emptio.domain.user.UserService;
+import emptio.domain.UserRepository;
+import emptio.domain.user.*;
 import emptio.domain.user.validators.*;
 import emptio.serialization.DiskCredentialsRepository;
 import emptio.serialization.DiskDomainRepository;
-import emptio.serialization.InMemoryCredentialsRepository;
-import emptio.serialization.InMemoryDomainRepository;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 public class Main {
 
@@ -33,7 +27,12 @@ public class Main {
         // Wire dependencies
 
         // Repositories
-        DomainRepository<User> userRepository = new DiskDomainRepository<>(User.class);
+        UserRepository<User> userRepository = new UserRepository<>(
+                new DiskDomainRepository<>(Shopper.class),
+                new DiskDomainRepository<>(Merchant.class),
+                new DiskDomainRepository<>(Advertiser.class)
+        );
+
         CredentialsRepository credentialsRepository = new DiskCredentialsRepository();
 
         // Entity services
