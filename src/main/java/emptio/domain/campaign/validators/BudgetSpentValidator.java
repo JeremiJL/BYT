@@ -13,13 +13,13 @@ public class BudgetSpentValidator implements Validator<Campaign> {
     public void validate(Campaign entity) throws ValidationException {
         if (entity.getBudgetSpent() == null)
             throw new ValidationException("Budget spent can't be null");
-        if (entity.getBudgetSpent().value() == null)
+        if (entity.getBudgetSpent().getValue() == null)
             throw new ValidationException("Budget spent value can't be null");
-        if (entity.getBudgetSpent().currency() != Currency.EUR)
+        if (entity.getBudgetSpent().getCurrency() != Currency.EUR)
             throw new ValidationException("Budget spent can be only expressed in EUR.");
-        if (entity.getBudgetSpent().value().compareTo(BigDecimal.ZERO) < 0)
+        if (entity.getBudgetSpent().getValue().compareTo(BigDecimal.ZERO) < 0)
             throw new ValidationException("Budget spent can't be smaller than 0.");
-        if (entity.getBudgetSpent().value().compareTo(entity.getTotalBudget().value()) > 0)
+        if (entity.getBudgetSpent().getValue().compareTo(entity.getTotalBudget().getValue()) > 0)
             throw new ValidationException("Budget spent can't be greater than total budget.");
     }
 }
