@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class UserTest {
 
     UserRepository<User> userRepository;
-    CredentialsRepository credentialsRepository;
     Set<Validator<User>> validators;
 
     UserService userService;
@@ -27,14 +26,14 @@ class UserTest {
 
     @BeforeEach
     void setUp() {
-        credentialsRepository = new InMemoryCredentialsRepository();
         validators = new HashSet<>();
         userRepository = new UserRepository<>(
                 new InMemoryDomainRepository<Shopper>(),
                 new InMemoryDomainRepository<Merchant>(),
-                new InMemoryDomainRepository<Advertiser>()
+                new InMemoryDomainRepository<Advertiser>(),
+                new InMemoryCredentialsRepository()
         );
-        userService = new UserService(userRepository,credentialsRepository,validators);
+        userService = new UserService(userRepository,validators);
         addressBuilder = new AddressBuilder();
         userBuilder = new UserBuilder(userService, addressBuilder);
     }

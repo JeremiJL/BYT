@@ -43,9 +43,10 @@ class ProductTest {
         UserRepository<User> userRepository = new UserRepository<>(
                 new InMemoryDomainRepository<Shopper>(),
                 new InMemoryDomainRepository<Merchant>(),
-                new InMemoryDomainRepository<Advertiser>()
+                new InMemoryDomainRepository<Advertiser>(),
+                new InMemoryCredentialsRepository()
         );
-        userService = new UserService(userRepository, new InMemoryCredentialsRepository(), new HashSet<>());
+        userService = new UserService(userRepository, new HashSet<>());
         addressBuilder = new AddressBuilder();
         userBuilder = new UserBuilder(userService, addressBuilder);
         productBuilder =  new ProductBuilder(productService, userBuilder);

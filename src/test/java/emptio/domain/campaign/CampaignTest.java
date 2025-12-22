@@ -41,9 +41,10 @@ class CampaignTest {
         UserRepository<User> userRepository = new UserRepository<>(
                 new InMemoryDomainRepository<Shopper>(),
                 new InMemoryDomainRepository<Merchant>(),
-                new InMemoryDomainRepository<Advertiser>()
+                new InMemoryDomainRepository<Advertiser>(),
+                new InMemoryCredentialsRepository()
         );
-        userService = new UserService(userRepository, new InMemoryCredentialsRepository(), new HashSet<>());
+        userService = new UserService(userRepository, new HashSet<>());
         userBuilder = new UserBuilder(userService, addressBuilder);
         campaignBuilder = new CampaignBuilder(campaignService, userBuilder);
     }

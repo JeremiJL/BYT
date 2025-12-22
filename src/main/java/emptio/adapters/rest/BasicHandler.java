@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class BasicHandler implements HttpHandler {
 
@@ -32,7 +34,7 @@ public abstract class BasicHandler implements HttpHandler {
 
     public byte[] renderTemplate(Map<String, String> templateData) {
 
-        String pageAsText = new String(page);
+        String pageAsText = new String(this.getPage());
 
         for (Entry<String, String> record : templateData.entrySet()) {
             String templatedKey = "{{ " + record.getKey() + " }}";

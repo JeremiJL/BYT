@@ -15,19 +15,16 @@ public class UserService {
 
     private final Set<Validator<User>> validators;
     private final UserRepository<User> userRepository;
-    private final CredentialsRepository credentialsRepository;
 
     @SafeVarargs
-    public UserService(UserRepository<User> userRepository, CredentialsRepository credentialsRepository, Validator<User>... validators) {
+    public UserService(UserRepository<User> userRepository, Validator<User>... validators) {
         this.validators = new HashSet<>(List.of(validators));
         this.userRepository = userRepository;
-        this.credentialsRepository = credentialsRepository;
     }
 
-    public UserService(UserRepository<User> userRepository, CredentialsRepository credentialsRepository, Set<Validator<User>> validators) {
+    public UserService(UserRepository<User> userRepository, Set<Validator<User>> validators) {
         this.validators = validators;
         this.userRepository = userRepository;
-        this.credentialsRepository = credentialsRepository;
     }
 
     public User newUser(AccountType accountType,
@@ -50,10 +47,8 @@ public class UserService {
         }
 
         try {
-            credentialsRepository.setCredentials(user.getLogin(), new UserCredentials(user.getId(),user.getPassword()));
             userRepository.add(user);
         } catch (Exception e) {
-            credentialsRepository.deleteCredentials(user.getLogin());
             userRepository.remove(user.getId());
             throw e;
         }
@@ -68,7 +63,7 @@ public class UserService {
     }
 
     public int getUserId(String login, String password) {
-        UserCredentials credentials = credentialsRepository.getCredentials(login);
+        UserCredentials credentials = userRepository.find(login);
         if (credentials.getPassword().equals(password))
             return credentials.getId();
         else

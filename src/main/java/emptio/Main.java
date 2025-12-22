@@ -30,13 +30,14 @@ public class Main {
         UserRepository<User> userRepository = new UserRepository<>(
                 new DiskDomainRepository<>(Shopper.class),
                 new DiskDomainRepository<>(Merchant.class),
-                new DiskDomainRepository<>(Advertiser.class)
+                new DiskDomainRepository<>(Advertiser.class),
+                new DiskCredentialsRepository()
         );
 
         CredentialsRepository credentialsRepository = new DiskCredentialsRepository();
 
         // Entity services
-        UserService userService = new UserService(userRepository, credentialsRepository,
+        UserService userService = new UserService(userRepository,
                 new LoginValidator(), new PasswordValidator(), new AddressValidator(new PostalCodeValidator()),
                 new EmailValidator(), new NameValidator(), new PhoneNumberValidator(), new SurnameValidator());
 

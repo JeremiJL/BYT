@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Emptio</title>
+    <link rel="stylesheet" href="../../static/basic.css" />
+</head>
+<body>
+<main class="page">
+    <section class="card">
+        <p class="brand">Emptio</p>
+        <h1>Account creation</h1>
+        <h2>Account creation {{ ACCOUNT_CREATION_RESULT }}</h2>
+
+        <div class="divider"></div>
+
+        <div class="actions">
+            <button id="login_button" class="primary" onclick="document.location='/'">Login</button>
+            <button id="try_again_button" onclick="history.back()">Try again</button>
+        </div>
+    </section>
+
+</main>
+
+<script>
+    document.getElementById("login_button").style.visibility = "{{ LOGIN_REDIRECT_VISIBILITY }}";
+    document.getElementById("try_again_button").style.visibility = "{{ TRY_AGAIN_REDIRECT_VISIBILITY }}";
+</script>
+</body>
+</html>

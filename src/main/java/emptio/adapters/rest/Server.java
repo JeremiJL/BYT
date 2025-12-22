@@ -1,5 +1,6 @@
 package emptio.adapters.rest;
 
+import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import emptio.adapters.rest.login.CreateAccountHandler;
 import emptio.adapters.rest.login.LoginFormHandler;
@@ -31,18 +32,32 @@ public class Server {
 
     private void linkHandlers(HttpServer server) {
 
+        server.createContext("/static/basic.css", new BasicHandler(getBytes("src/main/resources/ui/static/basic.css")) {
+            @Override
+            public void handle(HttpExchange exchange) throws IOException {
+                this.showPage(exchange, getPage());
+            }
+        });
+
+        server.createContext("/static/forms.css", new BasicHandler(getBytes("src/main/resources/ui/static/forms.css")) {
+            @Override
+            public void handle(HttpExchange exchange) throws IOException {
+                this.showPage(exchange, getPage());
+            }
+        });
+
         server.createContext("/",
-                new LoginFormHandler(getBytes("src/main/resources/ui/login/.html"))); // Landing login form page
+                new LoginFormHandler(getBytes("src/main/resources/ui/template/login/login_form.html"))); // Landing login form page
         server.createContext("/login",
-                new LoginHandler(getBytes("src/main/resources/ui/login/login.html"), this.userService)); // Login data is sent, redirect to home page performed
+                new LoginHandler(getBytes("src/main/resources/ui/template/login/login.html"), this.userService)); // Login data is sent, redirect to home page performed
 
         server.createContext("/home",
-                new HomeHandler(getBytes("src/main/resources/ui/home.html"))); // Home page for logged users
+                new HomeHandler(getBytes("src/main/resources/ui/template/home.html"))); // Home page for logged users
 
         server.createContext("/create_account_form",
-                new CreateAccountFormHandler(getBytes("src/main/resources/ui/login/create_account_form.html"))); // New account form page for new users
+                new CreateAccountFormHandler(getBytes("src/main/resources/ui/template/login/create_account_form.html"))); // New account form page for new users
         server.createContext("/create_account",
-                new CreateAccountHandler(getBytes("src/main/resources/ui/login/create_account.html"), this.userService)); // New account data is sent, redirect to success/failure page performed
+                new CreateAccountHandler(getBytes("src/main/resources/ui/template/login/create_account.html"), this.userService)); // New account data is sent, redirect to success/failure page performed
     }
 
 }

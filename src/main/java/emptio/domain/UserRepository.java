@@ -1,30 +1,34 @@
 package emptio.domain;
 
-import emptio.domain.user.Advertiser;
-import emptio.domain.user.Merchant;
-import emptio.domain.user.Shopper;
-import emptio.domain.user.User;
+import emptio.domain.user.*;
 
 public class UserRepository<T extends User> implements DomainRepository<T> {
 
     private final DomainRepository<Shopper> shopperRepository;
     private final DomainRepository<Merchant> merchantRepository;
     private final DomainRepository<Advertiser> advertiserRepository;
+    private final CredentialsRepository credentialsRepository;
 
     public UserRepository(DomainRepository<Shopper> shopperRepository, DomainRepository<Merchant> merchantRepository,
-                          DomainRepository<Advertiser> advertiserRepository) {
+                          DomainRepository<Advertiser> advertiserRepository, CredentialsRepository credentialsRepository) {
         this.shopperRepository = shopperRepository;
         this.merchantRepository = merchantRepository;
         this.advertiserRepository = advertiserRepository;
+        this.credentialsRepository = credentialsRepository;
     }
 
     @Override
     public Integer add(T user) {
+        credentialsRepository.setCredentials(user.getLogin(), new UserCredentials(user.getId(),user.getPassword()));
+
         return switch (user) {
             case Merchant merchant -> merchantRepository.add(merchant);
             case Shopper shopper -> shopperRepository.add(shopper);
             case Advertiser advertiser -> advertiserRepository.add(advertiser);
-            case null, default -> throw new RepositoryException("Can not save User of unknown sub-type.");
+            default -> {
+                credentialsRepository.deleteCredentials(user.getLogin());
+                throw new RepositoryException("Can not save User of unknown sub-type.");
+            }
         };
     }
 
@@ -48,20 +52,28 @@ public class UserRepository<T extends User> implements DomainRepository<T> {
         throw new RepositoryException("Entity of given id : " + id + " doesn't exist yet.");
     }
 
+    public UserCredentials find(String login) {
+        return credentialsRepository.getCredentials(login);
+    }
+
     @Override
     public void remove(Integer id) {
         try {
             shopperRepository.remove(id);
-        } catch (RepositoryException _) {}
+        } catch (RepositoryException _) {
+            try {
+                merchantRepository.remove(id);
+            } catch (RepositoryException _) {
+                try {
+                    advertiserRepository.remove(id);
+                } catch (RepositoryException _) {
+                    throw new RepositoryException("Entity of given id : " + id + " doesn't exist yet.");
+                }
+            }
+            credentialsRepository.deleteCredentials(
+                    find(id).getLogin()
+            );
+        }
 
-        try {
-            merchantRepository.remove(id);
-        } catch (RepositoryException _) {}
-
-        try {
-            advertiserRepository.remove(id);
-        } catch (RepositoryException _) {}
-
-        throw new RepositoryException("Entity of given id : " + id + " doesn't exist yet.");
     }
 }
