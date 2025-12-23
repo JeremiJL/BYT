@@ -37,14 +37,20 @@ public class Server {
             public void handle(HttpExchange exchange) throws IOException {
                 this.showPage(exchange, getPage());
             }
-        });
-
+        }); // css file
         server.createContext("/static/forms.css", new BasicHandler(getBytes("src/main/resources/ui/static/forms.css")) {
             @Override
             public void handle(HttpExchange exchange) throws IOException {
                 this.showPage(exchange, getPage());
             }
-        });
+        }); // css file
+
+        server.createContext("/static/logo.png", new BasicHandler(getBytes("src/main/resources/ui/static/logo.png")) {
+            @Override
+            public void handle(HttpExchange exchange) throws IOException {
+                this.showPage(exchange, getPage());
+            }
+        }); // image file
 
         server.createContext("/",
                 new LoginFormHandler(getBytes("src/main/resources/ui/template/login/login_form.html"))); // Landing login form page

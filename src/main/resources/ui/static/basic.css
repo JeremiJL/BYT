@@ -1,3 +1,36 @@
+.logo-head{
+    justify-content: center;
+    text-align: center;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:0 0 14px;
+}
+
+.logo{
+    width:56px;
+    height:56px;
+    border-radius:16px;
+    object-fit:cover;
+    box-shadow: 0 14px 34px rgba(20,184,166,0.18);
+    border: 1px solid rgba(18, 32, 42, 0.10);
+    background: rgba(255,255,255,0.25);
+}
+
+@media (prefers-color-scheme: dark){
+    .logo{
+        border-color: rgba(255,255,255,0.14);
+    }
+}
+
+.logo-head .brand{
+    margin:0;
+}
+
+.logo-head .brand::before{
+    display:none;
+}
+
 :root{
     /* playful palette */
     --teal:#14b8a6;
@@ -43,6 +76,13 @@
         --primary:linear-gradient(135deg, var(--teal), var(--pink));
         --primaryText:#0b1020;
         --chip:rgba(255, 216, 74, 0.18);
+    }
+}
+
+@media (max-width: 420px){
+    .logo-head{
+        flex-direction: column;
+        gap: 10px;
     }
 }
 
