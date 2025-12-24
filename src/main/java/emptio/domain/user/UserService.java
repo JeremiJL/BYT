@@ -70,6 +70,10 @@ public class UserService {
             throw new CredentialsException("Given password does not match given login");
     }
 
+    public User getUser(int id) {
+        return userRepository.find(id);
+    }
+
     public void addCampaign(Advertiser advertiser, Campaign newCampaign) {
         Set<Campaign> advertiserCampaigns;
         advertiserCampaigns = new HashSet<>(advertiser.getCampaigns());

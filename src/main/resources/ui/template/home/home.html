@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Emptio</title>
+    <link rel="stylesheet" href="../../static/basic.css" />
+</head>
+<body>
+<main class="page">
+    <section class="card" role="region" aria-label="Welcome">
+        <div class="logo-head">
+            <img class="logo" src="../../static/logo.png" alt="Emptio logo" />
+            <p class="brand">Emptio</p>
+        </div>
+        <h1>Welcome to Emptio</h1>
+        <p class="sub">Your favorite e-marketplace.</p>
+    </section>
+    <!-- User functionalities -->
+    <button onclick="document.location='/edit_profile_form'">Edit profile</button>
+    <!-- Shopper functionalities -->
+    <button id="cart_button" onclick="document.location='/cart'" style="visibility: hidden">Cart</button>
+    <form id="product_search_form" action="/product_search" method="post" style="visibility: hidden">
+        <label for="product_search_input"></label>
+        <input type="text" id="product_search_input" name="productSearchQuery" placeholder="Search products..." required/>
+        <input type="submit" value="Search"/>
+    </form>
+    <!-- Merchant functionalities -->
+    <button id="product_inventory_button" onclick="document.location='/product_inventory'" style="visibility: hidden">Product inventory</button>
+    <button id="new_product_button" onclick="document.location='/new_product_form'" style="visibility: hidden">Add new product</button>
+    <!-- Advertiser functionalities -->
+    <button id="campaign_inventory_button" onclick="document.location='/campaign_inventory'" style="visibility: hidden">Campaign inventory</button>
+    <button id="new_campaign_button" onclick="document.location='/new_campaign_form'" style="visibility: hidden">Add new campaign</button>
+</main>
+</body>
+<script>
+
+    const TYPES_OF_USER = {
+        SHOPPER: "shopper",
+        MERCHANT: "merchant",
+        ADVERTISER: "advertiser",
+    };
+    const LOGGED_USER = {{ USER_TYPE }};
+
+    switch (LOGGED_USER) {
+        case TYPES_OF_USER.SHOPPER:
+            document.getElementById("cart_button").style.visibility = "visible";
+            document.getElementById("product_search_form").style.visibility = "visible";
+            break;
+        case TYPES_OF_USER.MERCHANT:
+            document.getElementById("product_inventory_button").style.visibility = "visible";
+            document.getElementById("new_product_button").style.visibility = "visible";
+            break;
+        case TYPES_OF_USER.ADVERTISER:
+            document.getElementById("campaign_inventory_button").style.visibility = "visible";
+            document.getElementById("new_campaign_button").style.visibility = "visible";
+            break;
+    }
+
+</script>
+
+</html>

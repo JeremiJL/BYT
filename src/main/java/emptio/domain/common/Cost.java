@@ -19,7 +19,7 @@ import java.util.Arrays;
         this.currency = currency;
     }
 
-    public static Cost add(Cost... costs) {
+    public static Cost add(Cost... costs) throws CostException {
         if (Arrays.stream(costs).findFirst().isEmpty())
             throw new CostException("Can't add 0 number of costs together");
         else {

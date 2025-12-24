@@ -46,7 +46,7 @@ public class ProductService {
         productRepository.update(updatedProduct);
     }
 
-    public void decrementCountOnMarketplace(int id) {
+    public void decrementCountOnMarketplace(int id) throws ProductServiceException {
         Product oldProduct = productRepository.find(id);
 
         if (oldProduct.getCountOnMarketplace() > 0) {

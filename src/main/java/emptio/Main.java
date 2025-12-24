@@ -1,6 +1,8 @@
 package emptio;
 
 import emptio.adapters.rest.Server;
+import emptio.common.DasSymetricEncryptor;
+import emptio.common.SymetricEncryptor;
 import emptio.domain.CredentialsRepository;
 import emptio.domain.DomainRepository;
 import emptio.domain.UserRepository;
@@ -15,16 +17,17 @@ public class Main {
 
     public static void main(String[] args) {
 
-
-        // TMP
-
-        DomainRepository<User> repository = new DiskDomainRepository<>(User.class);
-
-
         // Greet
         System.out.println("Welcome to Emptio!");
 
         // Wire dependencies
+
+        // Tools
+        SymetricEncryptor symmetricEncryptor = new DasSymetricEncryptor();
+
+
+//        String encrypted = symmetricEncryptor.encrypt(String.valueOf(0));
+//        String decrypted = symmetricEncryptor.decrypt(encrypted);
 
         // Repositories
         UserRepository<User> userRepository = new UserRepository<>(
@@ -42,7 +45,7 @@ public class Main {
                 new EmailValidator(), new NameValidator(), new PhoneNumberValidator(), new SurnameValidator());
 
         // Server - Root dependency
-        Server server = new Server(userService);
+        Server server = new Server(userService, symmetricEncryptor);
 
         try {
             server.run();

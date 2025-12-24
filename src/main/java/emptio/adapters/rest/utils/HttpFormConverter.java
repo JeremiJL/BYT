@@ -16,7 +16,7 @@ public class HttpFormConverter {
         }
     }
 
-    public static Map<String, String> convertToMap(byte[] data) {
+    public static Map<String, String> convertToMap(byte[] data) throws HttpFormToJsonConversionException {
         try {
             String plain = new String(data);
             String[] pairs = plain.split("&");

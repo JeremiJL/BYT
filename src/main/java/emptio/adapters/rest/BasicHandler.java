@@ -2,6 +2,8 @@ package emptio.adapters.rest;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import lombok.Generated;
+import lombok.Getter;
 import lombok.NonNull;
 
 import java.io.IOException;
@@ -13,11 +15,7 @@ import java.util.regex.Pattern;
 
 public abstract class BasicHandler implements HttpHandler {
 
-    @NonNull private final byte[] page;
-
-    public byte[] getPage() {
-        return page;
-    }
+    @NonNull @Getter private final byte[] page;
 
     public BasicHandler(byte[] page) {
         this.page = page;
