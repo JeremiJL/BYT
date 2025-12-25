@@ -1,21 +1,18 @@
 package emptio.adapters.rest;
 
 import com.sun.net.httpserver.HttpExchange;
+import emptio.adapters.rest.utils.CookiesExtractor;
 import emptio.common.SymetricEncryptor;
 import emptio.common.SymetricEncryptorException;
-import emptio.domain.RepositoryException;
 import emptio.domain.user.User;
 import emptio.domain.user.UserService;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 public abstract class SessionHandler extends BasicHandler {
-
 
     @NonNull private final UserService userService;
     @NonNull private final SymetricEncryptor symmetricEncryptor;
@@ -29,56 +26,28 @@ public abstract class SessionHandler extends BasicHandler {
     }
 
     @Override
-    public final void handle(HttpExchange exchange) throws IOException {
+    public final void handleExchange(HttpExchange exchange) throws IOException {
 
-        String sessionKey = getCookies(exchange).get("sessionKey");
+        String sessionKey = CookiesExtractor.getCookies(exchange).get("sessionKey");
+        Optional<User> user = fetchUser(sessionKey);
 
-        if (isSessionValid(sessionKey)) {
-            User user = fetchUserForSession(sessionKey);
-            this.handleSession(exchange, user);
+        if (user.isPresent()) {
+            this.handleExchangeSession(exchange, user.get());
         } else {
-            this.showPage(exchange, getFallbackPage());
+            this.renderPage(exchange, getFallbackPage());
         }
     }
 
-    public abstract void handleSession(HttpExchange exchange, User user) throws IOException;
+    public abstract void handleExchangeSession(HttpExchange exchange, User user) throws IOException;
 
-    private boolean isSessionValid(String sessionKey)  {
+    private Optional<User> fetchUser(String sessionKey) {
         try {
-            fetchUserForSession(sessionKey);
-        } catch (RuntimeException e) {
-            return false;
-        }
-        return true;
-    }
-
-    private User fetchUserForSession(String sessionKey) {
-        try {
-            int id = Integer.parseInt(symmetricEncryptor.decrypt(sessionKey));
-            return this.userService.getUser(id);
-        } catch (SymetricEncryptorException | NumberFormatException | RepositoryException e) {
-            throw new RuntimeException(e);
+            int userId = Integer.parseInt(
+                    symmetricEncryptor.decrypt(sessionKey)
+            );
+            return this.userService.getUser(userId);
+        } catch (SymetricEncryptorException | NumberFormatException e) {
+            return Optional.empty();
         }
     }
-
-    private Map<String,String> getCookies(HttpExchange exchange) {
-
-        StringBuilder mergedCookies = new StringBuilder();
-
-        for (String c :  exchange.getRequestHeaders().get("Cookie"))
-            mergedCookies.append(c);
-
-
-        Map<String,String> cookies = new HashMap<>();
-
-        for (String entry : mergedCookies.toString().split(";")) {
-            String key = entry.trim().split("=")[0].trim();
-            String value = entry.substring(key.length() + 2).trim();
-            cookies.put(key, value);
-        }
-
-        return cookies;
-    }
-
-
 }

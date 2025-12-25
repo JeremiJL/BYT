@@ -4,12 +4,10 @@ import emptio.domain.*;
 import emptio.domain.campaign.Campaign;
 import emptio.domain.cart.Cart;
 import emptio.domain.product.Product;
+import lombok.NonNull;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class UserService {
 
@@ -30,7 +28,7 @@ public class UserService {
     public User newUser(AccountType accountType,
                         String name, String surname,
                         String email, String number,
-                        String login, String password, Address address) throws ValidationException
+                        String login, String password, Address address) throws ValidationException, RepositoryException
     {
         LocalDate today = today();
 
@@ -48,7 +46,7 @@ public class UserService {
 
         try {
             userRepository.add(user);
-        } catch (Exception e) {
+        } catch (RepositoryException e) {
             userRepository.remove(user.getId());
             throw e;
         }
@@ -62,16 +60,20 @@ public class UserService {
         return userRepository.find(1);
     }
 
-    public int getUserId(String login, String password) {
+    public Optional<@NonNull Integer> getUserId(String login, String password) {
         UserCredentials credentials = userRepository.find(login);
         if (credentials.getPassword().equals(password))
-            return credentials.getId();
+            return Optional.of(credentials.getId());
         else
-            throw new CredentialsException("Given password does not match given login");
+            return Optional.empty();
     }
 
-    public User getUser(int id) {
-        return userRepository.find(id);
+    public Optional<User> getUser(int id) {
+        try {
+            return Optional.of(userRepository.find(id));
+        } catch (RepositoryException e) {
+            return Optional.empty();
+        }
     }
 
     public void addCampaign(Advertiser advertiser, Campaign newCampaign) {

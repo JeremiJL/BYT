@@ -12,7 +12,7 @@ public class LoginFormHandler extends BasicHandler {
     }
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        showPage(exchange, getPage());
+    public void handleExchange(HttpExchange exchange) throws IOException {
+        renderPage(exchange, getDefaultPage());
     }
 }

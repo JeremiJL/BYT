@@ -10,6 +10,7 @@ import lombok.NonNull;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class LoginHandler extends BasicHandler {
 
@@ -23,33 +24,40 @@ public class LoginHandler extends BasicHandler {
     }
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    public void handleExchange(HttpExchange exchange) throws IOException {
 
         Map<String,String> requestData = HttpFormConverter.convertToMap(exchange.getRequestBody().readAllBytes());
 
         String login = requestData.get("login");
         String password = requestData.get("password");
 
-        Map<String, String> template = new HashMap<>();
+        Optional<Integer> userId = userService.getUserId(login, password);
 
-        try {
-            int id = userService.getUserId(login, password);
-            String sessionKey = symmetricEncryptor.encrypt(String.valueOf(id));
-
-            exchange.getResponseHeaders().add("Set-Cookie", "sessionKey=" + sessionKey + "; Max-Age=3600; Path=/");
-
-            template.put("LOGIN_RESULT", "successful");
-            template.put("HOME_REDIRECT_VISIBILITY", "visible");
-            template.put("TRY_AGAIN_REDIRECT_VISIBILITY", "hidden");
-
-        } catch (Exception e) {
-
-            template.put("LOGIN_RESULT", "failed - " + e.getMessage());
-            template.put("HOME_REDIRECT_VISIBILITY", "hidden");
-            template.put("TRY_AGAIN_REDIRECT_VISIBILITY", "visible");
+        if (userId.isPresent()) {
+            renderSuccessfulLoginPage(exchange, userId.get());
+        } else {
+            renderFailedLoginPage(exchange);
         }
+    }
 
-        showPage(exchange, renderTemplate(template));
+    private void renderSuccessfulLoginPage(HttpExchange exchange, int userId) throws IOException {
+        String sessionKey = symmetricEncryptor.encrypt(String.valueOf(userId));
+        exchange.getResponseHeaders().add("Set-Cookie", "sessionKey=" + sessionKey + "; Max-Age=3600; Path=/");
+
+        Map<String, String> template = new HashMap<>();
+        template.put("LOGIN_RESULT", "successful");
+        template.put("HOME_REDIRECT_VISIBILITY", "visible");
+        template.put("TRY_AGAIN_REDIRECT_VISIBILITY", "hidden");
+
+        renderPage(exchange, applyDataToTemplate(getDefaultPage(), template));
+    }
+
+    private void renderFailedLoginPage(HttpExchange exchange) throws IOException {
+        Map<String, String> template = new HashMap<>();
+        template.put("LOGIN_RESULT", "failed");
+        template.put("HOME_REDIRECT_VISIBILITY", "hidden");
+        template.put("TRY_AGAIN_REDIRECT_VISIBILITY", "visible");
+        renderPage(exchange, applyDataToTemplate(getDefaultPage(), template));
     }
 
 }

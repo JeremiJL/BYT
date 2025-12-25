@@ -18,7 +18,7 @@ public class UserRepository<T extends User> implements DomainRepository<T> {
     }
 
     @Override
-    public Integer add(T user) {
+    public Integer add(T user) throws RepositoryException {
         credentialsRepository.setCredentials(user.getLogin(), new UserCredentials(user.getId(),user.getPassword()));
 
         return switch (user) {
@@ -33,7 +33,7 @@ public class UserRepository<T extends User> implements DomainRepository<T> {
     }
 
     @Override
-    public T find(Integer id) {
+    public T find(Integer id) throws RepositoryException {
         try {
             //noinspection unchecked
             return (T) shopperRepository.find(id);
@@ -57,7 +57,7 @@ public class UserRepository<T extends User> implements DomainRepository<T> {
     }
 
     @Override
-    public void remove(Integer id) {
+    public void remove(Integer id) throws RepositoryException {
         try {
             shopperRepository.remove(id);
         } catch (RepositoryException _) {

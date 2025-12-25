@@ -14,8 +14,8 @@ public class HomeHandler extends SessionHandler {
     }
 
     @Override
-    public void handleSession(HttpExchange exchange, User user) throws IOException {
-        this.showPage(exchange, getPage());
+    public void handleExchangeSession(HttpExchange exchange, User user) throws IOException {
+        this.renderPage(exchange, getDefaultPage());
     }
 
 }
