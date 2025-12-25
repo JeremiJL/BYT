@@ -5,12 +5,13 @@ import emptio.domain.product.Product;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
+import lombok.With;
 
 import java.time.LocalDate;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
-@Value public class Merchant extends User {
+@With @Value public class Merchant extends User {
 
     @NonNull Set<Product> products;
 

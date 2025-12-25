@@ -2,6 +2,8 @@ package emptio.domain;
 
 import emptio.domain.user.*;
 
+import java.util.Optional;
+
 public class UserRepository<T extends User> implements DomainRepository<T> {
 
     private final DomainRepository<Shopper> shopperRepository;
@@ -18,7 +20,7 @@ public class UserRepository<T extends User> implements DomainRepository<T> {
     }
 
     @Override
-    public Integer add(T user) throws RepositoryException {
+    public Optional<T> add(T user) throws RepositoryException, CredentialsException {
         credentialsRepository.setCredentials(user.getLogin(), new UserCredentials(user.getId(),user.getPassword()));
 
         return switch (user) {
@@ -32,6 +34,7 @@ public class UserRepository<T extends User> implements DomainRepository<T> {
         };
     }
 
+    // BEGS FOR REFACTOR
     @Override
     public T find(Integer id) throws RepositoryException {
         try {
@@ -52,12 +55,12 @@ public class UserRepository<T extends User> implements DomainRepository<T> {
         throw new RepositoryException("Entity of given id : " + id + " doesn't exist yet.");
     }
 
-    public UserCredentials find(String login) {
+    public UserCredentials find(String login) throws RepositoryException, CredentialsException {
         return credentialsRepository.getCredentials(login);
     }
 
     @Override
-    public void remove(Integer id) throws RepositoryException {
+    public boolean remove(Integer id) throws RepositoryException, CredentialsException {
         try {
             shopperRepository.remove(id);
         } catch (RepositoryException _) {
@@ -70,10 +73,10 @@ public class UserRepository<T extends User> implements DomainRepository<T> {
                     throw new RepositoryException("Entity of given id : " + id + " doesn't exist yet.");
                 }
             }
+        } finally {
             credentialsRepository.deleteCredentials(
                     find(id).getLogin()
             );
         }
-
     }
 }

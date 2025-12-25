@@ -25,17 +25,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User newUser(AccountType accountType,
+    public Optional<User> newUser(AccountType accountType,
                         String name, String surname,
-                        String email, String number,
+                        String email, String phoneNumber,
                         String login, String password, Address address) throws ValidationException, RepositoryException
     {
         LocalDate today = today();
 
         User user = switch (accountType) {
-            case SHOPPER -> new Shopper(User.idService.getNewId(), name, surname, email, number, login, password, address, today, null);
-            case MERCHANT -> new Merchant(User.idService.getNewId(), name, surname, email, number, login, password, address, today, Collections.emptySet());
-            case ADVERTISER -> new Advertiser(User.idService.getNewId(), name, surname, email, number, login, password, address, today, Collections.emptySet());
+            case SHOPPER -> new Shopper(User.idService.getNewId(), name, surname, email, phoneNumber, login, password, address, today, null);
+            case MERCHANT -> new Merchant(User.idService.getNewId(), name, surname, email, phoneNumber, login, password, address, today, Collections.emptySet());
+            case ADVERTISER -> new Advertiser(User.idService.getNewId(), name, surname, email, phoneNumber, login, password, address, today, Collections.emptySet());
         };
 
         try {
@@ -44,16 +44,30 @@ public class UserService {
             throw new ValidationException("Failed to create a user with given parameters, cause : " + e.getMessage());
         }
 
+        return userRepository.add(user);
+    }
+
+    public Optional<User> updateUser(User user,
+                           String name, String surname,
+                           String email, String phoneNumber,
+                           String login, String password, Address address) throws ValidationException, RepositoryException {
+
+        User updatedUser = user
+                .withName(name)
+                .withSurname(surname)
+                .withEmail(email)
+                .withPhoneNumber(phoneNumber)
+                .withLogin(login)
+                .withPassword(password)
+                .withAddress(address);
+
         try {
-            userRepository.add(user);
-        } catch (RepositoryException e) {
-            userRepository.remove(user.getId());
-            throw e;
+            validators.forEach(validator -> validator.validate(updatedUser));
+        } catch (ValidationException e) {
+            throw new ValidationException("Failed to create a user with given parameters, cause : " + e.getMessage());
         }
 
-        return userRepository.find(
-            user.getId()
-        );
+        return userRepository.update(updatedUser);
     }
 
     public User getEmptioUser() {
@@ -61,11 +75,15 @@ public class UserService {
     }
 
     public Optional<@NonNull Integer> getUserId(String login, String password) {
-        UserCredentials credentials = userRepository.find(login);
-        if (credentials.getPassword().equals(password))
-            return Optional.of(credentials.getId());
-        else
+        try {
+            UserCredentials credentials = userRepository.find(login);
+            if (credentials.getPassword().equals(password))
+                return Optional.of(credentials.getId());
+            else
+                return Optional.empty();
+        } catch (RepositoryException | CredentialsException e) {
             return Optional.empty();
+        }
     }
 
     public Optional<User> getUser(int id) {

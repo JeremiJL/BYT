@@ -1,10 +1,15 @@
 package emptio.domain.user;
 
+import lombok.EqualsAndHashCode;
+import lombok.Value;
+import lombok.With;
+
 import java.time.LocalDate;
 
-public class Moderator extends User {
+@EqualsAndHashCode(callSuper = true)
+@With @Value public class Moderator extends User {
 
-    protected Moderator(int id, String name, String surname,
+    public Moderator(int id, String name, String surname,
                         String email, String number,
                         String login, String password,
                         LocalDate lastLogin, Address address) {

@@ -7,6 +7,7 @@ import emptio.domain.RepositoryException;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 public class DiskDomainRepository<T extends Identifiable> implements DomainRepository<T> {
 
@@ -31,42 +32,49 @@ public class DiskDomainRepository<T extends Identifiable> implements DomainRepos
     }
 
     @Override
-    public Integer add(T i) {
+    public Optional<T> add(T i) throws RepositoryException {
         try {
             File file = new File(collectionPath + "/" + i.getId());
             if (file.exists())
-                throw new RepositoryException("Entity of given id : " + i.getId() + " already exists. Can not add it.");
+                return Optional.empty();
 
             OutputStream outputStream = new FileOutputStream(file);
             String mappedEntity = objectMapper.writeValueAsString(i);
             outputStream.write(mappedEntity.getBytes());
             outputStream.close();
 
-            return i.getId();
+            return find(i.getId());
         } catch (IOException e) {
             throw new RepositoryException("Failed to save " + i.getId() + " due to I/O error : " + e.getMessage());
         }
     }
 
     @Override
-    public T find(Integer id) {
+    public Optional<T> find(Integer id) throws RepositoryException {
         try {
             File file = new File(collectionPath + "/" + id);
             if (!file.exists())
-                throw new RepositoryException("Entity of given id : " + id + " doesn't exist yet.");
-            return objectMapper.readValue(file, clazz);
+                return Optional.empty();
+
+            try (InputStream inputStream = new FileInputStream(file)) {
+                T entity = objectMapper.readValue(inputStream, clazz);
+                inputStream.close();
+                return Optional.of(entity);
+            }
+
         } catch (IOException e) {
             throw new RepositoryException("Failed to read " + id + " due to I/O error : " + e.getMessage());
         }
     }
 
     @Override
-    public void remove(Integer id) {
+    public boolean remove(Integer id) throws RepositoryException {
         try {
             File file = new File(collectionPath + "/" + id);
             if (!file.exists())
-                throw new RepositoryException("Entity of given id : " + id + " doesn't exist yet.");
+                return false;
             Files.delete(Paths.get(collectionPath + "/" + id));
+            return true;
         } catch (IOException e) {
             throw new RepositoryException("Failed to delete " + id + " due to I/O error : " + e.getMessage());
         }

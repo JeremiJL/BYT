@@ -12,15 +12,17 @@ import lombok.NonNull;
 import java.io.IOException;
 import java.util.Optional;
 
+import static emptio.adapters.rest.utils.FilePathToBytes.getBytes;
+
 public abstract class SessionHandler extends BasicHandler {
 
     @NonNull private final UserService userService;
     @NonNull private final SymetricEncryptor symmetricEncryptor;
     @Getter @NonNull private final byte[] fallbackPage;
 
-    public SessionHandler(byte[] pageWithAuthorizedAccess, byte[] fallbackPage, UserService userService, @NonNull SymetricEncryptor symmetricEncryptor) {
+    public SessionHandler(byte[] pageWithAuthorizedAccess, UserService userService, @NonNull SymetricEncryptor symmetricEncryptor) {
         super(pageWithAuthorizedAccess);
-        this.fallbackPage = fallbackPage;
+        this.fallbackPage = getBytes("src/main/resources/ui/template/login/login_form.html");
         this.userService = userService;
         this.symmetricEncryptor = symmetricEncryptor;
     }

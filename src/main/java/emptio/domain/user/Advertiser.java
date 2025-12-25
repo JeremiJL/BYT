@@ -5,12 +5,13 @@ import emptio.domain.campaign.Campaign;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
+import lombok.With;
 
 import java.time.LocalDate;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
-@Value public class Advertiser extends User {
+@With @Value public class Advertiser extends User {
 
     @NonNull Set<Campaign> campaigns;
 

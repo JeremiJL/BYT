@@ -1,7 +1,9 @@
 package emptio.adapters.rest;
 
-import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import emptio.adapters.rest.home.EditProfileFormHandler;
+import emptio.adapters.rest.home.EditProfileHandler;
+import emptio.adapters.rest.home.HomeHandler;
 import emptio.adapters.rest.login.CreateAccountHandler;
 import emptio.adapters.rest.login.LoginFormHandler;
 import emptio.adapters.rest.login.LoginHandler;
@@ -38,21 +40,21 @@ public class Server {
 
 //        server.createContext("/static/basic.css", new BasicHandler(getBytes("src/main/resources/ui/static/basic.css")) {
 //            @Override
-//            public void handle(HttpExchange exchange) throws IOException {
-//                this.showPage(exchange, getPage());
+//            public void handleExchange(HttpExchange exchange) throws IOException {
+//                this.renderPage(exchange, getDefaultPage());
 //            }
 //        }); // css file
 //        server.createContext("/static/forms.css", new BasicHandler(getBytes("src/main/resources/ui/static/forms.css")) {
 //            @Override
-//            public void handle(HttpExchange exchange) throws IOException {
-//                this.showPage(exchange, getPage());
+//            public void handleExchange(HttpExchange exchange) throws IOException {
+//                this.renderPage(exchange, getDefaultPage());
 //            }
 //        }); // css file
 //
 //        server.createContext("/static/logo.png", new BasicHandler(getBytes("src/main/resources/ui/static/logo.png")) {
 //            @Override
-//            public void handle(HttpExchange exchange) throws IOException {
-//                this.showPage(exchange, getPage());
+//            public void handleExchange(HttpExchange exchange) throws IOException {
+//                this.renderPage(exchange, getDefaultPage());
 //            }
 //        }); // image file
 
@@ -70,7 +72,16 @@ public class Server {
         server.createContext("/home",
                 new HomeHandler(
                         getBytes("src/main/resources/ui/template/home/home.html"), // Home page for logged users
-                        getBytes("src/main/resources/ui/template/login/login_form.html"), // Redirects to log page if user is not logged
+                        this.userService, this.symmetricEncryptor));
+
+        server.createContext("/edit_profile_form",
+                new EditProfileFormHandler(
+                        getBytes("src/main/resources/ui/template/home/edit_profile_form.html"), // Edit profile form page for logged users
+                        this.userService, this.symmetricEncryptor));
+
+        server.createContext("/edit_profile",
+                new EditProfileHandler(
+                        getBytes("src/main/resources/ui/template/home/edit_profile.html"), // Edit profile page for logged users
                         this.userService, this.symmetricEncryptor));
     }
 

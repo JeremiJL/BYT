@@ -6,11 +6,12 @@ import emptio.domain.cart.Cart;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
 import lombok.Value;
+import lombok.With;
 
 import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = true)
-@Value public class Shopper extends User {
+@With @Value public class Shopper extends User {
 
     // Nullable
     Cart cart;

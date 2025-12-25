@@ -2,13 +2,12 @@ package emptio.adapters.rest.login;
 
 import com.sun.net.httpserver.HttpExchange;
 import emptio.adapters.rest.BasicHandler;
-import emptio.adapters.rest.utils.HttpFormConverter;
+import emptio.adapters.rest.utils.HttpConverter;
 import emptio.common.SymetricEncryptor;
 import emptio.domain.user.UserService;
 import lombok.NonNull;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,7 +25,7 @@ public class LoginHandler extends BasicHandler {
     @Override
     public void handleExchange(HttpExchange exchange) throws IOException {
 
-        Map<String,String> requestData = HttpFormConverter.convertToMap(exchange.getRequestBody().readAllBytes());
+        Map<String,String> requestData = HttpConverter.convertFormDataToMap(exchange.getRequestBody().readAllBytes());
 
         String login = requestData.get("login");
         String password = requestData.get("password");
@@ -44,19 +43,21 @@ public class LoginHandler extends BasicHandler {
         String sessionKey = symmetricEncryptor.encrypt(String.valueOf(userId));
         exchange.getResponseHeaders().add("Set-Cookie", "sessionKey=" + sessionKey + "; Max-Age=3600; Path=/");
 
-        Map<String, String> template = new HashMap<>();
-        template.put("LOGIN_RESULT", "successful");
-        template.put("HOME_REDIRECT_VISIBILITY", "visible");
-        template.put("TRY_AGAIN_REDIRECT_VISIBILITY", "hidden");
-
+        Map<String, String> template = Map.of(
+                "LOGIN_RESULT", "successful",
+                "HOME_REDIRECT_VISIBILITY", "visible",
+                "TRY_AGAIN_REDIRECT_VISIBILITY", "hidden"
+        );
         renderPage(exchange, applyDataToTemplate(getDefaultPage(), template));
     }
 
     private void renderFailedLoginPage(HttpExchange exchange) throws IOException {
-        Map<String, String> template = new HashMap<>();
-        template.put("LOGIN_RESULT", "failed");
-        template.put("HOME_REDIRECT_VISIBILITY", "hidden");
-        template.put("TRY_AGAIN_REDIRECT_VISIBILITY", "visible");
+
+        Map<String, String> template = Map.of(
+                "LOGIN_RESULT", "failed - incorrect password or login",
+                "HOME_REDIRECT_VISIBILITY", "hidden",
+                "TRY_AGAIN_REDIRECT_VISIBILITY", "visible"
+        );
         renderPage(exchange, applyDataToTemplate(getDefaultPage(), template));
     }
 

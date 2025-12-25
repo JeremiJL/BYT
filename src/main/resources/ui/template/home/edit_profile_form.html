@@ -16,110 +16,93 @@
                 <img class="logo" src="../../static/logo.png" alt="Emptio logo" />
                 <p class="brand">Emptio</p>
             </div>
-            <h1>Create new account</h1>
-            <h2>Provide account details</h2>
+            <h1>Edit profile</h1>
+            <h2>Change your account details</h2>
         </div>
 
-        <form action="/create_account" method="post">
-            <fieldset>
-                <legend>Account type</legend>
-                <div class="radio-row">
-                    <div class="radio">
-                        <input type="radio" id="shopper_account" name="accountType" value="SHOPPER" required />
-                        <label for="shopper_account">shopper</label>
-                    </div>
-                    <div class="radio">
-                        <input type="radio" id="merchant_account" name="accountType" value="MERCHANT" required />
-                        <label for="merchant_account">merchant</label>
-                    </div>
-                    <div class="radio">
-                        <input type="radio" id="advertiser_account" name="accountType" value="ADVERTISER" required />
-                        <label for="advertiser_account">advertiser</label>
-                    </div>
-                </div>
-            </fieldset>
+        <form action="/edit_profile" method="post">
 
             <fieldset>
-                <legend>New login credentials</legend>
+                <legend>Change your login credentials</legend>
                 <div class="grid cols-2">
                     <div class="field">
                         <label for="login">login:</label>
-                        <input type="text" id="login" name="login" required />
+                        <input type="text" id="login" name="login" value="{{ CURRENT_LOGIN }}" required />
                     </div>
                     <div class="field">
                         <label for="password">password:</label>
-                        <input type="password" id="password" name="password" required />
+                        <input type="password" id="password" name="password" value="{{ CURRENT_PASSWORD }}" required />
                     </div>
                 </div>
             </fieldset>
 
             <fieldset>
-                <legend>Your full name</legend>
+                <legend>Change your full name</legend>
                 <div class="grid cols-2">
                     <div class="field">
                         <label for="name">first name:</label>
-                        <input type="text" id="name" name="name" required />
+                        <input type="text" id="name" name="name" value="{{ CURRENT_NAME }}" required />
                     </div>
                     <div class="field">
                         <label for="surname">surname:</label>
-                        <input type="text" id="surname" name="surname" required />
+                        <input type="text" id="surname" name="surname" value="{{ CURRENT_SURNAME }}" required />
                     </div>
                 </div>
             </fieldset>
 
             <fieldset>
-                <legend>Contact information</legend>
+                <legend>Change your contact information</legend>
                 <div class="grid cols-2">
                     <div class="field">
                         <label for="email">email:</label>
-                        <input type="text" id="email" name="email" required />
+                        <input type="text" id="email" name="email" value="{{ CURRENT_EMAIL }}" required />
                     </div>
                     <div class="field">
                         <label for="phoneNumber">phone number:</label>
-                        <input type="text" id="phoneNumber" name="phoneNumber" required />
+                        <input type="text" id="phoneNumber" name="phoneNumber" value="{{ CURRENT_PHONE_NUMBER }}" required />
                     </div>
                 </div>
             </fieldset>
 
             <fieldset>
-                <legend>Address</legend>
+                <legend>Change your address</legend>
                 <div class="grid cols-2">
                     <div class="field">
                         <label for="postalCode">postal code:</label>
-                        <input type="text" id="postalCode" name="postalCode" required />
+                        <input type="text" id="postalCode" name="postalCode" value="{{ CURRENT_POSTAL_CODE }}" required />
                     </div>
                     <div class="field">
                         <label for="streetName">street name:</label>
-                        <input type="text" id="streetName" name="streetName" />
+                        <input type="text" id="streetName" name="streetName" value="{{ CURRENT_STREET_NAME }}" />
                     </div>
                 </div>
 
                 <div class="grid cols-3" style="margin-top:12px;">
                     <div class="field">
                         <label for="country">country:</label>
-                        <input type="text" id="country" name="country" />
+                        <input type="text" id="country" name="country" value="{{ CURRENT_COUNTRY }}" required />
                     </div>
                     <div class="field">
                         <label for="city">city:</label>
-                        <input type="text" id="city" name="city" />
+                        <input type="text" id="city" name="city" value="{{ CURRENT_CITY }}" required />
                     </div>
                     <div class="field">
                         <label for="buildingNumber">building number:</label>
-                        <input type="number" id="buildingNumber" name="buildingNumber" />
+                        <input type="number" id="buildingNumber" name="buildingNumber" value="{{ CURRENT_BUILDING_NUMBER }}" required />
                     </div>
                 </div>
 
                 <div class="grid" style="margin-top:12px;">
                     <div class="field">
                         <label for="apartmentNumber">apartment number:</label>
-                        <input type="number" id="apartmentNumber" name="apartmentNumber" />
+                        <input type="number" id="apartmentNumber" name="apartmentNumber" value="{{ CURRENT_APARTMENT_NUMBER }}" required/>
                     </div>
                 </div>
             </fieldset>
 
             <div class="actions">
-                <button id="try_again_button" onclick="document.location='/back'">Back</button>
-                <input type="submit" value="Create" />
+                <button id="try_again_button" onclick="document.location='/back'">Cancel</button>
+                <input type="submit" value="Apply changes" />
             </div>
         </form>
     </section>
