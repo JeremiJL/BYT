@@ -2,17 +2,11 @@ package emptio.domain;
 
 import emptio.serialization.Identifiable;
 
-import java.util.Optional;
-
 public interface DomainRepository<T extends Identifiable> {
-    Optional<T> add(T i) throws RepositoryException;
-    Optional<T> find(Integer id) throws RepositoryException;
-    default Optional<T> update(T i) {
-        try {
-            remove(i.getId());
-        } catch (RepositoryException e) {
-            return Optional.empty();
-        }
+    Integer add(T i) throws RepositoryException;
+    T find(Integer id) throws RepositoryException;
+    default Integer update(T i){
+        remove(i.getId());
         return add(i);
     }
     boolean remove(Integer id) throws RepositoryException;

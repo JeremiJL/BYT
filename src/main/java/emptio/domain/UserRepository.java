@@ -20,7 +20,7 @@ public class UserRepository<T extends User> implements DomainRepository<T> {
     }
 
     @Override
-    public Optional<T> add(T user) throws RepositoryException, CredentialsException {
+    public Integer add(T user) throws RepositoryException {
         credentialsRepository.setCredentials(user.getLogin(), new UserCredentials(user.getId(),user.getPassword()));
 
         return switch (user) {
@@ -34,7 +34,6 @@ public class UserRepository<T extends User> implements DomainRepository<T> {
         };
     }
 
-    // BEGS FOR REFACTOR
     @Override
     public T find(Integer id) throws RepositoryException {
         try {
@@ -55,28 +54,34 @@ public class UserRepository<T extends User> implements DomainRepository<T> {
         throw new RepositoryException("Entity of given id : " + id + " doesn't exist yet.");
     }
 
-    public UserCredentials find(String login) throws RepositoryException, CredentialsException {
+    public UserCredentials find(String login) throws CredentialsException, RepositoryException {
         return credentialsRepository.getCredentials(login);
     }
 
     @Override
-    public boolean remove(Integer id) throws RepositoryException, CredentialsException {
+    public boolean remove(Integer id) throws RepositoryException {
+        boolean resultOfRemoval = false;
+        String userLogin = find(id).getLogin();
         try {
-            shopperRepository.remove(id);
+            resultOfRemoval = shopperRepository.remove(id);
         } catch (RepositoryException _) {
             try {
-                merchantRepository.remove(id);
+                resultOfRemoval = merchantRepository.remove(id);
             } catch (RepositoryException _) {
                 try {
-                    advertiserRepository.remove(id);
+                    resultOfRemoval = advertiserRepository.remove(id);
                 } catch (RepositoryException _) {
                     throw new RepositoryException("Entity of given id : " + id + " doesn't exist yet.");
                 }
             }
-        } finally {
-            credentialsRepository.deleteCredentials(
-                    find(id).getLogin()
+        }
+
+        if (resultOfRemoval) {
+            return credentialsRepository.deleteCredentials(
+                    userLogin
             );
+        } else {
+            return false;
         }
     }
 }

@@ -47,7 +47,7 @@ public abstract class SessionHandler extends BasicHandler {
             int userId = Integer.parseInt(
                     symmetricEncryptor.decrypt(sessionKey)
             );
-            return this.userService.getUser(userId);
+            return Optional.of(this.userService.getUser(userId));
         } catch (SymetricEncryptorException | NumberFormatException e) {
             return Optional.empty();
         }

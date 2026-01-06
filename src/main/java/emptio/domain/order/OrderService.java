@@ -47,7 +47,7 @@ public class OrderService {
             payments.add(new Payment(
                     Payment.idService.getNewId(),
                     campaign.getTotalBudget(),
-                    userService.getEmptioUser(),
+                    userService.getEmptioAsABillingUser(),
                     campaign.getOwner()));
 
         Order order = new Order(payments, Order.idService.getNewId(), ORDER_TIME_TO_LIVE_IN_MINUTES, LocalDateTime.now());

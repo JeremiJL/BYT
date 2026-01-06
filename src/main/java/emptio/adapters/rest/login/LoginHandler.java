@@ -4,6 +4,8 @@ import com.sun.net.httpserver.HttpExchange;
 import emptio.adapters.rest.BasicHandler;
 import emptio.adapters.rest.utils.HttpConverter;
 import emptio.common.SymetricEncryptor;
+import emptio.domain.CredentialsException;
+import emptio.domain.RepositoryException;
 import emptio.domain.user.UserService;
 import lombok.NonNull;
 
@@ -30,12 +32,11 @@ public class LoginHandler extends BasicHandler {
         String login = requestData.get("login");
         String password = requestData.get("password");
 
-        Optional<Integer> userId = userService.getUserId(login, password);
-
-        if (userId.isPresent()) {
-            renderSuccessfulLoginPage(exchange, userId.get());
-        } else {
-            renderFailedLoginPage(exchange);
+        try {
+            int userId = userService.getIdOfUser(login, password);
+            renderSuccessfulLoginPage(exchange, userId);
+        } catch (CredentialsException | RepositoryException e) {
+            renderFailedLoginPage(exchange, e.getMessage());
         }
     }
 
@@ -51,10 +52,10 @@ public class LoginHandler extends BasicHandler {
         renderPage(exchange, applyDataToTemplate(getDefaultPage(), template));
     }
 
-    private void renderFailedLoginPage(HttpExchange exchange) throws IOException {
+    private void renderFailedLoginPage(HttpExchange exchange, String exceptionMessage) throws IOException {
 
         Map<String, String> template = Map.of(
-                "LOGIN_RESULT", "failed - incorrect password or login",
+                "LOGIN_RESULT", "failed - " + exceptionMessage,
                 "HOME_REDIRECT_VISIBILITY", "hidden",
                 "TRY_AGAIN_REDIRECT_VISIBILITY", "visible"
         );

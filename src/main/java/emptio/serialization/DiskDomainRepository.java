@@ -32,36 +32,33 @@ public class DiskDomainRepository<T extends Identifiable> implements DomainRepos
     }
 
     @Override
-    public Optional<T> add(T i) throws RepositoryException {
+    public Integer add(T i) throws RepositoryException {
         try {
             File file = new File(collectionPath + "/" + i.getId());
+
             if (file.exists())
-                return Optional.empty();
+                throw new RepositoryException("Entity of given id : " + i.getId() + " already exists. Can not add it.");
+            else {
+                OutputStream outputStream = new FileOutputStream(file);
+                String mappedEntity = objectMapper.writeValueAsString(i);
+                outputStream.write(mappedEntity.getBytes());
+                outputStream.close();
 
-            OutputStream outputStream = new FileOutputStream(file);
-            String mappedEntity = objectMapper.writeValueAsString(i);
-            outputStream.write(mappedEntity.getBytes());
-            outputStream.close();
-
-            return find(i.getId());
+                return i.getId();
+            }
         } catch (IOException e) {
             throw new RepositoryException("Failed to save " + i.getId() + " due to I/O error : " + e.getMessage());
         }
     }
 
     @Override
-    public Optional<T> find(Integer id) throws RepositoryException {
+    public T find(Integer id) throws RepositoryException {
         try {
             File file = new File(collectionPath + "/" + id);
             if (!file.exists())
-                return Optional.empty();
-
-            try (InputStream inputStream = new FileInputStream(file)) {
-                T entity = objectMapper.readValue(inputStream, clazz);
-                inputStream.close();
-                return Optional.of(entity);
-            }
-
+                throw new RepositoryException("Entity of given id : " + id + " doesn't exist yet.");
+            else
+                return objectMapper.readValue(file, clazz);
         } catch (IOException e) {
             throw new RepositoryException("Failed to read " + id + " due to I/O error : " + e.getMessage());
         }
@@ -72,11 +69,22 @@ public class DiskDomainRepository<T extends Identifiable> implements DomainRepos
         try {
             File file = new File(collectionPath + "/" + id);
             if (!file.exists())
-                return false;
-            Files.delete(Paths.get(collectionPath + "/" + id));
-            return true;
+                throw new RepositoryException("Entity of given id : " + id + " doesn't exist yet.");
+            else {
+                Files.delete(Paths.get(collectionPath + "/" + id));
+                return !file.exists();
+            }
         } catch (IOException e) {
             throw new RepositoryException("Failed to delete " + id + " due to I/O error : " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Integer update(T i) {
+        if (remove(i.getId())) {
+            return add(i);
+        } else {
+            throw new RepositoryException("Failed to update " + i.getId());
         }
     }
 }

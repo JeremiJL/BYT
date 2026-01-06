@@ -30,6 +30,7 @@ public class InMemoryDomainRepository<T extends Identifiable> implements DomainR
 
     public boolean remove(Integer id) {
         extent.remove(id);
+        return !extent.containsKey(id);
     }
 
 }

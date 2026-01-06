@@ -6,31 +6,29 @@ import emptio.domain.user.UserCredentials;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class InMemoryCredentialsRepository implements CredentialsRepository {
 
     Map<String, UserCredentials> extent = new HashMap<>();
 
     @Override
-    public Optional<UserCredentials> getCredentials(String login) {
+    public UserCredentials getCredentials(String login) {
         if (extent.containsKey(login))
-            return Optional.ofNullable(extent.get(login));
-        else
-            return Optional.empty();
+            return extent.get(login);
+        else throw new CredentialsException("No credentials under given login : " + login);
     }
 
     @Override
-    public Optional<UserCredentials> setCredentials(String login, UserCredentials credentials) {
+    public void setCredentials(String login, UserCredentials credentials) {
         if (!extent.containsKey(login))
-           return Optional.ofNullable(extent.put(login, credentials));
+            extent.put(login, credentials);
         else
-            return Optional.empty();
+            throw new CredentialsException("Given login is already taken : " + login);
     }
 
     @Override
     public boolean deleteCredentials(String login) {
         extent.remove(login);
-        return true;
+        return !extent.containsKey(login);
     }
 }
