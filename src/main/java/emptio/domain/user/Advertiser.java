@@ -33,4 +33,85 @@ import java.util.Set;
                         campaigns
                 );
     }
+
+    @Override
+    public User withId(int id) {
+        return new Advertiser(
+                id, getName(), getSurname(), getEmail(), getPhoneNumber(),
+                getLogin(), getPassword(), getAddress(), getLastLogin(),
+                getCampaigns()
+        );
+    }
+
+    @Override
+    public User withName(@NonNull String name) {
+        return new Advertiser(
+                getId(), name, getSurname(), getEmail(), getPhoneNumber(),
+                getLogin(), getPassword(), getAddress(), getLastLogin(),
+                getCampaigns()
+        );
+    }
+
+    @Override
+    public User withSurname(@NonNull String surname) {
+        return new Advertiser(
+                getId(), getName(), surname, getEmail(), getPhoneNumber(),
+                getLogin(), getPassword(), getAddress(), getLastLogin(),
+                getCampaigns()
+        );
+    }
+
+    @Override
+    public User withEmail(@NonNull String email) {
+        return new Advertiser(
+                getId(), getName(), getSurname(), email, getPhoneNumber(),
+                getLogin(), getPassword(), getAddress(), getLastLogin(),
+                getCampaigns()
+        );
+    }
+
+    @Override
+    public User withPhoneNumber(@NonNull String phoneNumber) {
+        return new Advertiser(
+                getId(), getName(), getSurname(), getEmail(), phoneNumber,
+                getLogin(), getPassword(), getAddress(), getLastLogin(),
+                getCampaigns()
+        );
+    }
+
+    @Override
+    public User withLogin(@NonNull String login) {
+        return new Advertiser(
+                getId(), getName(), getSurname(), getEmail(), getPhoneNumber(),
+                login, getPassword(), getAddress(), getLastLogin(),
+                getCampaigns()
+        );
+    }
+
+    @Override
+    public User withPassword(@NonNull String password) {
+        return new Advertiser(
+                getId(), getName(), getSurname(), getEmail(), getPhoneNumber(),
+                getLogin(), password, getAddress(), getLastLogin(),
+                getCampaigns()
+        );
+    }
+
+    @Override
+    public User withAddress(@NonNull Address address) {
+        return new Advertiser(
+                getId(), getName(), getSurname(), getEmail(), getPhoneNumber(),
+                getLogin(), getPassword(), address, getLastLogin(),
+                getCampaigns()
+        );
+    }
+
+    @Override
+    public User withLastLogin(@NonNull LocalDate lastLogin) {
+        return new Advertiser(
+                getId(), getName(), getSurname(), getEmail(), getPhoneNumber(),
+                getLogin(), getPassword(), getAddress(), lastLogin,
+                getCampaigns()
+        );
+    }
 }

@@ -1,10 +1,12 @@
 package emptio.serialization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import emptio.common.Enviorment;
 import emptio.domain.CredentialsException;
 import emptio.domain.CredentialsRepository;
 import emptio.domain.RepositoryException;
 import emptio.domain.user.UserCredentials;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,8 +20,8 @@ public class DiskCredentialsRepository implements CredentialsRepository {
     private final String collectionPath;
     private final ObjectMapper objectMapper;
 
-    public DiskCredentialsRepository() {
-        this.collectionPath = "operations_data/credentials_collection/";
+    public DiskCredentialsRepository(Enviorment enviorment) {
+        this.collectionPath = "operations_data/" + enviorment.name() + "/credentials_collection/";
         this.objectMapper = new ObjectMapper();
         this.objectMapper.findAndRegisterModules();
         this.initialize();
@@ -71,6 +73,16 @@ public class DiskCredentialsRepository implements CredentialsRepository {
         } catch (IOException e) {
             throw new RepositoryException("Failed to delete " + login + " due to I/O error : " + e.getMessage());
         }
+    }
+
+    @Override
+    public void tearDown() {
+        try {
+            FileUtils.deleteDirectory(new File(this.collectionPath));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to tear down " + this.collectionPath + " directory due to I/O error : " + e.getMessage());
+        }
+
     }
 
     private String getPathToCredentials(String login) {

@@ -2,9 +2,8 @@ package emptio;
 
 import emptio.adapters.rest.Server;
 import emptio.common.DasSymetricEncryptor;
+import emptio.common.Enviorment;
 import emptio.common.SymetricEncryptor;
-import emptio.domain.CredentialsRepository;
-import emptio.domain.DomainRepository;
 import emptio.domain.UserRepository;
 import emptio.domain.user.*;
 import emptio.domain.user.validators.*;
@@ -17,6 +16,9 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // Variables
+        final Enviorment ENV = Enviorment.DEV;
+
         // Greet
         System.out.println("Welcome to Emptio!");
 
@@ -25,19 +27,13 @@ public class Main {
         // Tools
         SymetricEncryptor symmetricEncryptor = new DasSymetricEncryptor();
 
-
-//        String encrypted = symmetricEncryptor.encrypt(String.valueOf(0));
-//        String decrypted = symmetricEncryptor.decrypt(encrypted);
-
         // Repositories
         UserRepository<User> userRepository = new UserRepository<>(
-                new DiskDomainRepository<>(Shopper.class),
-                new DiskDomainRepository<>(Merchant.class),
-                new DiskDomainRepository<>(Advertiser.class),
-                new DiskCredentialsRepository()
+                new DiskDomainRepository<>(Shopper.class, ENV),
+                new DiskDomainRepository<>(Merchant.class, ENV),
+                new DiskDomainRepository<>(Advertiser.class, ENV),
+                new DiskCredentialsRepository(ENV)
         );
-
-        CredentialsRepository credentialsRepository = new DiskCredentialsRepository();
 
         // Entity services
         UserService userService = new UserService(userRepository,

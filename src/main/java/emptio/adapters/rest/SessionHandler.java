@@ -31,25 +31,21 @@ public abstract class SessionHandler extends BasicHandler {
     public final void handleExchange(HttpExchange exchange) throws IOException {
 
         String sessionKey = CookiesExtractor.getCookies(exchange).get("sessionKey");
-        Optional<User> user = fetchUser(sessionKey);
 
-        if (user.isPresent()) {
-            this.handleExchangeSession(exchange, user.get());
-        } else {
+        try {
+            User user = fetchUser(sessionKey);
+            this.handleExchangeSession(exchange, user);
+        } catch (SymetricEncryptorException | NumberFormatException e) {
             this.renderPage(exchange, getFallbackPage());
         }
     }
 
     public abstract void handleExchangeSession(HttpExchange exchange, User user) throws IOException;
 
-    private Optional<User> fetchUser(String sessionKey) {
-        try {
-            int userId = Integer.parseInt(
-                    symmetricEncryptor.decrypt(sessionKey)
-            );
-            return Optional.of(this.userService.getUser(userId));
-        } catch (SymetricEncryptorException | NumberFormatException e) {
-            return Optional.empty();
-        }
+    private User fetchUser(String sessionKey) {
+        int userId = Integer.parseInt(
+                symmetricEncryptor.decrypt(sessionKey)
+        );
+        return this.userService.getUser(userId);
     }
 }

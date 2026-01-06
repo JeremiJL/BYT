@@ -1,11 +1,14 @@
 package emptio.serialization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import emptio.common.Enviorment;
 import emptio.domain.DomainRepository;
 import emptio.domain.RepositoryException;
+import org.apache.commons.io.FileUtils;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
@@ -15,9 +18,9 @@ public class DiskDomainRepository<T extends Identifiable> implements DomainRepos
     private final String collectionPath;
     private final ObjectMapper objectMapper;
 
-    public DiskDomainRepository(Class<T> clazz) {
+    public DiskDomainRepository(Class<T> clazz, Enviorment enviorment) {
         this.clazz = clazz;
-        this.collectionPath = "operations_data/domain_collection/" + clazz.getName();
+        this.collectionPath = "operations_data/" + enviorment.name() + "/domain_collection" + clazz.getName();
         this.objectMapper = new ObjectMapper();
         this.objectMapper.findAndRegisterModules();
         this.initialize();
@@ -77,6 +80,16 @@ public class DiskDomainRepository<T extends Identifiable> implements DomainRepos
         } catch (IOException e) {
             throw new RepositoryException("Failed to delete " + id + " due to I/O error : " + e.getMessage());
         }
+    }
+
+    @Override
+    public void tearDown() {
+        try {
+            FileUtils.deleteDirectory(new File(this.collectionPath));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to tear down " + this.collectionPath + " directory due to I/O error : " + e.getMessage());
+        }
+
     }
 
     @Override

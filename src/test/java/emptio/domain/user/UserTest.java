@@ -183,7 +183,6 @@ class UserTest {
         userBuilder.build();
     }
 
-
     private String stringOfGivenLength(int length) {
         return "-".repeat(length);
     }

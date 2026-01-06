@@ -33,4 +33,85 @@ import java.util.Set;
                 products
         );
     }
+
+    @Override
+    public User withId(int id) {
+        return new Merchant(
+                id, getName(), getSurname(), getEmail(), getPhoneNumber(),
+                getLogin(), getPassword(), getAddress(), getLastLogin(),
+                getProducts()
+        );
+    }
+
+    @Override
+    public User withName(@NonNull String name) {
+        return new Merchant(
+                getId(), name, getSurname(), getEmail(), getPhoneNumber(),
+                getLogin(), getPassword(), getAddress(), getLastLogin(),
+                getProducts()
+        );
+    }
+
+    @Override
+    public User withSurname(@NonNull String surname) {
+        return new Merchant(
+                getId(), getName(), surname, getEmail(), getPhoneNumber(),
+                getLogin(), getPassword(), getAddress(), getLastLogin(),
+                getProducts()
+        );
+    }
+
+    @Override
+    public User withEmail(@NonNull String email) {
+        return new Merchant(
+                getId(), getName(), getSurname(), email, getPhoneNumber(),
+                getLogin(), getPassword(), getAddress(), getLastLogin(),
+                getProducts()
+        );
+    }
+
+    @Override
+    public User withPhoneNumber(@NonNull String phoneNumber) {
+        return new Merchant(
+                getId(), getName(), getSurname(), getEmail(), phoneNumber,
+                getLogin(), getPassword(), getAddress(), getLastLogin(),
+                getProducts()
+        );
+    }
+
+    @Override
+    public User withLogin(@NonNull String login) {
+        return new Merchant(
+                getId(), getName(), getSurname(), getEmail(), getPhoneNumber(),
+                login, getPassword(), getAddress(), getLastLogin(),
+                getProducts()
+        );
+    }
+
+    @Override
+    public User withPassword(@NonNull String password) {
+        return new Merchant(
+                getId(), getName(), getSurname(), getEmail(), getPhoneNumber(),
+                getLogin(), password, getAddress(), getLastLogin(),
+                getProducts()
+        );
+    }
+
+    @Override
+    public User withAddress(@NonNull Address address) {
+        return new Merchant(
+                getId(), getName(), getSurname(), getEmail(), getPhoneNumber(),
+                getLogin(), getPassword(), address, getLastLogin(),
+                getProducts()
+        );
+    }
+
+    @Override
+    public User withLastLogin(@NonNull LocalDate lastLogin) {
+        return new Merchant(
+                getId(), getName(), getSurname(), getEmail(), getPhoneNumber(),
+                getLogin(), getPassword(), getAddress(), lastLogin,
+                getProducts()
+        );
+    }
 }

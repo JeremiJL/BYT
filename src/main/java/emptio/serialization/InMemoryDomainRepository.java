@@ -33,5 +33,10 @@ public class InMemoryDomainRepository<T extends Identifiable> implements DomainR
         return !extent.containsKey(id);
     }
 
+    @Override
+    public void tearDown() {
+        this.extent.clear();
+    }
+
 }
 

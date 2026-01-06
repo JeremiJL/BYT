@@ -10,5 +10,6 @@ public interface DomainRepository<T extends Identifiable> {
         return add(i);
     }
     boolean remove(Integer id) throws RepositoryException;
+    void tearDown();
 }
 

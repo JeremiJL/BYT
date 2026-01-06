@@ -48,7 +48,6 @@ public class UserService {
                                               String email, String phoneNumber,
                                               String login, String password, Address address) throws ValidationException, RepositoryException {
 
-
         User updatedUser = userToBeUpdated
             .withName(name)
             .withSurname(surname)

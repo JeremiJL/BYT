@@ -84,4 +84,12 @@ public class UserRepository<T extends User> implements DomainRepository<T> {
             return false;
         }
     }
+
+    @Override
+    public void tearDown() {
+        this.shopperRepository.tearDown();
+        this.merchantRepository.tearDown();
+        this.advertiserRepository.tearDown();
+        this.credentialsRepository.tearDown();
+    }
 }
