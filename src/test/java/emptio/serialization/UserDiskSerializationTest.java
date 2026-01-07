@@ -43,7 +43,6 @@ public class UserDiskSerializationTest {
 
     @Test
     public void updateTest() {
-
         // Create and serialize a new shopper account
         userBuilder.setAccountType(AccountType.SHOPPER);
         userBuilder.setLogin("123");

@@ -18,9 +18,12 @@ public class Main {
 
         // Variables
         final Enviorment ENV = Enviorment.DEV;
+        final int port = 8080;
 
         // Greet
-        System.out.println("Welcome to Emptio!");
+        System.out.println("Welcome to Emptio! Environment is set to "
+                + ENV.name() + ". " +
+                "Listening on port " + port + ". For local development open your browser at: localhost:" + port + ". Good luck!");
 
         // Wire dependencies
 
@@ -41,7 +44,7 @@ public class Main {
                 new EmailValidator(), new NameValidator(), new PhoneNumberValidator(), new SurnameValidator());
 
         // Server - Root dependency
-        Server server = new Server(userService, symmetricEncryptor);
+        Server server = new Server(port, userService, symmetricEncryptor);
 
         try {
             server.run();

@@ -12,6 +12,7 @@ import static emptio.adapters.rest.utils.FilePathToBytes.getBytes;
 
 import emptio.common.SymetricEncryptor;
 import emptio.domain.user.UserService;
+import lombok.NonNull;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -21,16 +22,18 @@ import java.net.InetSocketAddress;
 
 public class Server {
 
-    private final UserService userService;
-    private final SymetricEncryptor symmetricEncryptor;
+    private final int port;
+    private final @NonNull UserService userService;
+    private final @NonNull SymetricEncryptor symmetricEncryptor;
 
-    public Server(UserService userService, SymetricEncryptor symmetricEncryptor) {
+    public Server(int port, UserService userService, SymetricEncryptor symmetricEncryptor) {
+        this.port = port;
         this.userService = userService;
         this.symmetricEncryptor = symmetricEncryptor;
     }
 
     public void run() throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         this.linkHandlers(server);
         server.setExecutor(null);
         server.start();

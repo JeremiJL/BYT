@@ -1,7 +1,19 @@
 # BYT Project
-## Emptio ~ 3P e-commerce platform
+### Emptio a third party e-commerce platform
 
 ---
+
+### Project objectives :
+Develop a working application without relying on modern web/data frameworks.
+
+### How to run application locally?
+
+1. Download Java 22 (a version compatible with Gradle 8.13).
+2. Go to root directory of the project.
+3. In the command line, run the commands listed above, where _XYZ_ points to where your JDK is stored.
+4. `JAVA_HOME=/Users/XYZ/temurin-22.0.2 ./gradlew build`
+5. `JAVA_HOME=/Users/XYZ/temurin-22.0.2 ./gradlew run`
+6. Open your browser at `localhost:8080`, under which you should see the welcoming page of the application.
 
 ### Authors :
 - s26743
