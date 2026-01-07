@@ -45,6 +45,7 @@ label{
 }
 
 input[type="text"],
+textarea,
 input[type="password"],
 input[type="number"]{
     width:100%;
