@@ -13,6 +13,7 @@ import static emptio.adapters.rest.utils.FilePathToBytes.getBytes;
 
 import emptio.adapters.rest.merchant.CreateProductHandler;
 import emptio.common.SymetricEncryptor;
+import emptio.domain.product.ProductService;
 import emptio.domain.user.User;
 import emptio.domain.user.UserService;
 import lombok.NonNull;
@@ -27,11 +28,13 @@ public class Server {
 
     private final int port;
     private final @NonNull UserService userService;
+    private final @NonNull ProductService productService;
     private final @NonNull SymetricEncryptor symmetricEncryptor;
 
-    public Server(int port, UserService userService, SymetricEncryptor symmetricEncryptor) {
+    public Server(int port, UserService userService, ProductService productService, SymetricEncryptor symmetricEncryptor) {
         this.port = port;
         this.userService = userService;
+        this.productService = productService;
         this.symmetricEncryptor = symmetricEncryptor;
     }
 
@@ -127,7 +130,8 @@ public class Server {
         server.createContext("/merchant/create_product",
                 new CreateProductHandler(
                         getBytes("src/main/resources/ui/template/merchant/create_product.html"), // Create new product page for logged merchants
-                        this.userService, this.symmetricEncryptor
+                        this.userService, this.symmetricEncryptor,
+                        this.productService
                 ));
     }
 }

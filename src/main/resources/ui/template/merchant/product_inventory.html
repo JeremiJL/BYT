@@ -13,15 +13,21 @@
             <img class="logo" src="../../static/logo.png" alt="Emptio logo" />
             <p class="brand">Emptio</p>
         </div>
-        <h1>Product creation</h1>
-        <h2>Product creation {{ PRODUCT_CREATION_RESULT }}</h2>
+        <h1>Product inventory</h1>
+        <h2>Browse your products</h2>
 
         <div class="divider"></div>
 
+        <div class="product-tile">
+            <img src="img_avatar.png" alt="Avatar" style="width:100%">
+            <div class="container">
+                <h4><b>John Doe</b></h4>
+                <p>Architect & Engineer</p>
+            </div>
+        </div>
+
         <div class="actions">
             <button id="back_home" class="primary" onclick="document.location='/home'">Back home</button>
-            <button id="try_again_button" onclick="history.back()">Try again</button>
-            <button id="add_next_product_button" onclick="document.location='/merchant/create_product_form'">Add next product</button>
         </div>
     </section>
 </main>

@@ -4,7 +4,11 @@ import emptio.adapters.rest.Server;
 import emptio.common.DasSymetricEncryptor;
 import emptio.common.Enviorment;
 import emptio.common.SymetricEncryptor;
+import emptio.domain.DomainRepository;
 import emptio.domain.UserRepository;
+import emptio.domain.product.Product;
+import emptio.domain.product.ProductService;
+import emptio.domain.product.validators.*;
 import emptio.domain.user.*;
 import emptio.domain.user.validators.*;
 import emptio.serialization.DiskCredentialsRepository;
@@ -39,14 +43,21 @@ public class Main {
                 new DiskDomainRepository<>(Advertiser.class, ENV),
                 new DiskCredentialsRepository(ENV)
         );
+        DomainRepository<Product> productRepository = new DiskDomainRepository<>(Product.class, ENV);
 
         // Entity services
         UserService userService = new UserService(userRepository,
                 new LoginValidator(), new PasswordValidator(), new AddressValidator(new PostalCodeValidator()),
                 new EmailValidator(), new NameValidator(), new PhoneNumberValidator(), new SurnameValidator());
 
+        ProductService productService = new ProductService(productRepository, userService,
+          new CategoryValidator(), new CountOnMarketplaceValidator(), new DescriptionValidator(),
+          new ImageValidator(), new InteractionsValidator(), new OrderingWeightValidator(),
+          new PriceValidator(), new TitleValidator()
+        );
+
         // Server - Root dependency
-        Server server = new Server(port, userService, symmetricEncryptor);
+        Server server = new Server(port, userService, productService, symmetricEncryptor);
 
         try {
             server.run();

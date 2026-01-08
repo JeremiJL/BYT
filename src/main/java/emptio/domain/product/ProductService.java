@@ -1,33 +1,45 @@
 package emptio.domain.product;
 
-import emptio.domain.DomainRepository;
-import emptio.domain.ValidationException;
-import emptio.domain.Validator;
+import emptio.domain.*;
 import emptio.domain.common.Category;
 import emptio.domain.common.Cost;
 import emptio.domain.user.Merchant;
+import emptio.domain.user.UserService;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ProductService {
 
     private final Set<Validator<Product>> validators;
     private final DomainRepository<Product> productRepository;
+    private final UserService userService;
 
-    public ProductService(Set<Validator<Product>> validators, DomainRepository<Product> productRepository) {
+    @SafeVarargs
+    public ProductService(DomainRepository<Product> productRepository, UserService userService, Validator<Product>... validators) {
+        this.validators = new HashSet<>(List.of(validators));
+        this.userService = userService;
+        this.productRepository = productRepository;
+    }
+
+    public ProductService(Set<Validator<Product>> validators, UserService userService, DomainRepository<Product> productRepository) {
         this.validators = validators;
         this.productRepository = productRepository;
+        this.userService = userService;
     }
 
     public Product newProduct(
             Merchant seller,
             Cost price, byte[] image, Category category,
             String title, String description, int countOnMarketplace)
-            throws ValidationException
+            throws ValidationException, RepositoryException
     {
-        Product product = new Product(seller,
-                Product.idService.getNewId(),
-                        price, image, category, title, description, 0.0, countOnMarketplace, 0);
+        if (image == null)
+            image = getDefalutImage();
+
+        Product product = new Product(Product.idService.getNewId(), price, image, category, title, description, 0.0, countOnMarketplace, 0, seller
+        );
 
         try {
             validators.forEach(validator -> validator.validate(product));
@@ -35,6 +47,7 @@ public class ProductService {
             throw new ValidationException("Failed to create a campaign with given parameters, cause : " + e.getMessage());
         }
 
+        userService.addProduct(seller,product);
         return productRepository.find(
                 productRepository.add(product)
         );
@@ -56,6 +69,10 @@ public class ProductService {
         else {
             throw new ProductServiceException("Can't decrement count off products on marketplace, it's already 0.");
         }
+    }
+
+    private byte[] getDefalutImage() {
+        return new byte[]{1};
     }
 
 }
