@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Emptio</title>
-    <link rel="stylesheet" href="../../static/basic.css" />
+<!--    <link rel="stylesheet" href="../../static/basic.css" />-->
 </head>
 <body>
 <main class="page">
     <section class="card">
         <div class="logo-head">
-            <img class="logo" src="../../static/logo.png" alt="Emptio logo" />
+<!--            <img class="logo" src="../../static/logo.png" alt="Emptio logo" />-->
             <p class="brand">Emptio</p>
         </div>
         <h1>Product inventory</h1>
@@ -18,12 +18,8 @@
 
         <div class="divider"></div>
 
-        <div class="product-tile">
-            <img src="img_avatar.png" alt="Avatar" style="width:100%">
-            <div class="container">
-                <h4><b>John Doe</b></h4>
-                <p>Architect & Engineer</p>
-            </div>
+        <div class="product-listing">
+
         </div>
 
         <div class="actions">
@@ -32,8 +28,94 @@
     </section>
 </main>
 <script>
-    document.getElementById("try_again_button").style.visibility = "{{ TRY_AGAIN_REDIRECT_VISIBILITY }}";
-    document.getElementById("add_next_product_button").style.visibility = "{{ ADD_NEXT_PRODUCT_REDIRECT_VISIBILITY }}";
+
+    const products = [
+        {
+            imgSrc: "xyz",
+            title: "Best Product",
+            priceValue: 100,
+            priceCurrency: "USD"
+        }
+    ];
+
+    function renderListing() {
+        renderListingTable({ totalCells: products.length });
+        for (let i = 0; i < products.length; i++) {
+            const product = products[i];
+            renderProductTile({
+                    parent: document.querySelector("#cell-" + i),
+                    imgSrc: product.imgSrc,
+                    title: product.title,
+                    priceValue: product.priceValue,
+                    priceCurrency: product.priceCurrency,
+                }
+            );
+        }
+    }
+
+    function renderProductTile({ parent, imgSrc, title, priceValue, priceCurrency }) {
+
+        const productTile = document.createElement("div");
+        productTile.className = "product-tile";
+        productTile.style.border = "1px solid";
+
+        const imageNode = document.createElement("img");
+        imageNode.src = imgSrc;
+        imageNode.style.width = "200px";
+        imageNode.style.height = "200px";
+
+        const contentNode = document.createElement("div");
+
+        const headingNode = document.createElement("h4");
+        const titleNode = document.createTextNode(title);
+        headingNode.appendChild(titleNode);
+
+        const paragraphNode = document.createElement("p");
+        paragraphNode.textContent = `${priceValue} ${priceCurrency}`;
+
+        contentNode.appendChild(headingNode);
+        contentNode.appendChild(paragraphNode);
+
+        productTile.appendChild(imageNode);
+        productTile.appendChild(contentNode);
+
+        parent.appendChild(productTile);
+        return productTile;
+    }
+
+    function renderListingTable({ totalCells }) {
+        const parent = document.querySelector(".product-listing");
+
+        const columns = 5;
+        const rows = Math.ceil(totalCells / columns);
+
+        const table = document.createElement("table");
+        const tbody = document.createElement("tbody");
+
+        table.style.width = "100%";
+
+        for (let row = 0; row < rows; row++) {
+            const tr = document.createElement("tr");
+
+            for (let column = 0; column < columns; column++) {
+                const td = document.createElement("td");
+                td.id = "cell-" + (column + row * columns)
+
+                td.style.border = "1px dotted";
+                td.style.padding = "8px";
+
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+        }
+
+        table.appendChild(tbody);
+        parent.appendChild(table);
+        return table;
+    }
+
+    renderListing();
+
 </script>
 </body>
 </html>
