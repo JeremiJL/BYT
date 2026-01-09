@@ -4,19 +4,19 @@ import emptio.adapters.rest.Server;
 import emptio.common.DasSymetricEncryptor;
 import emptio.common.Enviorment;
 import emptio.common.SymetricEncryptor;
-import emptio.domain.DomainRepository;
+import emptio.domain.ProductRepository;
 import emptio.domain.UserRepository;
 import emptio.domain.product.Product;
 import emptio.domain.product.ProductService;
 import emptio.domain.product.validators.*;
 import emptio.domain.user.*;
 import emptio.domain.user.validators.*;
+import emptio.search.ProductQuerySearch;
 import emptio.serialization.DiskCredentialsRepository;
 import emptio.serialization.DiskDomainRepository;
+import emptio.search.DiskSearchRepository;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Main {
 
@@ -43,7 +43,21 @@ public class Main {
                 new DiskDomainRepository<>(Advertiser.class, ENV),
                 new DiskCredentialsRepository(ENV)
         );
-        DomainRepository<Product> productRepository = new DiskDomainRepository<>(Product.class, ENV);
+        ProductRepository productRepository = new ProductRepository(
+                new DiskDomainRepository<>(Product.class, ENV),
+                new ProductRepository(
+                        new DiskDomainRepository<>(Product.class, ENV),
+                        new DiskSearchRepository<>(Product.class, ENV) {
+                            @Override
+                            public String getFeature(Product i) {
+                                return i.getCategory().toString();
+                            }
+                        }
+                )
+        );
+
+        // Search engines
+        ProductQuerySearch productQuerySearch = new ProductQuerySearch(productRepository);
 
         // Entity services
         UserService userService = new UserService(userRepository,
@@ -57,7 +71,7 @@ public class Main {
         );
 
         // Server - Root dependency
-        Server server = new Server(port, userService, productService, symmetricEncryptor);
+        Server server = new Server(port, userService, productService, symmetricEncryptor, productQuerySearch);
 
         try {
             server.run();

@@ -3,15 +3,15 @@ package emptio.domain.product;
 import emptio.builder.AddressBuilder;
 import emptio.builder.ProductBuilder;
 import emptio.builder.UserBuilder;
-import emptio.domain.DomainRepository;
-import emptio.domain.UserRepository;
-import emptio.domain.ValidationException;
-import emptio.domain.Validator;
+import emptio.common.Enviorment;
+import emptio.domain.*;
 import emptio.domain.common.Category;
 import emptio.domain.common.Cost;
 import emptio.domain.common.Currency;
 import emptio.domain.product.validators.*;
 import emptio.domain.user.*;
+import emptio.serialization.DiskDomainRepository;
+import emptio.search.DiskSearchRepository;
 import emptio.serialization.InMemoryCredentialsRepository;
 import emptio.serialization.InMemoryDomainRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ProductTest {
 
-    DomainRepository<Product> productRepository;
+    ProductRepository productRepository;
     Set<Validator<Product>> validators;
 
     ProductService productService;
@@ -44,7 +44,18 @@ class ProductTest {
                 new InMemoryCredentialsRepository()
         );
         userService = new UserService(userRepository, new HashSet<>());
-        productRepository = new InMemoryDomainRepository<>();
+        productRepository = new ProductRepository(
+                new InMemoryDomainRepository<>(),
+                new ProductRepository(
+                        new DiskDomainRepository<>(Product.class, Enviorment.TEST),
+                        new DiskSearchRepository<>(Product.class, Enviorment.TEST) {
+                            @Override
+                            public String getFeature(Product i) {
+                                return i.getCategory().toString();
+                            }
+                        }
+                )
+        );
         validators = new HashSet<>();
         productService = new ProductService(validators, userService, productRepository);
         addressBuilder = new AddressBuilder();

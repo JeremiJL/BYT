@@ -14,11 +14,12 @@
             <div class="nav-actions">
                 <!-- User functionalities -->
                 <button class="nav-btn" onclick="document.location='/edit_profile_form'">Edit profile</button>
+                <button class="nav-btn" onclick="document.location='/'">Logout</button>
                 <!-- Shopper functionalities -->
                 <button id="cart_button" class="nav-btn" onclick="document.location='/cart'" style="visibility: hidden">Cart</button>
-                <form id="product_search_form" class="nav-search" action="/product_search" method="post" style="visibility: hidden">
+                <form id="product_search_form" class="nav-search" action="/shopper/listing" method="post" style="visibility: hidden">
                     <label for="product_search_input"></label>
-                    <input type="text" id="product_search_input" name="productSearchQuery" placeholder="Search products..." required />
+                    <input type="text" id="product_search_input" name="searchQuery" placeholder="Search products..." required />
                     <button type="submit" class="nav-btn nav-btn-primary">Search</button>
                 </form>
                 <!-- Merchant functionalities -->

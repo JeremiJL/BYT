@@ -13,10 +13,12 @@ import static emptio.adapters.rest.utils.FilePathToBytes.getBytes;
 
 import emptio.adapters.rest.merchant.CreateProductHandler;
 import emptio.adapters.rest.merchant.ProductInventoryHandler;
+import emptio.adapters.rest.shopper.ProductSearchHandler;
 import emptio.common.SymetricEncryptor;
 import emptio.domain.product.ProductService;
 import emptio.domain.user.User;
 import emptio.domain.user.UserService;
+import emptio.search.ProductQuerySearch;
 import lombok.NonNull;
 
 import java.io.IOException;
@@ -31,12 +33,14 @@ public class Server {
     private final @NonNull UserService userService;
     private final @NonNull ProductService productService;
     private final @NonNull SymetricEncryptor symmetricEncryptor;
+    private final @NonNull ProductQuerySearch productQuerySearch;
 
-    public Server(int port, UserService userService, ProductService productService, SymetricEncryptor symmetricEncryptor) {
+    public Server(int port, UserService userService, ProductService productService, SymetricEncryptor symmetricEncryptor, ProductQuerySearch productQuerySearch) {
         this.port = port;
         this.userService = userService;
         this.productService = productService;
         this.symmetricEncryptor = symmetricEncryptor;
+        this.productQuerySearch = productQuerySearch;
     }
 
     public void run() throws IOException {
@@ -122,6 +126,11 @@ public class Server {
     }
 
     private void linkPagesForLoggedShoppers(HttpServer server) {
+        server.createContext("/shopper/listing",
+                new ProductSearchHandler(
+                        getBytes("src/main/resources/ui/template/shopper/listing.html"), // Product listing page for logged shoppers
+                        this.userService, this.symmetricEncryptor,
+                        this.productQuerySearch));
 
     }
 
