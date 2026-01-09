@@ -95,10 +95,6 @@
             for (let column = 0; column < columns; column++) {
                 const td = document.createElement("td");
                 td.id = "cell-" + (column + row * columns)
-
-                td.style.border = "1px dotted";
-                td.style.padding = "8px";
-
                 tr.appendChild(td);
             }
             tbody.appendChild(tr);

@@ -1,150 +1,163 @@
-/* css/forms.css */
+/* forms.css — matches basic.css */
 
 .top{
-    display:grid;
-    gap:10px;
-    margin-bottom:18px;
+  display:grid;
+  gap:10px;
+  margin-bottom:18px;
 }
 
 form{ margin-top:18px; }
 
 fieldset{
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:16px;
-    margin:0 0 14px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:16px;
+  margin:0 0 14px;
 }
 
 legend{
-    padding:0 8px;
-    color:var(--muted);
-    font-size:12px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
+  padding:0 8px;
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
 }
 
 .grid{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:12px;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
 }
 
 @media (min-width:720px){
-    .grid.cols-2{ grid-template-columns:1fr 1fr; }
-    .grid.cols-3{ grid-template-columns:1fr 1fr 1fr; }
+  .grid.cols-2{ grid-template-columns:1fr 1fr; }
+  .grid.cols-3{ grid-template-columns:1fr 1fr 1fr; }
 }
 
 .field{
-    display:grid;
-    gap:6px;
+  display:grid;
+  gap:6px;
 }
 
 label{
-    font-size:13px;
-    color:var(--muted);
+  font-size:13px;
+  color:var(--muted);
 }
 
 input[type="text"],
 textarea,
 input[type="password"],
 input[type="number"]{
-    width:100%;
-    padding:12px 12px;
-    border-radius:12px;
-    border:1px solid var(--line);
-    background:var(--field);
-    color:var(--text);
-    outline:none;
-    transition:background .15s ease, border-color .15s ease, box-shadow .15s ease;
+  width:100%;
+  padding:12px 12px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:rgba(15,23,42,0.04);
+  color:var(--text);
+  outline:none;
+  transition:background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+@media (prefers-color-scheme: dark){
+  input[type="text"],
+  textarea,
+  input[type="password"],
+  input[type="number"]{
+    background:rgba(255,255,255,0.06);
+  }
 }
 
 input[type="text"]:focus,
+textarea:focus,
 input[type="password"]:focus,
 input[type="number"]:focus{
-    background:var(--field2);
-    box-shadow:var(--focus);
+  border-color:rgba(37,99,235,0.35);
+  box-shadow:var(--focus);
+  background:rgba(37,99,235,0.06);
 }
 
 .radio-row{
-    display:grid;
-    gap:10px;
+  display:grid;
+  gap:10px;
 }
 
 @media (min-width:720px){
-    .radio-row{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .radio-row{ grid-template-columns:repeat(3,minmax(0,1fr)); }
 }
 
 .radio{
-    border:1px solid var(--line);
-    background:var(--field);
-    border-radius:14px;
-    padding:12px 12px;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    transition: box-shadow .15s ease, transform .06s ease, background .15s ease, border-color .15s ease;
+  border:1px solid var(--line);
+  background:rgba(15,23,42,0.03);
+  border-radius:14px;
+  padding:12px 12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  transition: box-shadow .15s ease, transform .06s ease, background .15s ease, border-color .15s ease;
+}
+
+@media (prefers-color-scheme: dark){
+  .radio{ background:rgba(255,255,255,0.05); }
 }
 
 .radio:hover{
-    background: var(--chip);
+  background:rgba(37,99,235,0.06);
+  border-color:rgba(37,99,235,0.25);
 }
 
 .radio input{
-    width:18px;
-    height:18px;
-    margin:0;
+  width:18px;
+  height:18px;
+  margin:0;
 }
 
 .radio label{
-    margin:0;
-    color:var(--text);
-    font-size:14px;
+  margin:0;
+  color:var(--text);
+  font-size:14px;
 }
 
-/* make only the form's action row right-aligned (doesn't affect button groups on other pages) */
 form .actions{
-    display:flex;
-    justify-content:flex-end;
-    margin-top:16px;
+  display:flex;
+  justify-content:flex-end;
+  margin-top:16px;
 }
 
 input[type="submit"]{
-    appearance:none;
-    border:1px solid var(--line);
-    background:transparent;
-    color:var(--text);
-    padding:12px 16px;
-    border-radius:14px;
-    font-weight:750;
-    letter-spacing:.02em;
-    cursor:pointer;
-    box-shadow:none;
-    transition:transform .06s ease, opacity .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
+  appearance:none;
+  border:1px solid rgba(37,99,235,0.35);
+  background:linear-gradient(135deg, var(--accent), var(--accent2));
+  color:white;
+  padding:12px 16px;
+  border-radius:14px;
+  font-weight:750;
+  letter-spacing:.02em;
+  cursor:pointer;
+  box-shadow:0 12px 30px rgba(37,99,235,0.18);
+  transition:transform .06s ease, opacity .15s ease, box-shadow .15s ease, filter .15s ease;
 }
 
 input[type="submit"]:hover{
-    opacity:1;
-    border-color: rgba(20, 184, 166, 0.55);
-    background: linear-gradient(135deg, rgba(20,184,166,0.22), rgba(255,79,216,0.18));
-    box-shadow: 0 14px 34px rgba(20,184,166,0.18);
-    transform: translateY(-1px);
+  filter:brightness(1.03);
+  box-shadow:0 14px 34px rgba(14,165,233,0.20);
+  transform: translateY(-1px);
 }
 
 input[type="submit"]:active{
-    transform: translateY(0px);
+  transform: translateY(0px);
 }
 
 .note{
-    margin-top:14px;
-    color:var(--muted);
-    font-size:12px;
-    line-height:1.6;
+  margin-top:14px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6;
 }
 
 @supports(selector(:has(*))){
-    .radio:has(input:checked){
-        border-color: rgba(20,184,166,0.55);
-        box-shadow: 0 10px 26px rgba(20,184,166,0.18);
-        background: rgba(20,184,166,0.12);
-    }
+  .radio:has(input:checked){
+    border-color: rgba(37,99,235,0.40);
+    box-shadow: 0 12px 30px rgba(37,99,235,0.16);
+    background: rgba(37,99,235,0.08);
+  }
 }
