@@ -4,13 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Emptio</title>
-<!--    <link rel="stylesheet" href="../../static/basic.css" />-->
+    <link rel="stylesheet" href="../../static/basic.css" />
 </head>
 <body>
 <main class="page">
     <section class="card">
         <div class="logo-head">
-<!--            <img class="logo" src="../../static/logo.png" alt="Emptio logo" />-->
+            <img class="logo" src="../../static/logo.png" alt="Emptio logo" />
             <p class="brand">Emptio</p>
         </div>
         <h1>Product inventory</h1>
@@ -30,12 +30,7 @@
 <script>
 
     const products = [
-        {
-            imgSrc: "xyz",
-            title: "Best Product",
-            priceValue: 100,
-            priceCurrency: "USD"
-        }
+        {{ PRODUCTS_DEFINITIONS }}
     ];
 
     function renderListing() {
@@ -114,7 +109,10 @@
         return table;
     }
 
-    renderListing();
+    document.addEventListener("DOMContentLoaded", () => {
+        renderListing();
+    });
+
 
 </script>
 </body>

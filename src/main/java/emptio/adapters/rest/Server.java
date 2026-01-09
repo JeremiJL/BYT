@@ -12,6 +12,7 @@ import emptio.adapters.rest.login.CreateAccountFormHandler;
 import static emptio.adapters.rest.utils.FilePathToBytes.getBytes;
 
 import emptio.adapters.rest.merchant.CreateProductHandler;
+import emptio.adapters.rest.merchant.ProductInventoryHandler;
 import emptio.common.SymetricEncryptor;
 import emptio.domain.product.ProductService;
 import emptio.domain.user.User;
@@ -46,7 +47,7 @@ public class Server {
     }
 
     private void linkHandlers(HttpServer server) {
-//        linkHandlersOfStaticContent(server);
+        linkHandlersOfStaticContent(server);
         linkTemplatePages(server);
     }
 
@@ -65,6 +66,13 @@ public class Server {
         });
 
         server.createContext("/static/logo.png", new BasicHandler(getBytes("src/main/resources/ui/static/logo.png")) {
+            @Override
+            public void handleExchange(HttpExchange exchange) throws IOException {
+                this.renderPage(exchange, getDefaultPage());
+            }
+        });
+
+        server.createContext("/static/professor_abdulla.jpg", new BasicHandler(getBytes("src/main/resources/ui/static/professor_abdulla.jpg")) {
             @Override
             public void handleExchange(HttpExchange exchange) throws IOException {
                 this.renderPage(exchange, getDefaultPage());
@@ -133,5 +141,11 @@ public class Server {
                         this.userService, this.symmetricEncryptor,
                         this.productService
                 ));
+
+        server.createContext("/merchant/product_inventory",
+                new ProductInventoryHandler(
+                        getBytes("src/main/resources/ui/template/merchant/product_inventory.html"), // Product inventory page for logged merchants
+                        this.userService, this.symmetricEncryptor) {
+                });
     }
 }

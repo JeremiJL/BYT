@@ -1,6 +1,7 @@
 package emptio.domain.product;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import emptio.domain.common.Blockable;
 import emptio.domain.common.Category;
@@ -48,5 +49,11 @@ import java.util.Collections;
         this.orderingWeight = orderingWeight;
         this.countOnMarketplace = countOnMarketplace;
         this.interactions = interactions;
+    }
+
+    @JsonIgnore
+    public String getTheImageSource(){
+        //  TODO: this function should save image under specific path and then return this path
+        return "../../static/professor_abdulla.jpg";
     }
 }
