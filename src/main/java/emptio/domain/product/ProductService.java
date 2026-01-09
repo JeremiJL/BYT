@@ -13,17 +13,17 @@ import java.util.Set;
 public class ProductService {
 
     private final Set<Validator<Product>> validators;
-    private final DomainRepository<Product> productRepository;
+    private final ProductRepository productRepository;
     private final UserService userService;
 
     @SafeVarargs
-    public ProductService(DomainRepository<Product> productRepository, UserService userService, Validator<Product>... validators) {
+    public ProductService(ProductRepository productRepository, UserService userService, Validator<Product>... validators) {
         this.validators = new HashSet<>(List.of(validators));
         this.userService = userService;
         this.productRepository = productRepository;
     }
 
-    public ProductService(Set<Validator<Product>> validators, UserService userService, DomainRepository<Product> productRepository) {
+    public ProductService(Set<Validator<Product>> validators, UserService userService, ProductRepository productRepository) {
         this.validators = validators;
         this.productRepository = productRepository;
         this.userService = userService;
