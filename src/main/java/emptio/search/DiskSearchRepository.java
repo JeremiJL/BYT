@@ -1,8 +1,9 @@
-package emptio.serialization;
+package emptio.search;
 
 import emptio.common.Enviorment;
 import emptio.domain.RepositoryException;
 import emptio.domain.SearchRepository;
+import emptio.serialization.Identifiable;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -30,8 +31,7 @@ public abstract class DiskSearchRepository <T extends Identifiable> implements S
     }
 
     @Override
-    public List<Integer> search(T i) throws RepositoryException {
-        String feature = getFeature(i);
+    public List<Integer> search(String feature) throws RepositoryException {
         List<Integer> ids = new ArrayList<>();
         File file = new File(collectionPath + "/" + feature);
         try {

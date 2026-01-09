@@ -11,7 +11,7 @@ import emptio.domain.common.Currency;
 import emptio.domain.product.validators.*;
 import emptio.domain.user.*;
 import emptio.serialization.DiskDomainRepository;
-import emptio.serialization.DiskSearchRepository;
+import emptio.search.DiskSearchRepository;
 import emptio.serialization.InMemoryCredentialsRepository;
 import emptio.serialization.InMemoryDomainRepository;
 import org.junit.jupiter.api.BeforeEach;

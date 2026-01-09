@@ -37,8 +37,8 @@ public class ProductRepository implements SearchRepository<Product>, DomainRepos
     }
 
     @Override
-    public List<Integer> search(Product i) {
-        return this.searchRepository.search(i);
+    public List<Integer> search(String feature) {
+        return this.searchRepository.search(feature);
     }
 
     @Override

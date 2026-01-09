@@ -11,9 +11,10 @@ import emptio.domain.product.ProductService;
 import emptio.domain.product.validators.*;
 import emptio.domain.user.*;
 import emptio.domain.user.validators.*;
+import emptio.search.ProductQuerySearch;
 import emptio.serialization.DiskCredentialsRepository;
 import emptio.serialization.DiskDomainRepository;
-import emptio.serialization.DiskSearchRepository;
+import emptio.search.DiskSearchRepository;
 
 import java.io.IOException;
 
@@ -55,6 +56,9 @@ public class Main {
                 )
         );
 
+        // Search engines
+        ProductQuerySearch productQuerySearch = new ProductQuerySearch(productRepository);
+
         // Entity services
         UserService userService = new UserService(userRepository,
                 new LoginValidator(), new PasswordValidator(), new AddressValidator(new PostalCodeValidator()),
@@ -67,7 +71,7 @@ public class Main {
         );
 
         // Server - Root dependency
-        Server server = new Server(port, userService, productService, symmetricEncryptor);
+        Server server = new Server(port, userService, productService, symmetricEncryptor, productQuerySearch);
 
         try {
             server.run();
