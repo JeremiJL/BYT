@@ -1,17 +1,35 @@
 package emptio.serialization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import emptio.common.Enviorment;
+import emptio.domain.RepositoryException;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class IdService {
 
-    private final String idCollectionPath = "operations_data/id_collection/id";
+    private final String idCollectionPath;
+
+    public IdService(Enviorment enviorment) {
+        String idCollectionDirectory = "operations_data/" + enviorment.name() + "/id_collection/";
+        this.idCollectionPath = idCollectionDirectory + "id";
+        this.initialize(idCollectionDirectory);
+    }
+
+    private void initialize(String directory) {
+        try {
+            Files.createDirectories(Paths.get(directory));
+        } catch (IOException e) {
+            throw new RepositoryException("Failed to initialize disk id repository :" + e.getMessage());
+        }
+    }
 
     public int getNewId() {
         try {
-            File file = new File(idCollectionPath);
+            File file = new File(this.idCollectionPath);
             ObjectMapper objectMapper = new ObjectMapper();
 
             if (!file.exists()) {

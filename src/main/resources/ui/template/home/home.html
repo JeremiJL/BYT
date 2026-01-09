@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Emptio</title>
+    <link rel="stylesheet" href="../../static/basic.css" />
+</head>
+<body>
+<main class="page">
+
+    <nav class="top-nav">
+        <div class="nav-inner">
+            <div class="nav-actions">
+                <!-- User functionalities -->
+                <button class="nav-btn" onclick="document.location='/edit_profile_form'">Edit profile</button>
+                <!-- Shopper functionalities -->
+                <button id="cart_button" class="nav-btn" onclick="document.location='/cart'" style="visibility: hidden">Cart</button>
+                <form id="product_search_form" class="nav-search" action="/product_search" method="post" style="visibility: hidden">
+                    <label for="product_search_input"></label>
+                    <input type="text" id="product_search_input" name="productSearchQuery" placeholder="Search products..." required />
+                    <button type="submit" class="nav-btn nav-btn-primary">Search</button>
+                </form>
+                <!-- Merchant functionalities -->
+                <button id="product_inventory_button" class="nav-btn" onclick="document.location='/merchant/product_inventory'" style="visibility: hidden">Product inventory</button>
+                <button id="new_product_button" class="nav-btn nav-btn-primary" onclick="document.location='/merchant/create_product_form'" style="visibility: hidden">Add new product</button>
+                <!-- Advertiser functionalities -->
+                <button id="campaign_inventory_button" class="nav-btn" onclick="document.location='/advertiser/campaign_inventory'" style="visibility: hidden">Campaign inventory</button>
+                <button id="new_campaign_button" class="nav-btn nav-btn-primary" onclick="document.location='/advertiser/create_campaign_form'" style="visibility: hidden">Add new campaign</button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="card" role="region" aria-label="Welcome">
+        <div class="logo-head">
+            <img class="logo" src="../../static/logo.png" alt="Emptio logo" />
+            <p class="brand">Emptio</p>
+        </div>
+        <h1>Home</h1>
+        <h2>Welcome to Emptio, {{ USER_NAME }}!</h2>
+        <p class="sub">Your favorite e-marketplace.</p>
+    </section>
+</main>
+</body>
+<script>
+
+    const TYPES_OF_ACCOUNT = {
+        SHOPPER: "SHOPPER",
+        MERCHANT: "MERCHANT",
+        ADVERTISER: "ADVERTISER",
+    };
+    const ACCOUNT_TYPE = "{{ ACCOUNT_TYPE }}";
+
+    switch (ACCOUNT_TYPE) {
+        case TYPES_OF_ACCOUNT.SHOPPER:
+            document.getElementById("cart_button").style.visibility = "visible";
+            document.getElementById("product_search_form").style.visibility = "visible";
+            break;
+        case TYPES_OF_ACCOUNT.MERCHANT:
+            document.getElementById("product_inventory_button").style.visibility = "visible";
+            document.getElementById("new_product_button").style.visibility = "visible";
+            break;
+        case TYPES_OF_ACCOUNT.ADVERTISER:
+            document.getElementById("campaign_inventory_button").style.visibility = "visible";
+            document.getElementById("new_campaign_button").style.visibility = "visible";
+            break;
+    }
+
+</script>
+
+</html>

@@ -2,14 +2,14 @@ package emptio.adapters.rest.login;
 
 import com.sun.net.httpserver.HttpExchange;
 import emptio.adapters.rest.BasicHandler;
-import emptio.adapters.rest.utils.HttpFormConverter;
+import emptio.adapters.rest.utils.HttpConverter;
+import emptio.domain.RepositoryException;
 import emptio.domain.ValidationException;
 import emptio.domain.user.AccountType;
 import emptio.domain.user.Address;
 import emptio.domain.user.UserService;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class CreateAccountHandler extends BasicHandler {
@@ -22,9 +22,9 @@ public class CreateAccountHandler extends BasicHandler {
     }
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    public void handleExchange(HttpExchange exchange) throws IOException {
 
-        Map<String,String> requestData = HttpFormConverter.convertToMap(exchange.getRequestBody().readAllBytes());
+        Map<String,String> requestData = HttpConverter.convertFormDataToMap(exchange.getRequestBody().readAllBytes());
 
         String accountType = requestData.get("accountType");
         String name = requestData.get("name");
@@ -39,49 +39,41 @@ public class CreateAccountHandler extends BasicHandler {
         String city = requestData.get("city");
         String buildingNumber = requestData.get("buildingNumber");
         String apartmentNumber = requestData.get("apartmentNumber");
-
-
-        byte[] page = createNewAccount(
-            accountType,name,surname,email,phoneNumber,login,password,postalCode,streetName,country,city,buildingNumber,apartmentNumber
-        );
-
-        showPage(exchange, page);
-    }
-
-    private byte[] createNewAccount(String accountType, String name, String surname,
-                                  String email, String number,
-                                  String login, String password,
-                                  String postalCode, String streetName,
-                                  String country, String city,
-                                  String buildingNumber, String apartmentNumber) {
-
-        Map<String, String> template = new HashMap<>();
+        
+        Integer apartmentNumberParsed = (apartmentNumber == null) ? null : Integer.parseInt(apartmentNumber);
+        int buildingNumberParsed = Integer.parseInt(buildingNumber);
+        String emailFormatted = HttpConverter.convertEscapeCharacters(email);
+        AccountType accountTypeFormatted = AccountType.valueOf(accountType);
 
         try {
+            userService.newUser(accountTypeFormatted, name, surname, 
+                    emailFormatted, phoneNumber,
+                    login, password,
+                    new Address(
+                            postalCode, streetName, country, city, buildingNumberParsed, apartmentNumberParsed
+                    ));
 
-            Integer apartmentNumberParsed = (apartmentNumber == null) ? null : Integer.parseInt(apartmentNumber);
-            int buildingNumberParsed = Integer.parseInt(buildingNumber);
-            String emailFormatted = formatEscapeCharacters(email);
-            AccountType accountTypeFormatted = AccountType.valueOf(accountType);
-
-            userService.newUser(accountTypeFormatted,name,surname,emailFormatted,number,login,password,
-                    new Address(postalCode,streetName,country,city,buildingNumberParsed, apartmentNumberParsed));
-
-            template.put("ACCOUNT_CREATION_RESULT","succeeded");
-            template.put("LOGIN_REDIRECT_VISIBILITY","visible");
-            template.put("TRY_AGAIN_REDIRECT_VISIBILITY","hidden");
-
-        } catch (Exception e){
-
-            template.put("ACCOUNT_CREATION_RESULT","failed - " + e.getMessage());
-            template.put("LOGIN_REDIRECT_VISIBILITY","hidden");
-            template.put("TRY_AGAIN_REDIRECT_VISIBILITY","visible");
+            renderSuccessfulAccountCreationPage(exchange);
+        } catch (ValidationException | RepositoryException e){
+            renderFailedAccountCreationPage(exchange, e.getMessage());
         }
-
-        return renderTemplate(template);
     }
-
-    private String formatEscapeCharacters(String value) {
-        return value.replaceFirst("%40", "@");
+    
+    private void renderSuccessfulAccountCreationPage(HttpExchange exchange) throws IOException {
+        Map<String, String> template = Map.of(
+            "ACCOUNT_CREATION_RESULT","succeeded",
+            "LOGIN_REDIRECT_VISIBILITY","visible",
+            "TRY_AGAIN_REDIRECT_VISIBILITY","hidden"
+        );
+        renderPage(exchange, applyDataToTemplate(getDefaultPage(), template));
+    }
+    
+    private void renderFailedAccountCreationPage(HttpExchange exchange, String failureReason) throws IOException {
+        Map<String, String> template = Map.of(
+            "ACCOUNT_CREATION_RESULT","failed - " + failureReason,
+            "LOGIN_REDIRECT_VISIBILITY","hidden",
+            "TRY_AGAIN_REDIRECT_VISIBILITY","visible"
+        );
+        renderPage(exchange, applyDataToTemplate(getDefaultPage(), template));
     }
 }

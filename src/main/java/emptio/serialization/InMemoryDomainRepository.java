@@ -28,8 +28,14 @@ public class InMemoryDomainRepository<T extends Identifiable> implements DomainR
         return extent.get(id);
     }
 
-    public void remove(Integer id) {
+    public boolean remove(Integer id) {
         extent.remove(id);
+        return !extent.containsKey(id);
+    }
+
+    @Override
+    public void tearDown() {
+        this.extent.clear();
     }
 
 }

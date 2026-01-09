@@ -4,71 +4,70 @@ import emptio.domain.*;
 import emptio.domain.campaign.Campaign;
 import emptio.domain.cart.Cart;
 import emptio.domain.product.Product;
+import lombok.NonNull;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class UserService {
 
     private final Set<Validator<User>> validators;
     private final UserRepository<User> userRepository;
-    private final CredentialsRepository credentialsRepository;
 
     @SafeVarargs
-    public UserService(UserRepository<User> userRepository, CredentialsRepository credentialsRepository, Validator<User>... validators) {
+    public UserService(UserRepository<User> userRepository, Validator<User>... validators) {
         this.validators = new HashSet<>(List.of(validators));
         this.userRepository = userRepository;
-        this.credentialsRepository = credentialsRepository;
     }
 
-    public UserService(UserRepository<User> userRepository, CredentialsRepository credentialsRepository, Set<Validator<User>> validators) {
+    public UserService(UserRepository<User> userRepository, Set<Validator<User>> validators) {
         this.validators = validators;
         this.userRepository = userRepository;
-        this.credentialsRepository = credentialsRepository;
     }
 
-    public User newUser(AccountType accountType,
-                        String name, String surname,
-                        String email, String number,
-                        String login, String password, Address address) throws ValidationException
+    public @NonNull User newUser(AccountType accountType,
+                                           String name, String surname,
+                                           String email, String phoneNumber,
+                                           String login, String password, Address address) throws ValidationException, RepositoryException
     {
         LocalDate today = today();
 
         User user = switch (accountType) {
-            case SHOPPER -> new Shopper(User.idService.getNewId(), name, surname, email, number, login, password, address, today, null);
-            case MERCHANT -> new Merchant(User.idService.getNewId(), name, surname, email, number, login, password, address, today, Collections.emptySet());
-            case ADVERTISER -> new Advertiser(User.idService.getNewId(), name, surname, email, number, login, password, address, today, Collections.emptySet());
+            case SHOPPER -> new Shopper(User.idService.getNewId(), name, surname, email, phoneNumber, login, password, address, today, null);
+            case MERCHANT -> new Merchant(User.idService.getNewId(), name, surname, email, phoneNumber, login, password, address, today, Collections.emptySet());
+            case ADVERTISER -> new Advertiser(User.idService.getNewId(), name, surname, email, phoneNumber, login, password, address, today, Collections.emptySet());
         };
 
-        try {
-            validators.forEach(validator -> validator.validate(user));
-        } catch (ValidationException e) {
-            throw new ValidationException("Failed to create a user with given parameters, cause : " + e.getMessage());
-        }
-
-        try {
-            credentialsRepository.setCredentials(user.getLogin(), new UserCredentials(user.getId(),user.getPassword()));
-            userRepository.add(user);
-        } catch (Exception e) {
-            credentialsRepository.deleteCredentials(user.getLogin());
-            userRepository.remove(user.getId());
-            throw e;
-        }
-
-        return userRepository.find(
-            user.getId()
-        );
+        validateWithException(user);
+        int userId = userRepository.add(user);
+        return userRepository.find(userId);
     }
 
-    public User getEmptioUser() {
-        return userRepository.find(1);
+    public @NonNull User updateUser(User userToBeUpdated,
+                                              String name, String surname,
+                                              String email, String phoneNumber,
+                                              String login, String password, Address address) throws ValidationException, RepositoryException {
+
+        User updatedUser = userToBeUpdated
+            .withName(name)
+            .withSurname(surname)
+            .withEmail(email)
+            .withPhoneNumber(phoneNumber)
+            .withLogin(login)
+            .withPassword(password)
+            .withAddress(address);
+
+        validateWithException(updatedUser);
+        int updatedUserId = userRepository.update(updatedUser);
+        return userRepository.find(updatedUserId);
     }
 
-    public int getUserId(String login, String password) {
-        UserCredentials credentials = credentialsRepository.getCredentials(login);
+    public @NonNull User getUser(int id) throws RepositoryException {
+        return userRepository.find(id);
+    }
+
+    public @NonNull Integer getIdOfUser(String login, String password) throws CredentialsException, RepositoryException {
+        UserCredentials credentials = userRepository.find(login);
         if (credentials.getPassword().equals(password))
             return credentials.getId();
         else
@@ -95,10 +94,22 @@ public class UserService {
         ));
     }
 
-    public void newCart(Shopper shopper, Cart cart) {
+    public void makeNewCart(Shopper shopper, Cart cart) {
         userRepository.update(
                 shopper.withCart(cart)
         );
+    }
+
+    public User getEmptioAsABillingUser() {
+        return userRepository.find(1);
+    }
+
+    private void validateWithException(User user) throws ValidationException {
+        try {
+            validators.forEach(validator -> validator.validate(user));
+        } catch (ValidationException e) {
+            throw new ValidationException("Failed to create a user with given parameters, cause : " + e.getMessage());
+        }
     }
 
     private static LocalDate today() {

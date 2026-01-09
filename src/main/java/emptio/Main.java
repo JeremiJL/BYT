@@ -1,47 +1,63 @@
 package emptio;
 
 import emptio.adapters.rest.Server;
-import emptio.domain.CredentialsRepository;
+import emptio.common.DasSymetricEncryptor;
+import emptio.common.Enviorment;
+import emptio.common.SymetricEncryptor;
 import emptio.domain.DomainRepository;
 import emptio.domain.UserRepository;
+import emptio.domain.product.Product;
+import emptio.domain.product.ProductService;
+import emptio.domain.product.validators.*;
 import emptio.domain.user.*;
 import emptio.domain.user.validators.*;
 import emptio.serialization.DiskCredentialsRepository;
 import emptio.serialization.DiskDomainRepository;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
 
     public static void main(String[] args) {
 
-
-        // TMP
-
-        DomainRepository<User> repository = new DiskDomainRepository<>(User.class);
-
+        // Variables
+        final Enviorment ENV = Enviorment.DEV;
+        final int port = 8080;
 
         // Greet
-        System.out.println("Welcome to Emptio!");
+        System.out.println("Welcome to Emptio! Environment is set to "
+                + ENV.name() + ". " +
+                "Listening on port " + port + ". For local development open your browser at: localhost:" + port + ". Good luck!");
 
         // Wire dependencies
 
+        // Tools
+        SymetricEncryptor symmetricEncryptor = new DasSymetricEncryptor();
+
         // Repositories
         UserRepository<User> userRepository = new UserRepository<>(
-                new DiskDomainRepository<>(Shopper.class),
-                new DiskDomainRepository<>(Merchant.class),
-                new DiskDomainRepository<>(Advertiser.class)
+                new DiskDomainRepository<>(Shopper.class, ENV),
+                new DiskDomainRepository<>(Merchant.class, ENV),
+                new DiskDomainRepository<>(Advertiser.class, ENV),
+                new DiskCredentialsRepository(ENV)
         );
-
-        CredentialsRepository credentialsRepository = new DiskCredentialsRepository();
+        DomainRepository<Product> productRepository = new DiskDomainRepository<>(Product.class, ENV);
 
         // Entity services
-        UserService userService = new UserService(userRepository, credentialsRepository,
+        UserService userService = new UserService(userRepository,
                 new LoginValidator(), new PasswordValidator(), new AddressValidator(new PostalCodeValidator()),
                 new EmailValidator(), new NameValidator(), new PhoneNumberValidator(), new SurnameValidator());
 
+        ProductService productService = new ProductService(productRepository, userService,
+          new CategoryValidator(), new CountOnMarketplaceValidator(), new DescriptionValidator(),
+          new ImageValidator(), new InteractionsValidator(), new OrderingWeightValidator(),
+          new PriceValidator(), new TitleValidator()
+        );
+
         // Server - Root dependency
-        Server server = new Server(userService);
+        Server server = new Server(port, userService, productService, symmetricEncryptor);
 
         try {
             server.run();

@@ -2,26 +2,43 @@ package emptio.adapters.rest;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import lombok.Getter;
 import lombok.NonNull;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static emptio.adapters.rest.utils.FilePathToBytes.getBytes;
+
+
 public abstract class BasicHandler implements HttpHandler {
 
-    @NonNull private final byte[] page;
+    @NonNull @Getter private final byte[] defaultPage;
+    @NonNull @Getter private final byte[] errorPage;
 
-    public byte[] getPage() {
-        return page;
+    public BasicHandler(@NonNull byte[] page) {
+        this.defaultPage = page;
+        this.errorPage = getBytes("src/main/resources/ui/template/error.html");
     }
 
-    public BasicHandler(byte[] page) {
-        this.page = page;
+    @Override
+    public final void handle(HttpExchange exchange) throws IOException {
+        try {
+            handleExchange(exchange);
+        } catch (Exception e) {
+            Map<String, String> templateData = new HashMap<>();
+            templateData.put("ERROR", e.getMessage());
+            renderPage(exchange, applyDataToTemplate(
+                    getErrorPage(), templateData));
+        }
     }
 
-    public void showPage(HttpExchange exchange, byte[] pageToBeShown) throws IOException {
+    public abstract void handleExchange(HttpExchange exchange) throws IOException;
+
+    public void renderPage(HttpExchange exchange, byte[] pageToBeShown) throws IOException {
 
         exchange.sendResponseHeaders(200, pageToBeShown.length);
         OutputStream os = exchange.getResponseBody();
@@ -30,17 +47,17 @@ public abstract class BasicHandler implements HttpHandler {
         exchange.close();
     }
 
-    public byte[] renderTemplate(Map<String, String> templateData) {
+    public byte[] applyDataToTemplate(byte[] pageWithTemplate, Map<String, String> templateData) {
 
-        String pageAsText = new String(page);
+        String updatedPage = new String(pageWithTemplate);
 
         for (Entry<String, String> record : templateData.entrySet()) {
             String templatedKey = "{{ " + record.getKey() + " }}";
             String templatedValue = record.getValue();
-            pageAsText = pageAsText.replace(templatedKey, templatedValue);
+            updatedPage = updatedPage.replace(templatedKey, templatedValue);
         }
 
-        return pageAsText.getBytes();
+        return updatedPage.getBytes();
     }
 
 }

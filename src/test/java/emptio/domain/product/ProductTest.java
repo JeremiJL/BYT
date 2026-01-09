@@ -37,15 +37,16 @@ class ProductTest {
 
     @BeforeEach
     void setUp() {
-        productRepository = new InMemoryDomainRepository<>();
-        validators = new HashSet<>();
-        productService = new ProductService(validators, productRepository);
         UserRepository<User> userRepository = new UserRepository<>(
                 new InMemoryDomainRepository<Shopper>(),
                 new InMemoryDomainRepository<Merchant>(),
-                new InMemoryDomainRepository<Advertiser>()
+                new InMemoryDomainRepository<Advertiser>(),
+                new InMemoryCredentialsRepository()
         );
-        userService = new UserService(userRepository, new InMemoryCredentialsRepository(), new HashSet<>());
+        userService = new UserService(userRepository, new HashSet<>());
+        productRepository = new InMemoryDomainRepository<>();
+        validators = new HashSet<>();
+        productService = new ProductService(validators, userService, productRepository);
         addressBuilder = new AddressBuilder();
         userBuilder = new UserBuilder(userService, addressBuilder);
         productBuilder =  new ProductBuilder(productService, userBuilder);

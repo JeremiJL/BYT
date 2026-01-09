@@ -27,7 +27,13 @@ public class InMemoryCredentialsRepository implements CredentialsRepository {
     }
 
     @Override
-    public void deleteCredentials(String login) {
+    public boolean deleteCredentials(String login) {
         extent.remove(login);
+        return !extent.containsKey(login);
+    }
+
+    @Override
+    public void tearDown() {
+        this.extent.clear();
     }
 }

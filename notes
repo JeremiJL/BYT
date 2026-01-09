@@ -1,0 +1,38 @@
+// build.gradle (Groovy DSL)
+
+plugins {
+    // your usual plugins (examples)
+    id 'java'
+    // id 'application'   // if you use it
+    // id 'org.springframework.boot' version 'x.y.z' apply false
+
+    // the plugin from buildSrc defined earlier
+    id 'com.emptio.inline-css'
+}
+
+repositories {
+    mavenCentral()
+}
+
+/*
+  Configure the task.
+  Assumptions (change if your structure differs):
+  - HTML templates: src/main/resources/templates
+  - Static assets:  src/main/resources/static
+    so /css/app.css resolves to src/main/resources/static/css/app.css
+*/
+tasks.named('inlineCss', com.emptio.InlineCssTask) {
+    htmlDir = layout.projectDirectory.dir('src/main/resources/templates')
+    assetsDir = layout.projectDirectory.dir('src/main/resources/static')
+    outputDir = layout.buildDirectory.dir('inlined-html')
+}
+
+/*
+  Optional: run inlining as part of processResources
+  (so it’s executed during a normal build).
+  Uncomment if you want that behaviour.
+
+tasks.named('processResources') {
+    dependsOn tasks.named('inlineCss')
+}
+*/

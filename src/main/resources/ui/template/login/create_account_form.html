@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Emptio</title>
+    <link rel="stylesheet" href="../../static/basic.css" />
+    <link rel="stylesheet" href="../../static/forms.css" />
+</head>
+<body>
+<main class="page">
+    <section class="card">
+
+        <div class="top">
+            <div class="logo-head">
+                <img class="logo" src="../../static/logo.png" alt="Emptio logo" />
+                <p class="brand">Emptio</p>
+            </div>
+            <h1>Create new account</h1>
+            <h2>Provide account details</h2>
+        </div>
+
+        <form action="/create_account" method="post">
+            <fieldset>
+                <legend>Account type</legend>
+                <div class="radio-row">
+                    <div class="radio">
+                        <input type="radio" id="shopper_account" name="accountType" value="SHOPPER" required />
+                        <label for="shopper_account">shopper</label>
+                    </div>
+                    <div class="radio">
+                        <input type="radio" id="merchant_account" name="accountType" value="MERCHANT" required />
+                        <label for="merchant_account">merchant</label>
+                    </div>
+                    <div class="radio">
+                        <input type="radio" id="advertiser_account" name="accountType" value="ADVERTISER" required />
+                        <label for="advertiser_account">advertiser</label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>New login credentials</legend>
+                <div class="grid cols-2">
+                    <div class="field">
+                        <label for="login">login:</label>
+                        <input type="text" id="login" name="login" required />
+                    </div>
+                    <div class="field">
+                        <label for="password">password:</label>
+                        <input type="password" id="password" name="password" required />
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Your full name</legend>
+                <div class="grid cols-2">
+                    <div class="field">
+                        <label for="name">first name:</label>
+                        <input type="text" id="name" name="name" required />
+                    </div>
+                    <div class="field">
+                        <label for="surname">surname:</label>
+                        <input type="text" id="surname" name="surname" required />
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Contact information</legend>
+                <div class="grid cols-2">
+                    <div class="field">
+                        <label for="email">email:</label>
+                        <input type="text" id="email" name="email" required />
+                    </div>
+                    <div class="field">
+                        <label for="phoneNumber">phone number:</label>
+                        <input type="text" id="phoneNumber" name="phoneNumber" required />
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Address</legend>
+                <div class="grid cols-2">
+                    <div class="field">
+                        <label for="postalCode">postal code:</label>
+                        <input type="text" id="postalCode" name="postalCode" required />
+                    </div>
+                    <div class="field">
+                        <label for="streetName">street name:</label>
+                        <input type="text" id="streetName" name="streetName" />
+                    </div>
+                </div>
+
+                <div class="grid cols-3" style="margin-top:12px;">
+                    <div class="field">
+                        <label for="country">country:</label>
+                        <input type="text" id="country" name="country" />
+                    </div>
+                    <div class="field">
+                        <label for="city">city:</label>
+                        <input type="text" id="city" name="city" />
+                    </div>
+                    <div class="field">
+                        <label for="buildingNumber">building number:</label>
+                        <input type="number" id="buildingNumber" name="buildingNumber" />
+                    </div>
+                </div>
+
+                <div class="grid" style="margin-top:12px;">
+                    <div class="field">
+                        <label for="apartmentNumber">apartment number:</label>
+                        <input type="number" id="apartmentNumber" name="apartmentNumber" />
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="actions">
+                <input type="submit" value="Create" />
+            </div>
+        </form>
+        <button id="try_again_button" onclick="history.back()">Back</button>
+    </section>
+</main>
+</body>
+</html>
